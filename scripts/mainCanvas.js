@@ -53,7 +53,6 @@ canvas.onmousemove = function(e)
         
         
         drawContext.beginPath();
-        //drawContext.rect(rectX,rectY,width,height);
         drawContext.strokeRect(rectX, rectY,width,height, 1);
         drawContext.closePath();
     }
