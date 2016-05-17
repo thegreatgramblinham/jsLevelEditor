@@ -1,4 +1,8 @@
-var canvas = document.getElementById("MainCanvas");
+var canvasDiv = document.getElementById("MainCanvasDiv");
+var canvas =document.createElement("canvas");
+canvas.id="MainCanvas";
+canvasDiv.appendChild(canvas);
+
 var drawContext = canvas.getContext("2d");
 var mouseDown = false;
 var downPoint = undefined;
