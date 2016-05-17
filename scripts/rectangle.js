@@ -64,4 +64,23 @@ class Rectangle
     {
         return this.height * this.width;
     }
+    
+    toXml()
+    {
+        var xmlOut = "<Rectangle id="+this.id+"/>";
+        xmlOut += "\r\n";
+        xmlOut+="\t"+"<X>"+this.xLocation+"</X>"
+        xmlOut += "\r\n";
+        xmlOut+="\t"+"<Y>"+this.xLocation+"</Y>"
+        xmlOut += "\r\n";
+        xmlOut+="\t"+"<Width>"+this.width+"</Width>"
+        xmlOut += "\r\n";
+        xmlOut+="\t"+"<Height>"+this.height+"</Height>"
+        xmlOut += "\r\n";
+        xmlOut +="</Rectangle>"
+        
+        return xmlOut;
+    }
+    
+    }
 }
