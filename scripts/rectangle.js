@@ -71,7 +71,7 @@ class Rectangle
         xmlOut += "\r\n";
         xmlOut+="\t"+"<X>"+this.xLocation+"</X>"
         xmlOut += "\r\n";
-        xmlOut+="\t"+"<Y>"+this.xLocation+"</Y>"
+        xmlOut+="\t"+"<Y>"+this.yLocation+"</Y>"
         xmlOut += "\r\n";
         xmlOut+="\t"+"<Width>"+this.width+"</Width>"
         xmlOut += "\r\n";
