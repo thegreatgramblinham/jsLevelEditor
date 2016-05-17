@@ -18,26 +18,44 @@
                 </td>
             </tr>
             <tr style="height: 20%;">
-                <td style="width: 80%;">
+                <td style="height: 100%; width: 80%;">
                     <div>
-                        <canvas id="PropertyCanvas"/>
+                        <table>
+                            <tr style="height: 20%;">
+                                <td class="globalPropertyCell">
+                                    <span class="propertyItem">Level Width:</span>
+                                </td>                              
+                                <td class="globalPropertyCell">
+                                    <input type="number" name="LevelWidthInput" min="1" class="globalNumericInput"/>
+                                </td>
+                            </tr>
+                            <tr style="height: 20%;">
+                                <td class="globalPropertyCell">
+                                    <span class="propertyItem">Level Height:</span>                           
+                                </td>
+                                <td class="globalPropertyCell">
+                                    <input type="number" name="LevelHeightInput" min="1" class="globalNumericInput"/>
+                                </td>
+                            </tr>
+                            <tr></tr>
+                        </table>                          
                     </div>
                 </td>
                 <td style="width: 20%;">
                     <div>
                         <table>
                             <tr>
-                                <td style="buttonMenuRow" >
+                                <td class="buttonMenuCell" >
                                     <button>Load Images</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="buttonMenuRow">
+                                <td class="buttonMenuCell">
                                     <button>Save Level</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="buttonMenuRow">
+                                <td class="buttonMenuCell">
                                     <button>Load Level</button>
                                 </td>
                             </tr>
