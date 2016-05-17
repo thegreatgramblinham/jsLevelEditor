@@ -37,7 +37,30 @@ button {
     height: 100%;
 }
 
-buttonMenuRow {
+td.buttonMenuCell {
     width: 100%;
     height: 33%;
 }
+
+td.globalPropertyCell {
+    width: 5%;
+    height: 100%;
+    float: left;
+}
+
+span.propertyItem {
+    font-size: 10px;
+    font-family: monospace;
+    float: right;
+}
+
+input.globalNumericInput {
+    width: 45;
+    height: 25;
+}
+
+input[type='number'] { 
+    font-size: 10px;
+    font-family: monospace;
+}
+    
