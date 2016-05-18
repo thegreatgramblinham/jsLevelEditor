@@ -51,3 +51,62 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+/////BUILD SCRIPT/////
+
+//Imports
+"use strict";
+var fs = require('fs');
+
+//Global Variables
+var jsString = "";
+var globalWriteDirectory = __dirname;
+var outputFileName = "global.js"
+
+//// ADD FILES TO BE CONCATENATED HERE ////
+var filesInGlobalBuild = 
+[
+    "/scripts/mainCanvas.js",
+    "/scripts/rectangle.js"
+];
+///////////////////////////////////////////
+
+//Main
+RunBuild();
+
+//Methods
+function RunBuild()
+{    
+    ConcatFiles(filesInGlobalBuild);
+    WriteGlobalFile();
+}
+
+function ConcatFiles(filePathList) 
+{
+    for(var i = 0; i < filePathList.length; i++)
+    {
+        ConcatFile(filePathList[i]);
+    }
+    console.log("Finished Reading");
+}
+
+function ConcatFile(filePath)
+{
+    console.log("Trying Read - <"+ globalWriteDirectory + filePath +">");
+    var fileString = fs.readFileSync(globalWriteDirectory + filePath,"utf8");
+    jsString += "//START FILE: "+ filePath +"\n\n" 
+        + fileString 
+        + "\n\n" + "//END FILE: "+ filePath +"\n\n";
+        
+    console.log("Completed Read - <"+ filePath +">");
+}
+
+function WriteGlobalFile()
+{
+    var writePath = globalWriteDirectory +"/"+ outputFileName;
+    console.log("Trying Write - <"+ writePath +">");
+    fs.writeFileSync(writePath, jsString, "utf8");
+    console.log("Completed Full Write - <"+ writePath +">");
+}
+
+/////END BUILD SCRIPT/////
