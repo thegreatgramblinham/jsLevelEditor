@@ -3,7 +3,7 @@ class Rectangle
 {
     constructor(x,y,height,width,id)
     {
-        this.height = heaight;
+        this.height = height;
         this.width = width;
         this.xLocation = x;
         this.yLocation = y;
@@ -80,7 +80,5 @@ class Rectangle
         xmlOut +="</Rectangle>"
         
         return xmlOut;
-    }
-    
     }
 }
