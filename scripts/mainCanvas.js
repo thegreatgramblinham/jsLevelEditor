@@ -109,12 +109,14 @@ function RefreshRectangles()
 widthInputBox.onchange = function(e)
 {
     canvas.width = widthInputBox.value;
+    canvas.style.width = widthInputBox.value;
     RefreshRectangles();
 }
 
 heightInputBox.onchange = function(e)
 {
     canvas.height = heightInputBox.value;
+    canvas.style.height = heightInputBox.value;
     RefreshRectangles();
 }
 
