@@ -1,7 +1,7 @@
 "use strict";
 class Rectangle
 {
-    constructor(x,y,height,width,id)
+    constructor(x,y,width,height,id)
     {
         this.height = height;
         this.width = width;

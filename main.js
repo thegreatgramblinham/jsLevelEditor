@@ -66,8 +66,8 @@ var outputFileName = "global.js"
 //// ADD FILES TO BE CONCATENATED HERE ////
 var filesInGlobalBuild = 
 [
-    "/scripts/mainCanvas.js",
-    "/scripts/rectangle.js"
+    "/scripts/rectangle.js",
+    "/scripts/mainCanvas.js"
 ];
 ///////////////////////////////////////////
 
