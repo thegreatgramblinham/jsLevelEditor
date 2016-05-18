@@ -81,6 +81,4 @@ class Rectangle
         
         return xmlOut;
     }
-    
-    }
 }

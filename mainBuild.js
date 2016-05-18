@@ -4,7 +4,7 @@ var fs = require('fs');
 
 //Global Variables
 var jsString = "";
-var globalWriteDirectory = window.location.pathname.substring(1,
+var globalWriteDirectory = window.location.pathname.substring(1, //ignores the first '/' character
             window.location.pathname.lastIndexOf('/'));
 var outputFileName = "global.js"
 
