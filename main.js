@@ -66,8 +66,15 @@ var outputFileName = "global.js"
 //// ADD FILES TO BE CONCATENATED HERE ////
 var filesInGlobalBuild = 
 [
+    //IMPORT FILE
+    "/scripts/build/imports.js",
+    //CLASSES
+    "/scripts/rectangle.js",
+    //END CLASSES
+    //START EVENT HANDLERS
     "/scripts/mainCanvas.js",
-    "/scripts/rectangle.js"
+    "/scripts/buttons/importExportButtonEvents.js"
+    //END EVENT HANDLERS
 ];
 ///////////////////////////////////////////
 
