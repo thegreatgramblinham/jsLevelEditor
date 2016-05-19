@@ -40,4 +40,3 @@ openLevelButton.onclick = function(event)
         }
     );
 }
-

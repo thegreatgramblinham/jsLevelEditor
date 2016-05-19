@@ -1,6 +1,10 @@
 //Global Variables
 var ImageCache = [];
+var ImageDiv = document.createElement("DIV");
 var ImagePalleteDiv = document.getElementById("ImagePalleteDiv");
+
+//Main
+ImagePalleteDiv.appendChild(ImageDiv);
 
 //Methods
 function LoadImagesFromDirectory(directoryPath)
@@ -42,16 +46,16 @@ function LoadImage(imgFileName, containingDirectory)
 }
 
 function BuildItemsControl()
-{
-    var form = document.createElement("FORM");
+{   
+    var div = document.createElement("DIV");
     for(var i = 0; i < ImageCache.length; i++)
     {
         var button = document.createElement("BUTTON");
         button.className="imageListButton";
-        //button.id = "imageListButton";
         button.appendChild(ImageCache[i]);
-        form.appendChild(button);
+        div.appendChild(button);
     }
     
-    ImagePalleteDiv.appendChild(form);
+    ImagePalleteDiv.replaceChild(div, ImageDiv);
+    ImageDiv = div;
 }
