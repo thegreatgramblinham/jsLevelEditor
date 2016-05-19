@@ -1,4 +1,3 @@
-"use strict";
 class Rectangle
 {
     constructor(x,y,height,width,id)

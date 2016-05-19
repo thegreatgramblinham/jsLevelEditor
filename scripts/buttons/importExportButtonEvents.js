@@ -1,4 +1,3 @@
-"use strict";
 //Methods
 openFolderButton.onclick = function(event) 
 {
@@ -9,7 +8,8 @@ openFolderButton.onclick = function(event)
             if (fileNames === undefined) return;
             var fileName = fileNames[0];
             console.log(fileName + " has been selected.");
-            //Call load images function here.
+            
+            LoadImagesFromDirectory(fileName);
         }
     );
 }
@@ -40,3 +40,4 @@ openLevelButton.onclick = function(event)
         }
     );
 }
+
