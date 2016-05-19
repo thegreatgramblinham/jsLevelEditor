@@ -66,8 +66,18 @@ var outputFileName = "global.js"
 //// ADD FILES TO BE CONCATENATED HERE ////
 var filesInGlobalBuild = 
 [
+    //IMPORT FILE
+    "/scripts/build/imports.js",
+    //CLASSES
     "/scripts/rectangle.js",
-    "/scripts/mainCanvas.js"
+    //END CLASSES
+    //START EVENT HANDLERS
+    "/scripts/mainCanvas.js",
+    "/scripts/buttons/importExportButtonEvents.js",
+    //END EVENT HANDLERS
+    //START ENGINE FILES
+    "/scripts/imageLoading/imageLoader.js"
+    //END ENGINE FILES
 ];
 ///////////////////////////////////////////
 
@@ -95,6 +105,7 @@ function ConcatFile(filePath)
     console.log("Trying Read - <"+ globalWriteDirectory + filePath +">");
     var fileString = fs.readFileSync(globalWriteDirectory + filePath,"utf8");
     jsString += "//START FILE: "+ filePath +"\n\n" 
+        //+ "\"use strict\";" + "\n"
         + fileString 
         + "\n\n" + "//END FILE: "+ filePath +"\n\n";
         
