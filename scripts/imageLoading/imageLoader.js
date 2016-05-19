@@ -21,6 +21,7 @@ function LoadImagesFromDirectory(directoryPath)
     for(var i = 0; i < fileList.length; i++)
     {
         var imgFileName = fileList[i];
+        var pathArr = imgFileName.split('.');
         var ext = imgFileName.split('.').pop();
         
         console.log("Processing: " + imgFileName);        
@@ -29,6 +30,10 @@ function LoadImagesFromDirectory(directoryPath)
             case "png":
                 LoadImage(imgFileName, directoryPath);
         }
+        
+        if(pathArr.length === 1) //doesn't have extension, likely another folder.
+            LoadImagesFromDirectory(directoryPath+"/"+imgFileName);
+             
     }  
     console.log("Finished loading images."); 
     
@@ -52,6 +57,7 @@ function BuildItemsControl()
     {
         var button = document.createElement("BUTTON");
         button.className="imageListButton";
+        button.id="imageListButton."+i;
         button.appendChild(ImageCache[i]);
         div.appendChild(button);
     }
