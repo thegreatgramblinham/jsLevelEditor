@@ -17,6 +17,16 @@ class ImageBrush
         return this.image;
     }
     
+    get Width()
+    {
+        return this.image.width;
+    }
+    
+    get Height()
+    {
+        return this.image.height;
+    }
+    
     set ImagePath(imageFilePath)
     {
         this.imagePath = imageFilePath;
