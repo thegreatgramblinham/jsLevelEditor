@@ -1,24 +1,28 @@
 //DOM Access and Setup
-var widthInputBox = document.getElementById("levelWidthBox");
-var heightInputBox = document.getElementById("levelHeightBox");
-var canvas = document.getElementById("mainCanvas");
-var verticalScroll = document.getElementById("vScroll")
-var horizontalScroll = document.getElementById("hScroll");
-var drawContext = canvas.getContext("2d");
-var mouseDown = false;
-var downPoint = undefined;
-canvas.width = canvas.offsetWidth;
-canvas.height = canvas.offsetHeight;
-verticalScroll.style.height = "100%";
-verticalScroll.style.width = 25;
-horizontalScroll.style.width = canvas.width;
-horizontalScroll.style.height = 25;
-widthInputBox.value = canvas.width;
-heightInputBox.value = canvas.height;
+var _widthInputBox = document.getElementById("levelWidthBox");
+var _heightInputBox = document.getElementById("levelHeightBox");
+var _canvas = document.getElementById("mainCanvas");
+var _verticalScroll = document.getElementById("vScroll")
+var _horizontalScroll = document.getElementById("hScroll");
+var _verticalThumb = document.getElementById("vThumb");
+var _horizThumb = document.getElementById("hThumb");
+var _drawContext = _canvas.getContext("2d");
+var _mouseDown = false;
+var _downPoint = undefined;
+
+
+_canvas.width = _canvas.offsetWidth;
+_canvas.height = _canvas.offsetHeight;
+_verticalScroll.style.height = "100%";
+_verticalScroll.style.width = 25;
+_horizontalScroll.style.width = _canvas.width;
+_horizontalScroll.style.height = 25;
+_widthInputBox.value = _canvas.width;
+_heightInputBox.value = _canvas.height;
 
 //Rectangle Collection
-var rectangles = [];
-var currentRectangle = undefined;
+var _rectangles = [];
+var _currentRectangle = undefined;
 
 //Internal use Point object
 //We may want to make a class file for this later
@@ -30,63 +34,63 @@ function point(x,y)
 
 //Clear canvas Utility method
 function clearCanvas() {
-    drawContext.clearRect(0, 0, canvas.width, canvas.height);
+    _drawContext.clearRect(0, 0, _canvas.width, _canvas.height);
 }
 
 //Canvas Events
-canvas.onmousedown = function(e)
+_canvas.onmousedown = function(e)
 {
     if(e.button == 0)
     {
-        mouseDown = true;
-        var canvasRect = canvas.getBoundingClientRect();
-        var xCoord = Math.floor((e.clientX - canvasRect.left) / (canvasRect.right - canvasRect.left) * canvas.width);
-        var yCoord = Math.floor((e.clientY - canvasRect.top) / (canvasRect.bottom - canvasRect.top) * canvas.height);
-        downPoint = new point(xCoord,yCoord);
+        _mouseDown = true;
+        var canvasRect = _canvas.getBoundingClientRect();
+        var xCoord = Math.floor((e.clientX - canvasRect.left) / (canvasRect.right - canvasRect.left) * _canvas.width);
+        var yCoord = Math.floor((e.clientY - canvasRect.top) / (canvasRect.bottom - canvasRect.top) * _canvas.height);
+        _downPoint = new point(xCoord,yCoord);
     }
     else
     {
-        mouseDown = false;
-        downPoint = undefined;
+        _mouseDown = false;
+        _downPoint = undefined;
     }
 };
 
-canvas.onmousemove = function(e)
+_canvas.onmousemove = function(e)
 {
-    if(mouseDown && downPoint != undefined)
+    if(_mouseDown && _downPoint != undefined)
     {
         clearCanvas();
         RefreshRectangles();
-        var canvasRect = canvas.getBoundingClientRect();
-        var xCoord = Math.floor((e.clientX - canvasRect.left) / (canvasRect.right - canvasRect.left) * canvas.width);
-        var yCoord = Math.floor((e.clientY - canvasRect.top) / (canvasRect.bottom - canvasRect.top) * canvas.height);
+        var canvasRect = _canvas.getBoundingClientRect();
+        var xCoord = Math.floor((e.clientX - canvasRect.left) / (canvasRect.right - canvasRect.left) * _canvas.width);
+        var yCoord = Math.floor((e.clientY - canvasRect.top) / (canvasRect.bottom - canvasRect.top) * _canvas.height);
         
-        var rectX = Math.min(downPoint.xCoordinate, xCoord);
-        var rectY =  Math.min(downPoint.yCoordinate, yCoord);
+        var rectX = Math.min(_downPoint.xCoordinate, xCoord);
+        var rectY =  Math.min(_downPoint.yCoordinate, yCoord);
         
-        var width = Math.max(downPoint.xCoordinate,xCoord) - Math.min(downPoint.xCoordinate, xCoord);
-        var height = Math.max(downPoint.yCoordinate, yCoord) - Math.min(downPoint.yCoordinate, yCoord);
+        var width = Math.max(_downPoint.xCoordinate,xCoord) - Math.min(_downPoint.xCoordinate, xCoord);
+        var height = Math.max(_downPoint.yCoordinate, yCoord) - Math.min(_downPoint.yCoordinate, yCoord);
         
         
-        drawContext.beginPath();
-        drawContext.setLineDash([3,4])
-        drawContext.strokeStyle = "#D1A147"
-        drawContext.rect(rectX, rectY,width,height, 1);
-        drawContext.stroke();
-        drawContext.closePath();
+        _drawContext.beginPath();
+        _drawContext.setLineDash([3,4])
+        _drawContext.strokeStyle = "#D1A147"
+        _drawContext.rect(rectX, rectY,width,height, 1);
+        _drawContext.stroke();
+        _drawContext.closePath();
         
-        currentRectangle = new Rectangle(rectX, rectY,width,height,rectangles.length.toString());
+        _currentRectangle = new Rectangle(rectX, rectY,width,height,_rectangles.length.toString());
     }
 };
 
-canvas.onmouseup = function(e)
+_canvas.onmouseup = function(e)
 {
-    if(mouseDown)
+    if(_mouseDown)
     {
-        mouseDown = false;
-        downPoint = undefined;
+        _mouseDown = false;
+        _downPoint = undefined;
         clearCanvas();
-        if(currentRectangle != undefined && IsValidRectangle())
+        if(_currentRectangle != undefined && IsValidRectangle())
         {
             AddRectangle();
         }
@@ -98,23 +102,23 @@ canvas.onmouseup = function(e)
 function RefreshRectangles()
 {
     var i;
-    for(i=0; i<rectangles.length; i++)
+    for(i=0; i<_rectangles.length; i++)
     {
-        var refreshRect = rectangles[i];
-        drawContext.beginPath();
-        drawContext.fillStyle="#4FD921";
-        drawContext.fillRect(refreshRect.XLocation,refreshRect.YLocation, refreshRect.Width,refreshRect.Height);
-        drawContext.closePath();
+        var refreshRect = _rectangles[i];
+        _drawContext.beginPath();
+        _drawContext.fillStyle="#4FD921";
+        _drawContext.fillRect(refreshRect.XLocation,refreshRect.YLocation, refreshRect.Width,refreshRect.Height);
+        _drawContext.closePath();
     }
 }
 
 //Input Events
-widthInputBox.onchange = function(e)
+_widthInputBox.onchange = function(e)
 {
     RefreshRectangles();
 }
 
-heightInputBox.onchange = function(e)
+_heightInputBox.onchange = function(e)
 {
     RefreshRectangles();
 }
@@ -122,9 +126,9 @@ heightInputBox.onchange = function(e)
 //Rectangle Building
 function AddRectangle()
 {
-    var addRect = new Rectangle(currentRectangle.XLocation, currentRectangle.YLocation, currentRectangle.Width, currentRectangle.Height, rectangles.length.toString());
-    rectangles.push(addRect);
-    currentRectangle = undefined;
+    var addRect = new Rectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, _rectangles.length.toString());
+    _rectangles.push(addRect);
+    _currentRectangle = undefined;
 }
 
 //Rectangle Validation
@@ -132,10 +136,10 @@ function IsValidRectangle(rect)
 {
     if(rect === undefined)
     {
-        rect = currentRectangle;
+        rect = _currentRectangle;
     }
     
-    if(rectangles.length == 0)
+    if(_rectangles.length == 0)
     {
         return true;
     }
