@@ -1,15 +1,18 @@
 //DOM Access and Setup
-var canvasDiv = document.getElementById("MainCanvasDiv");
 var widthInputBox = document.getElementById("levelWidthBox");
 var heightInputBox = document.getElementById("levelHeightBox");
-var canvas =document.createElement("canvas");
-canvas.id="MainCanvas";
-canvasDiv.appendChild(canvas);
+var canvas = document.getElementById("mainCanvas");
+var verticalScroll = document.getElementById("vScroll")
+var horizontalScroll = document.getElementById("hScroll");
 var drawContext = canvas.getContext("2d");
 var mouseDown = false;
 var downPoint = undefined;
 canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
+verticalScroll.style.height = "100%";
+verticalScroll.style.width = 25;
+horizontalScroll.style.width = canvas.width;
+horizontalScroll.style.height = 25;
 widthInputBox.value = canvas.width;
 heightInputBox.value = canvas.height;
 
@@ -108,15 +111,11 @@ function RefreshRectangles()
 //Input Events
 widthInputBox.onchange = function(e)
 {
-    canvas.width = widthInputBox.value;
-    canvas.style.width = widthInputBox.value;
     RefreshRectangles();
 }
 
 heightInputBox.onchange = function(e)
 {
-    canvas.height = heightInputBox.value;
-    canvas.style.height = heightInputBox.value;
     RefreshRectangles();
 }
 
