@@ -68,8 +68,12 @@ var filesInGlobalBuild =
 [
     //IMPORT FILE
     "/scripts/build/imports.js",
+    //GLOBAL VARABLES
+    "/scripts/build/globalVariables.js",
     //CLASSES
     "/scripts/rectangle.js",
+    "/scripts/classes/imageRectangle.js",
+    "/scripts/imageLoading/imageBrush.js",
     //END CLASSES
     //START EVENT HANDLERS
     "/scripts/mainCanvas.js",
