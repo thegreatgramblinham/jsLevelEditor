@@ -57,7 +57,11 @@ function BuildItemsControl()
     {
         var button = document.createElement("BUTTON");
         button.className="imageListButton";
-        button.id="imageListButton."+i;
+        button.id="imageListButton."+ i;
+        button.onclick = function() 
+            { 
+                ImageButtonOnClick(this.id.split('.').pop());
+            };
         button.appendChild(ImageCache[i]);
         div.appendChild(button);
     }

@@ -40,3 +40,9 @@ openLevelButton.onclick = function(event)
         }
     );
 }
+
+function ImageButtonOnClick(imageIndex)
+{
+    CurrentImageBrush = new ImageBrush(ImageCache[imageIndex].src);
+    console.log("Set image brush to: "+ImageCache[imageIndex].src);
+}
