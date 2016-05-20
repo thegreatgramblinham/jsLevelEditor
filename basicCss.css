@@ -77,11 +77,25 @@ button.imageListButton {
     margin-left: 5px;
     display: table-cell;
     background: lavender;
+    border: 1px solid green;
 }
 
 .horiz-scroll
 {
     display: table-cell;
     background: lavender;
+    border: 1px solid green;
 }
+
+.thumb
+{
+    left:0px;
+    top:0px;
+    width:25px;
+    background: gray;
+    height: 25px;   
+}
+
+
+
     
