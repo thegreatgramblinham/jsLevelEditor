@@ -16,6 +16,8 @@ var _verticalThumbMouseDown = false;
 var _horizthumbMouseDown = false;
 var _verticalScrollVisible = true;
 var _horizScrollVisible = true;
+var _scrollOffsetX = 0;
+var _scrollOffsetY = 0;
 
 
 _canvas.width = _canvas.offsetWidth;
@@ -26,11 +28,13 @@ _verticalThumb.style.top="0px"
 _horizontalScroll.style.height = 25;
 _widthInputBox.value = _canvas.width;
 _heightInputBox.value = _canvas.height;
-UpdateScrollThumbs();
 
 //Rectangle Collection
 var _rectangles = [];
 var _currentRectangle = undefined;
+
+//Update the scrollbars on window load, they may not need to be visible
+UpdateScrollThumbs();
 
 //Internal use Point object
 //We may want to make a class file for this later
@@ -39,11 +43,6 @@ function point(x,y)
     this.xCoordinate = x;
     this.yCoordinate = y;
 }
-
-//window.onresize = function(e)
-//{
-//    UpdateScrollThumbs();
-//}
 
 //Canvas Events
 _canvas.onmousedown = function(e)
@@ -103,6 +102,9 @@ _canvas.onmouseup = function(e)
     
 };
 
+///<summary>
+///Method to redraw all current rectangles on the screen
+///</summary>
 function RefreshRectangles()
 {
     var i;
@@ -128,6 +130,10 @@ _heightInputBox.onchange = function(e)
 }
 
 //Scroll Handling
+///<summary>
+///Initially sets position of vertical thumb when the user first clicks on it,
+///Also sets bool to allow the dragging of the thumb
+///</summary>
 _verticalThumb.onmousedown = function(e)
 {       
     if(e.button == 0)
@@ -138,19 +144,30 @@ _verticalThumb.onmousedown = function(e)
     
 }
 
+///<summary>
+///Drags the vertical thumb along with the user's mouse as it moves
+///</summary>
 _verticalScroll.onmousemove = function(e)
 {
     if(_verticalThumbMouseDown)
     {
+        //get current position of mouse within the scrollbar
         var currentPoint = GetMousePointInElement(_verticalScroll,e.clientX,e.clientY);
+        //get the delta position - the difference between the current mouse pointand the thumb start point
         var deltaPos = new point(0, currentPoint.yCoordinate - _verticalThumbStartPoint.yCoordinate);
-
+        //get the current 'style top' value
+            //NOTE: this is the y value of the vertical thumb within the entire window, not necessarily within the scrollbar itself
         var currentTop = _verticalThumb.style.top;
+        //set up a variable for the new top value
         var newTop = 0;
-
+        //Convert the currentTop number from a style string "Zpx" where Z is the actual number value
+        //hence the substring operation to remove the "px" before converting to a number
         newTop = Number(currentTop.substr(0,currentTop.length-2));
+        //add the delta y to the top value 
         newTop += deltaPos.yCoordinate;
-
+        
+        //If the top value calculated is inclusive in the range of 0 to the max top offset
+        //we can go ahead and set the top Value, then update our start point for the next iteration of the function
         if(newTop >= 0 && newTop <= _verticalScroll.clientHeight-_verticalThumb.clientHeight)
         {
             _verticalThumb.style.top = newTop.toString()+"px";
@@ -159,18 +176,27 @@ _verticalScroll.onmousemove = function(e)
     }
 }
 
+///<summary>
+///Whjen the user releases the mouse within the scrollbar, stop scrolling the thumb
+///</summary>
 _verticalScroll.onmouseup = function(e)
 {
     _verticalThumbMouseDown = false;
     _verticalThumbStartPoint = undefined;
 }
 
+///<summary>
+/// Updates all scroll thumbs based on width of bar, etc
+///</summary>
 function UpdateScrollThumbs()
 {
    UpdateVerticalScrollVisual();
    UpdateHorizontalScrollVisual();
 }
 
+///<summary>
+/// Updates the vertical scroll bar thumb based on height of window or level height
+///</summary>
 function UpdateVerticalScrollVisual()
 {
     var levelHeightPercentage =  +(_canvas.height/_heightInputBox.value).toFixed(2);
@@ -188,12 +214,16 @@ function UpdateVerticalScrollVisual()
     {
         if(_verticalScrollVisible)
         {
-             _verticalScroll.style.display = "none";
+            //hide scroll bar when level height is the same or less than canvas height
+            _verticalScroll.style.display = "none";
             _verticalScrollVisible = false;
         }
     }
 }
 
+///<summary>
+/// Update horizontal scroll thumb in a similar way to previous method
+///</summary>
 function UpdateHorizontalScrollVisual()
 {
      var levelWidthPercentage = (_canvas.width/_widthInputBox.value);
@@ -217,7 +247,9 @@ function UpdateHorizontalScrollVisual()
 
 }
 
-//Rectangle Building
+///<summary>
+/// Adds a rectangle data object to the internal collection
+///</summary>
 function AddRectangle()
 {
     var addRect = new Rectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, _rectangles.length.toString());
@@ -225,7 +257,10 @@ function AddRectangle()
     _currentRectangle = undefined;
 }
 
-//Rectangle Validation
+///<summary>
+/// Stub method to validate rectangles, currently just makes sure
+/// the rectangle exists. But can be changed to prevent intersection, etc
+///</summary>
 function IsValidRectangle(rect)
 {
     if(rect === undefined)
@@ -242,7 +277,10 @@ function IsValidRectangle(rect)
     
 }
     
-//Utility
+///<summary>
+/// Utility method to get the mouse point within an element, generally called
+/// from mouseDown or mouseOver events
+///</summary>
 function GetMousePointInElement(element,clientX,clientY)
 {
     var boundingRect = element.getBoundingClientRect();
@@ -264,6 +302,9 @@ function GetMousePointInElement(element,clientX,clientY)
     return new point(xCoord,yCoord);
 }
 
+///<summary>
+/// Clears the canvas of all elements at a specified offset
+///</summary>
 function clearCanvas() {
     _drawContext.clearRect(0, 0, _canvas.width, _canvas.height);
 }
