@@ -14,6 +14,8 @@ var _verticalThumbStartPoint = 0;
 var _horizThumbStartPoint = 0;
 var _verticalThumbMouseDown = false;
 var _horizthumbMouseDown = false;
+var _verticalScrollVisible = true;
+var _horizScrollVisible = true;
 
 
 _canvas.width = _canvas.offsetWidth;
@@ -24,6 +26,7 @@ _verticalThumb.style.top="0px"
 _horizontalScroll.style.height = 25;
 _widthInputBox.value = _canvas.width;
 _heightInputBox.value = _canvas.height;
+UpdateScrollThumbs();
 
 //Rectangle Collection
 var _rectangles = [];
@@ -37,10 +40,10 @@ function point(x,y)
     this.yCoordinate = y;
 }
 
-//Clear canvas Utility method
-function clearCanvas() {
-    _drawContext.clearRect(0, 0, _canvas.width, _canvas.height);
-}
+//window.onresize = function(e)
+//{
+//    UpdateScrollThumbs();
+//}
 
 //Canvas Events
 _canvas.onmousedown = function(e)
@@ -116,12 +119,12 @@ function RefreshRectangles()
 //Input Events
 _widthInputBox.onchange = function(e)
 {
-    RefreshRectangles();
+    UpdateHorizontalScrollVisual();
 }
 
 _heightInputBox.onchange = function(e)
 {
-    RefreshRectangles();
+    UpdateVerticalScrollVisual();
 }
 
 //Scroll Handling
@@ -162,6 +165,57 @@ _verticalScroll.onmouseup = function(e)
     _verticalThumbStartPoint = undefined;
 }
 
+function UpdateScrollThumbs()
+{
+   UpdateVerticalScrollVisual();
+   UpdateHorizontalScrollVisual();
+}
+
+function UpdateVerticalScrollVisual()
+{
+    var levelHeightPercentage =  +(_canvas.height/_heightInputBox.value).toFixed(2);
+    if(levelHeightPercentage <= .99)
+    {
+        if(!_verticalScrollVisible)
+        {
+            _verticalScroll.style.display = "inline-block";
+            _verticalScrollVisible = true;
+        }
+       _verticalThumb.style.height = levelHeightPercentage*_verticalScroll.clientHeight;
+       
+    }
+    else
+    {
+        if(_verticalScrollVisible)
+        {
+             _verticalScroll.style.display = "none";
+            _verticalScrollVisible = false;
+        }
+    }
+}
+
+function UpdateHorizontalScrollVisual()
+{
+     var levelWidthPercentage = (_canvas.width/_widthInputBox.value);
+    if(levelWidthPercentage <= .99)
+    {
+        if(!_horizScrollVisible)
+        {
+            _horizontalScroll.style.display = "";
+            _horizScrollVisible = true;
+        }
+        _horizThumb.style.width = levelWidthPercentage*_horizontalScroll.clientWidth;
+    }
+    else
+    {
+        if(_horizScrollVisible)
+        {
+            _horizontalScroll.style.display = "none";
+            _horizScrollVisible = false;
+        }
+    }
+
+}
 
 //Rectangle Building
 function AddRectangle()
@@ -208,6 +262,10 @@ function GetMousePointInElement(element,clientX,clientY)
     var yCoord = Math.floor((clientY - boundingRect.top) / (boundingRect.bottom - boundingRect.top) * height);
     
     return new point(xCoord,yCoord);
+}
+
+function clearCanvas() {
+    _drawContext.clearRect(0, 0, _canvas.width, _canvas.height);
 }
 
 
