@@ -12,7 +12,7 @@ table {
 canvas {
     border-style: groove;
     border-color: antiquewhite;
-    background: lawngreen;
+    background: lightsteelblue;
     height: 100%;
     width:  100%;
 }
@@ -75,16 +75,16 @@ button.imageListButton {
 {
     float: left;
     margin-left: 5px;
-    display: table-cell;
+    display: inline-block;
     background: lavender;
     border: 1px solid green;
 }
 
 .horiz-scroll
 {
-    display: table-cell;
     background: lavender;
     border: 1px solid green;
+    width: 100%;
 }
 
 .thumb
@@ -93,7 +93,8 @@ button.imageListButton {
     top:0px;
     width:25px;
     background: gray;
-    height: 25px;   
+    height: 25px;
+    position: relative;
 }
 
 

@@ -10,12 +10,17 @@ var _drawContext = _canvas.getContext("2d");
 var _mouseDown = false;
 var _downPoint = undefined;
 
+var _verticalThumbStartPoint = 0;
+var _horizThumbStartPoint = 0;
+var _verticalThumbMouseDown = false;
+var _horizthumbMouseDown = false;
+
 
 _canvas.width = _canvas.offsetWidth;
 _canvas.height = _canvas.offsetHeight;
 _verticalScroll.style.height = "100%";
 _verticalScroll.style.width = 25;
-_horizontalScroll.style.width = _canvas.width;
+_verticalThumb.style.top="0px"
 _horizontalScroll.style.height = 25;
 _widthInputBox.value = _canvas.width;
 _heightInputBox.value = _canvas.height;
@@ -43,10 +48,7 @@ _canvas.onmousedown = function(e)
     if(e.button == 0)
     {
         _mouseDown = true;
-        var canvasRect = _canvas.getBoundingClientRect();
-        var xCoord = Math.floor((e.clientX - canvasRect.left) / (canvasRect.right - canvasRect.left) * _canvas.width);
-        var yCoord = Math.floor((e.clientY - canvasRect.top) / (canvasRect.bottom - canvasRect.top) * _canvas.height);
-        _downPoint = new point(xCoord,yCoord);
+        _downPoint = GetMousePointInElement(_canvas,e.clientX,e.clientY);
     }
     else
     {
@@ -61,15 +63,14 @@ _canvas.onmousemove = function(e)
     {
         clearCanvas();
         RefreshRectangles();
-        var canvasRect = _canvas.getBoundingClientRect();
-        var xCoord = Math.floor((e.clientX - canvasRect.left) / (canvasRect.right - canvasRect.left) * _canvas.width);
-        var yCoord = Math.floor((e.clientY - canvasRect.top) / (canvasRect.bottom - canvasRect.top) * _canvas.height);
         
-        var rectX = Math.min(_downPoint.xCoordinate, xCoord);
-        var rectY =  Math.min(_downPoint.yCoordinate, yCoord);
+        var currPoint = GetMousePointInElement(_canvas,e.clientX, e.clientY);
         
-        var width = Math.max(_downPoint.xCoordinate,xCoord) - Math.min(_downPoint.xCoordinate, xCoord);
-        var height = Math.max(_downPoint.yCoordinate, yCoord) - Math.min(_downPoint.yCoordinate, yCoord);
+        var rectX = Math.min(_downPoint.xCoordinate, currPoint.xCoordinate);
+        var rectY =  Math.min(_downPoint.yCoordinate, currPoint.yCoordinate);
+        
+        var width = Math.max(_downPoint.xCoordinate,currPoint.xCoordinate) - Math.min(_downPoint.xCoordinate, currPoint.xCoordinate);
+        var height = Math.max(_downPoint.yCoordinate, currPoint.yCoordinate) - Math.min(_downPoint.yCoordinate, currPoint.yCoordinate);
         
         
         _drawContext.beginPath();
@@ -123,6 +124,45 @@ _heightInputBox.onchange = function(e)
     RefreshRectangles();
 }
 
+//Scroll Handling
+_verticalThumb.onmousedown = function(e)
+{       
+    if(e.button == 0)
+    {
+        _verticalThumbMouseDown = true;
+        _verticalThumbStartPoint = GetMousePointInElement(_verticalScroll,e.clientX,e.clientY);
+    }
+    
+}
+
+_verticalScroll.onmousemove = function(e)
+{
+    if(_verticalThumbMouseDown)
+    {
+        var currentPoint = GetMousePointInElement(_verticalScroll,e.clientX,e.clientY);
+        var deltaPos = new point(0, currentPoint.yCoordinate - _verticalThumbStartPoint.yCoordinate);
+
+        var currentTop = _verticalThumb.style.top;
+        var newTop = 0;
+
+        newTop = Number(currentTop.substr(0,currentTop.length-2));
+        newTop += deltaPos.yCoordinate;
+
+        if(newTop >= 0 && newTop <= _verticalScroll.clientHeight-_verticalThumb.clientHeight)
+        {
+            _verticalThumb.style.top = newTop.toString()+"px";
+            _verticalThumbStartPoint = GetMousePointInElement(_verticalScroll,e.clientX,e.clientY);
+        }
+    }
+}
+
+_verticalScroll.onmouseup = function(e)
+{
+    _verticalThumbMouseDown = false;
+    _verticalThumbStartPoint = undefined;
+}
+
+
 //Rectangle Building
 function AddRectangle()
 {
@@ -146,6 +186,28 @@ function IsValidRectangle(rect)
     
     return true;
     
+}
+    
+//Utility
+function GetMousePointInElement(element,clientX,clientY)
+{
+    var boundingRect = element.getBoundingClientRect();
+    var height = element.height;
+    var width = element.width;
+    //handle instances where element's height and width are not available
+    if(element.height == undefined)
+    {
+        height = element.offsetHeight;
+    }
+    if(element.width == undefined)
+    {
+        width = element.offsetWidth;
+    }
+    
+    var xCoord = Math.floor((clientX - boundingRect.left) / (boundingRect.right - boundingRect.left) * width);
+    var yCoord = Math.floor((clientY - boundingRect.top) / (boundingRect.bottom - boundingRect.top) * height);
+    
+    return new point(xCoord,yCoord);
 }
 
 
