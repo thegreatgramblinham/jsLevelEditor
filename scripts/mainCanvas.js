@@ -21,6 +21,7 @@ var _scrollOffsetY = 0;
 var _scrollXDelta = 0;
 var _scrollYDelta = 0;
 var _prevScrollOffsetY = 0;
+var _prevScrollOffsetX = 0;
 
 
 _canvas.width = _canvas.offsetWidth;
@@ -226,14 +227,16 @@ _horizontalScroll.onmousemove = function(e)
 
         newLeft = Number(currentLeft.substr(0,currentLeft.length-2));
         newLeft += deltaPos.xCoordinate;
-
-        if(newLeft >= 0 && newLeft <= _horizontalScroll.clientWidth-_horizThumb.clientWidth)
+        var maxOffset = _horizontalScroll.clientWidth-_horizThumb.clientWidth;
+        if(newLeft >= 0 && newLeft <= maxOffset)
         {
+            var scrollPercent = Number(((newLeft/maxOffset).toFixed(2)));
             _horizThumb.style.left = newLeft.toString()+"px";
             _horizThumbStartPoint = GetMousePointInElement(_horizontalScroll,e.clientX,e.clientY);
-            _scrollOffsetX += deltaPos.xCoordinate;
-            _scrollXDelta = deltaPos.xCoordinate;
+            _scrollOffsetX = (scrollPercent*(_widthInputBox.value-_canvas.width));
+            _scrollXDelta = _scrollOffsetX - _prevScrollOffsetX;
             OnHorizontalScroll();
+            _prevScrollOffsetX = _scrollOffsetX;
         }
     }
     
