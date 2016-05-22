@@ -18,13 +18,16 @@ var _verticalScrollVisible = true;
 var _horizScrollVisible = true;
 var _scrollOffsetX = 0;
 var _scrollOffsetY = 0;
+var _scrollXDelta = 0;
+var _scrollYDelta = 0;
 
 
 _canvas.width = _canvas.offsetWidth;
 _canvas.height = _canvas.offsetHeight;
 _verticalScroll.style.height = "100%";
 _verticalScroll.style.width = 25;
-_verticalThumb.style.top="0px"
+_verticalThumb.style.top="0px";
+_horizThumb.style.left = "0px";
 _horizontalScroll.style.height = 25;
 _widthInputBox.value = _canvas.width;
 _heightInputBox.value = _canvas.height;
@@ -68,11 +71,11 @@ _canvas.onmousemove = function(e)
         
         var currPoint = GetMousePointInElement(_canvas,e.clientX, e.clientY);
         
-        var rectX = Math.min(_downPoint.xCoordinate, currPoint.xCoordinate);
-        var rectY =  Math.min(_downPoint.yCoordinate, currPoint.yCoordinate);
+        var rectX = Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
+        var rectY =  Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
         
-        var width = Math.max(_downPoint.xCoordinate,currPoint.xCoordinate) - Math.min(_downPoint.xCoordinate, currPoint.xCoordinate);
-        var height = Math.max(_downPoint.yCoordinate, currPoint.yCoordinate) - Math.min(_downPoint.yCoordinate, currPoint.yCoordinate);
+        var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
+        var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
         
         
         _drawContext.beginPath();
@@ -144,6 +147,15 @@ _verticalThumb.onmousedown = function(e)
     
 }
 
+_horizThumb.onmousedown = function(e)
+{
+    if(e.button == 0)
+    {
+        _horizthumbMouseDown = true;
+        _horizThumbStartPoint = GetMousePointInElement(_horizontalScroll,e.clientX, e.clientY);
+    }
+}
+
 ///<summary>
 ///Drags the vertical thumb along with the user's mouse as it moves
 ///</summary>
@@ -172,8 +184,40 @@ _verticalScroll.onmousemove = function(e)
         {
             _verticalThumb.style.top = newTop.toString()+"px";
             _verticalThumbStartPoint = GetMousePointInElement(_verticalScroll,e.clientX,e.clientY);
+            _scrollOffsetY = newTop;
+            _scrollYDelta = deltaPos.yCoordinate;
+            OnVerticalScroll();
         }
     }
+}
+
+_horizontalScroll.onmousemove = function(e)
+{
+    if(_horizthumbMouseDown)
+    {
+        //get current position of mouse within the scrollbar
+        var currentPoint = GetMousePointInElement(_horizontalScroll,e.clientX,e.clientY);
+        //get the delta position - the difference between the current mouse pointand the thumb start point
+        var deltaPos = new point(currentPoint.xCoordinate - _horizThumbStartPoint.xCoordinate, 0);
+        //get the current 'style left' value
+            //NOTE: this is the x value of the horizontal thumb within the entire window, not necessarily within the scrollbar itself
+        var currentLeft = _horizThumb.style.left;
+        //set up a variable for the new top value
+        var newLeft = 0;
+
+        newLeft = Number(currentLeft.substr(0,currentLeft.length-2));
+        newLeft += deltaPos.xCoordinate;
+
+        if(newLeft >= 0 && newLeft <= _horizontalScroll.clientWidth-_horizThumb.clientWidth)
+        {
+            _horizThumb.style.left = newLeft.toString()+"px";
+            _horizThumbStartPoint = GetMousePointInElement(_horizontalScroll,e.clientX,e.clientY);
+            _scrollOffsetX = newLeft;
+            _scrollXDelta = deltaPos.xCoordinate;
+            OnHorizontalScroll();
+        }
+    }
+    
 }
 
 ///<summary>
@@ -183,6 +227,12 @@ _verticalScroll.onmouseup = function(e)
 {
     _verticalThumbMouseDown = false;
     _verticalThumbStartPoint = undefined;
+}
+
+_horizontalScroll.onmouseup = function(e)
+{
+    _horizthumbMouseDown = false;
+    _horizThumbStartPoint = undefined;
 }
 
 ///<summary>
@@ -306,8 +356,21 @@ function GetMousePointInElement(element,clientX,clientY)
 /// Clears the canvas of all elements at a specified offset
 ///</summary>
 function clearCanvas() {
-    _drawContext.clearRect(0, 0, _canvas.width, _canvas.height);
+    _drawContext.clearRect(_scrollOffsetX,_scrollOffsetY, _canvas.width, _canvas.height);
 }
 
+function OnHorizontalScroll()
+{
+    _drawContext.translate(-_scrollXDelta, 0);
+    clearCanvas();
+    RefreshRectangles();
+}
+
+function OnVerticalScroll()
+{
+     _drawContext.translate(0, -_scrollYDelta);
+    clearCanvas();
+    RefreshRectangles();
+}
 
 
