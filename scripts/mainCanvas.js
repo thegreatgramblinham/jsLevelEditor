@@ -20,6 +20,7 @@ var _scrollOffsetX = 0;
 var _scrollOffsetY = 0;
 var _scrollXDelta = 0;
 var _scrollYDelta = 0;
+var _prevScrollOffsetY = 0;
 
 
 _canvas.width = _canvas.offsetWidth;
@@ -27,7 +28,9 @@ _canvas.height = _canvas.offsetHeight;
 _verticalScroll.style.height = "100%";
 _verticalScroll.style.width = 25;
 _verticalThumb.style.top="0px";
+_verticalThumb.style.cursor = "n-resize";
 _horizThumb.style.left = "0px";
+_horizThumb.style.cursor= "w-resize";
 _horizontalScroll.style.height = 25;
 _widthInputBox.value = _canvas.width;
 _heightInputBox.value = _canvas.height;
@@ -64,11 +67,10 @@ _canvas.onmousedown = function(e)
 
 _canvas.onmousemove = function(e)
 {
+    clearCanvas();
+    RefreshRectangles();
     if(_mouseDown && _downPoint != undefined)
     {
-        clearCanvas();
-        RefreshRectangles();
-        
         var currPoint = GetMousePointInElement(_canvas,e.clientX, e.clientY);
         
         var rectX = Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
@@ -87,6 +89,14 @@ _canvas.onmousemove = function(e)
         
         _currentRectangle = new Rectangle(rectX, rectY,width,height,_rectangles.length.toString());
     }
+    var locPoint = GetMousePointInElement(_canvas, e.clientX, e.clientY);
+    var worldPoint = new point(locPoint.xCoordinate+_scrollOffsetX, locPoint.yCoordinate+_scrollOffsetY);
+    var locationText = "(" + worldPoint.xCoordinate +","+worldPoint.yCoordinate+")";
+    _drawContext.beginPath();
+    _drawContext.font = "16px Arial";
+    _drawContext.fillStyle = "black";
+    _drawContext.fillText(locationText,worldPoint.xCoordinate, worldPoint.yCoordinate);
+    _drawContext.closePath();
 };
 
 _canvas.onmouseup = function(e)
@@ -180,13 +190,22 @@ _verticalScroll.onmousemove = function(e)
         
         //If the top value calculated is inclusive in the range of 0 to the max top offset
         //we can go ahead and set the top Value, then update our start point for the next iteration of the function
-        if(newTop >= 0 && newTop <= _verticalScroll.clientHeight-_verticalThumb.clientHeight)
+        var maxOffset =  _verticalScroll.clientHeight-_verticalThumb.clientHeight;
+        if(newTop >= 0 && newTop <= maxOffset)
         {
+            //get the percentage scrolled as the newTop offset divided by the maximum offset
+            var scrollPercent = Number(((newTop/maxOffset).toFixed(2)));
             _verticalThumb.style.top = newTop.toString()+"px";
             _verticalThumbStartPoint = GetMousePointInElement(_verticalScroll,e.clientX,e.clientY);
-            _scrollOffsetY = newTop;
-            _scrollYDelta = deltaPos.yCoordinate;
+            //get the scroll offset as a percentage of the difference between the level height and the viewport (canvas height)
+                //this is done because we need to take into account that the canvas is displaying a part of the level
+            _scrollOffsetY = (scrollPercent*(_heightInputBox.value-_canvas.height));
+            //The delta (how much we translate the canvas by) is the difference between our current offset
+            //and the one of the previous iteration
+            _scrollYDelta = _scrollOffsetY - _prevScrollOffsetY;
+            //scroll the canvas
             OnVerticalScroll();
+            _prevScrollOffsetY = _scrollOffsetY;
         }
     }
 }
@@ -212,7 +231,7 @@ _horizontalScroll.onmousemove = function(e)
         {
             _horizThumb.style.left = newLeft.toString()+"px";
             _horizThumbStartPoint = GetMousePointInElement(_horizontalScroll,e.clientX,e.clientY);
-            _scrollOffsetX = newLeft;
+            _scrollOffsetX += deltaPos.xCoordinate;
             _scrollXDelta = deltaPos.xCoordinate;
             OnHorizontalScroll();
         }
