@@ -22,6 +22,8 @@ var _scrollXDelta = 0;
 var _scrollYDelta = 0;
 var _prevScrollOffsetY = 0;
 var _prevScrollOffsetX = 0;
+const _minThumbWidth = 15;
+const _minThumbHeight = 15;
 
 
 _canvas.width = _canvas.offsetWidth;
@@ -279,7 +281,17 @@ function UpdateVerticalScrollVisual()
             _verticalScroll.style.display = "inline-block";
             _verticalScrollVisible = true;
         }
-       _verticalThumb.style.height = levelHeightPercentage*_verticalScroll.clientHeight;
+        var proposedHeight = levelHeightPercentage*_verticalScroll.clientHeight;
+        
+        if(proposedHeight >= _minThumbHeight)
+        {
+            _verticalThumb.style.height = proposedHeight; 
+        }
+        else
+        {
+            _verticalThumb.style.height = _minThumbHeight;
+        }
+
        
     }
     else
@@ -306,7 +318,16 @@ function UpdateHorizontalScrollVisual()
             _horizontalScroll.style.display = "";
             _horizScrollVisible = true;
         }
-        _horizThumb.style.width = levelWidthPercentage*_horizontalScroll.clientWidth;
+        var proposedWidth = levelWidthPercentage * _horizontalScroll.clientWidth;
+        if(proposedWidth >= _minThumbWidth)
+        {
+            _horizThumb.style.width = proposedWidth;
+        }
+        e;se
+        {
+            _horizThumb.style.width = _minThumbWidth;
+        }
+
     }
     else
     {
