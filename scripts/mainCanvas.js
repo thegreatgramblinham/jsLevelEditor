@@ -94,7 +94,7 @@ _canvas.onmousemove = function(e)
     }
     var locPoint = GetMousePointInElement(_canvas, e.clientX, e.clientY);
     var worldPoint = new point(locPoint.xCoordinate+_scrollOffsetX, locPoint.yCoordinate+_scrollOffsetY);
-    var locationText = "(" + worldPoint.xCoordinate +","+worldPoint.yCoordinate+")";
+    var locationText = "(" + worldPoint.xCoordinate.toFixed(0) +","+worldPoint.yCoordinate.toFixed(0)+")";
     _drawContext.beginPath();
     _drawContext.font = "16px Arial";
     _drawContext.fillStyle = "black";
@@ -118,6 +118,12 @@ _canvas.onmouseup = function(e)
     
 };
 
+window.onresize = function(e)
+{
+    _canvas.width = _canvas.offsetWidth;
+    _canvas.height = _canvas.offsetHeight;
+    RefreshRectangles();
+}
 ///<summary>
 ///Method to redraw all current rectangles on the screen
 ///</summary>
