@@ -68,10 +68,12 @@ var filesInGlobalBuild =
 [
     //IMPORT FILE
     "/scripts/build/imports.js",
+    //ENUMS
+    "/scripts/enums.js", 
     //GLOBAL VARABLES
     "/scripts/build/globalVariables.js",
     //CLASSES
-    "/scripts/rectangle.js",
+    "/scripts/classes/rectangle.js",
     "/scripts/classes/imageRectangle.js",
     "/scripts/imageLoading/imageBrush.js",
     //END CLASSES

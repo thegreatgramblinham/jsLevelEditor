@@ -3,3 +3,4 @@
 
 //Variables
 var CurrentImageBrush = undefined; //Holds the current ImageBrush after a button is selected.
+var SelectedRectangle = undefined; //Holds the currently selected rectangle.
