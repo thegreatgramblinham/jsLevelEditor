@@ -68,15 +68,18 @@ var filesInGlobalBuild =
 [
     //IMPORT FILE
     "/scripts/build/imports.js",
+    //ENUMS
+    "/scripts/enums.js", 
     //GLOBAL VARABLES
     "/scripts/build/globalVariables.js",
     //CLASSES
-    "/scripts/rectangle.js",
+    "/scripts/classes/rectangle.js",
     "/scripts/classes/imageRectangle.js",
     "/scripts/imageLoading/imageBrush.js",
     //END CLASSES
     //START EVENT HANDLERS
     "/scripts/mainCanvas.js",
+    "/scripts/buttons/imageButtonEvents.js",
     "/scripts/buttons/importExportButtonEvents.js",
     //END EVENT HANDLERS
     //START ENGINE FILES
