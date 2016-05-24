@@ -76,6 +76,8 @@ var filesInGlobalBuild =
     "/scripts/classes/rectangle.js",
     "/scripts/classes/imageRectangle.js",
     "/scripts/imageLoading/imageBrush.js",
+    "/scripts/classes/overlay.js",
+    "/scripts/classes/rectResizeOverlay.js",
     //END CLASSES
     //START EVENT HANDLERS
     "/scripts/mainCanvas.js",

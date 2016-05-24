@@ -23,6 +23,7 @@ var _scrollXDelta = 0;
 var _scrollYDelta = 0;
 var _prevScrollOffsetY = 0;
 var _prevScrollOffsetX = 0;
+var _selectedRectOverlay = undefined;
 const _minThumbWidth = 15;
 const _minThumbHeight = 15;
 
@@ -61,6 +62,11 @@ _canvas.onmousedown = function(e)
     {
         _mouseDown = true;
         _downPoint = GetMousePointInElement(_canvas,e.clientX,e.clientY);
+        if(CanvasMode == UIMode.Modify)
+        {
+            var hitPoint = new point(_downPoint.xCoordinate + _scrollOffsetX, _downPoint.yCoordinate + _scrollOffsetY);
+            DetectRectangleHit(hitPoint);
+        }
     }
     else
     {
@@ -79,21 +85,24 @@ _canvas.onmousemove = function(e)
         
         if(!_ctrlPressed)
         {
-            var rectX = Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
-            var rectY =  Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
+            if(CanvasMode == UIMode.Add)
+            {
+                var rectX = Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
+                var rectY =  Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
 
-            var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
-            var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
+                var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
+                var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
 
 
-            _drawContext.beginPath();
-            _drawContext.setLineDash([3,4])
-            _drawContext.strokeStyle = "#D1A147"
-            _drawContext.rect(rectX, rectY,width,height, 1);
-            _drawContext.stroke();
-            _drawContext.closePath();
+                _drawContext.beginPath();
+                _drawContext.setLineDash([3,4])
+                _drawContext.strokeStyle = "#D1A147"
+                _drawContext.rect(rectX, rectY,width,height, 1);
+                _drawContext.stroke();
+                _drawContext.closePath();
 
-            _currentRectangle = new Rectangle(rectX, rectY,width,height,_rectangles.length.toString());
+                _currentRectangle = new Rectangle(rectX, rectY,width,height,_rectangles.length.toString());
+            }
         }
         else
         {
@@ -178,6 +187,11 @@ function RefreshRectangles()
         _drawContext.fillStyle="#4FD921";
         _drawContext.fillRect(refreshRect.XLocation,refreshRect.YLocation, refreshRect.Width,refreshRect.Height);
         _drawContext.closePath();
+    }
+    
+    if(_selectedRectOverlay != undefined && SelectedRectangle != undefined)
+    {
+        _selectedRectOverlay.RenderOverlay(_drawContext);
     }
 }
 
@@ -425,6 +439,54 @@ function IsValidRectangle(rect)
     
     return true;
     
+}
+
+function DetectRectangleHit(hitPoint)
+{
+    var rectHit = false;
+    var i = 0;
+    for(i = 0; i <_rectangles.length; i++)
+    {
+        if(CheckPointWithinRectBounds(hitPoint,_rectangles[i]))
+        {
+            rectHit = true;
+            if(_rectangles[i] != SelectedRectangle)
+            {
+                AddResizeOverlay(_rectangles[i]);
+                SelectedRectangle = _rectangles[i];
+            }            
+        }
+    }
+    
+    if(!rectHit)
+    {
+        SelectedRectangle = undefined;
+        _selectedRectOverlay = undefined;
+    }
+}
+
+function CheckPointWithinRectBounds(point,rectangle)
+{
+    var top = rectangle.YLocation;
+    var left = rectangle.XLocation;
+    var bottom = top + rectangle.Height;
+    var right = left + rectangle.Width;
+    
+    if(point.xCoordinate >= left && point.xCoordinate <= right)
+    {
+        if(point.yCoordinate >= top && point.yCoordinate <= bottom)
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+function AddResizeOverlay(rectangle)
+{
+    _selectedRectOverlay = new RectResizeOverlay(rectangle);
+    _selectedRectOverlay.RenderOverlay(_drawContext);
 }
     
 ///<summary>
