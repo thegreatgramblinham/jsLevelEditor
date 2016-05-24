@@ -101,13 +101,13 @@ _canvas.onmousemove = function(e)
             
             if(_horizScrollVisible)
             {
-                var deltaX = Number((delta.xCoordinate));
+                var deltaX = delta.xCoordinate*-1;
                 MoveHorizontalThumb(deltaX)
             }
             
             if(_verticalScrollVisible)
             {
-                var deltaY = Number((delta.yCoordinate));
+                var deltaY = delta.yCoordinate*-1;
                 MoveVerticalThumb(deltaY);
             }
             _downPoint = currPoint;
