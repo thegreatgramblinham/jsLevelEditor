@@ -8,6 +8,7 @@ var _verticalThumb = document.getElementById("vThumb");
 var _horizThumb = document.getElementById("hThumb");
 var _drawContext = _canvas.getContext("2d");
 var _mouseDown = false;
+var _ctrlPressed = false;
 var _downPoint = undefined;
 
 var _verticalThumbStartPoint = 0;
@@ -76,21 +77,42 @@ _canvas.onmousemove = function(e)
     {
         var currPoint = GetMousePointInElement(_canvas,e.clientX, e.clientY);
         
-        var rectX = Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
-        var rectY =  Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
+        if(!_ctrlPressed)
+        {
+            var rectX = Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
+            var rectY =  Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
+
+            var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
+            var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
+
+
+            _drawContext.beginPath();
+            _drawContext.setLineDash([3,4])
+            _drawContext.strokeStyle = "#D1A147"
+            _drawContext.rect(rectX, rectY,width,height, 1);
+            _drawContext.stroke();
+            _drawContext.closePath();
+
+            _currentRectangle = new Rectangle(rectX, rectY,width,height,_rectangles.length.toString());
+        }
+        else
+        {
+            var delta = new point(currPoint.xCoordinate - _downPoint.xCoordinate, currPoint.yCoordinate - _downPoint.yCoordinate);
+            
+            if(_horizScrollVisible)
+            {
+                var deltaX = delta.xCoordinate*-1;
+                MoveHorizontalThumb(deltaX)
+            }
+            
+            if(_verticalScrollVisible)
+            {
+                var deltaY = delta.yCoordinate*-1;
+                MoveVerticalThumb(deltaY);
+            }
+            _downPoint = currPoint;
+        }
         
-        var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
-        var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
-        
-        
-        _drawContext.beginPath();
-        _drawContext.setLineDash([3,4])
-        _drawContext.strokeStyle = "#D1A147"
-        _drawContext.rect(rectX, rectY,width,height, 1);
-        _drawContext.stroke();
-        _drawContext.closePath();
-        
-        _currentRectangle = new Rectangle(rectX, rectY,width,height,_rectangles.length.toString());
     }
     var locPoint = GetMousePointInElement(_canvas, e.clientX, e.clientY);
     var worldPoint = new point(locPoint.xCoordinate+_scrollOffsetX, locPoint.yCoordinate+_scrollOffsetY);
@@ -118,12 +140,31 @@ _canvas.onmouseup = function(e)
     
 };
 
+//Window events
 window.onresize = function(e)
 {
     _canvas.width = _canvas.offsetWidth;
     _canvas.height = _canvas.offsetHeight;
     RefreshRectangles();
+    UpdateScrollThumbs();
 }
+
+window.onkeydown = function(e)
+{
+    if(e.keyCode == "17")
+    {
+     _ctrlPressed = true;
+    }
+}
+
+window.onkeyup = function(e)
+{
+    if(e.keyCode == "17")
+    {
+        _ctrlPressed = false;
+    }
+}
+
 ///<summary>
 ///Method to redraw all current rectangles on the screen
 ///</summary>
@@ -186,7 +227,14 @@ _verticalScroll.onmousemove = function(e)
         var currentPoint = GetMousePointInElement(_verticalScroll,e.clientX,e.clientY);
         //get the delta position - the difference between the current mouse pointand the thumb start point
         var deltaPos = new point(0, currentPoint.yCoordinate - _verticalThumbStartPoint.yCoordinate);
-        //get the current 'style top' value
+        MoveVerticalThumb(deltaPos.yCoordinate);
+        _verticalThumbStartPoint = GetMousePointInElement(_verticalScroll,e.clientX,e.clientY);
+    }
+}
+
+function MoveVerticalThumb(deltaY)
+{
+     //get the current 'style top' value
             //NOTE: this is the y value of the vertical thumb within the entire window, not necessarily within the scrollbar itself
         var currentTop = _verticalThumb.style.top;
         //set up a variable for the new top value
@@ -195,7 +243,7 @@ _verticalScroll.onmousemove = function(e)
         //hence the substring operation to remove the "px" before converting to a number
         newTop = Number(currentTop.substr(0,currentTop.length-2));
         //add the delta y to the top value 
-        newTop += deltaPos.yCoordinate;
+        newTop += deltaY;
         
         //If the top value calculated is inclusive in the range of 0 to the max top offset
         //we can go ahead and set the top Value, then update our start point for the next iteration of the function
@@ -205,7 +253,6 @@ _verticalScroll.onmousemove = function(e)
             //get the percentage scrolled as the newTop offset divided by the maximum offset
             var scrollPercent = Number(((newTop/maxOffset).toFixed(2)));
             _verticalThumb.style.top = newTop.toString()+"px";
-            _verticalThumbStartPoint = GetMousePointInElement(_verticalScroll,e.clientX,e.clientY);
             //get the scroll offset as a percentage of the difference between the level height and the viewport (canvas height)
                 //this is done because we need to take into account that the canvas is displaying a part of the level
             _scrollOffsetY = (scrollPercent*(_heightInputBox.value-_canvas.height));
@@ -216,7 +263,6 @@ _verticalScroll.onmousemove = function(e)
             OnVerticalScroll();
             _prevScrollOffsetY = _scrollOffsetY;
         }
-    }
 }
 
 _horizontalScroll.onmousemove = function(e)
@@ -227,27 +273,32 @@ _horizontalScroll.onmousemove = function(e)
         var currentPoint = GetMousePointInElement(_horizontalScroll,e.clientX,e.clientY);
         //get the delta position - the difference between the current mouse pointand the thumb start point
         var deltaPos = new point(currentPoint.xCoordinate - _horizThumbStartPoint.xCoordinate, 0);
-        //get the current 'style left' value
-            //NOTE: this is the x value of the horizontal thumb within the entire window, not necessarily within the scrollbar itself
-        var currentLeft = _horizThumb.style.left;
-        //set up a variable for the new top value
-        var newLeft = 0;
-
-        newLeft = Number(currentLeft.substr(0,currentLeft.length-2));
-        newLeft += deltaPos.xCoordinate;
-        var maxOffset = _horizontalScroll.clientWidth-_horizThumb.clientWidth;
-        if(newLeft >= 0 && newLeft <= maxOffset)
-        {
-            var scrollPercent = Number(((newLeft/maxOffset).toFixed(2)));
-            _horizThumb.style.left = newLeft.toString()+"px";
-            _horizThumbStartPoint = GetMousePointInElement(_horizontalScroll,e.clientX,e.clientY);
-            _scrollOffsetX = (scrollPercent*(_widthInputBox.value-_canvas.width));
-            _scrollXDelta = _scrollOffsetX - _prevScrollOffsetX;
-            OnHorizontalScroll();
-            _prevScrollOffsetX = _scrollOffsetX;
-        }
+        MoveHorizontalThumb(deltaPos.xCoordinate);
+        _horizThumbStartPoint = GetMousePointInElement(_horizontalScroll,e.clientX,e.clientY);
     }
     
+}
+
+function MoveHorizontalThumb(deltaX)
+{
+    //get the current 'style left' value
+        //NOTE: this is the x value of the horizontal thumb within the entire window, not necessarily within the scrollbar itself
+    var currentLeft = _horizThumb.style.left;
+    //set up a variable for the new top value
+    var newLeft = 0;
+
+    newLeft = Number(currentLeft.substr(0,currentLeft.length-2));
+    newLeft += deltaX;
+    var maxOffset = _horizontalScroll.clientWidth-_horizThumb.clientWidth;
+    if(newLeft >= 0 && newLeft <= maxOffset)
+    {
+        var scrollPercent = Number(((newLeft/maxOffset).toFixed(2)));
+        _horizThumb.style.left = newLeft.toString()+"px";
+        _scrollOffsetX = (scrollPercent*(_widthInputBox.value-_canvas.width));
+        _scrollXDelta = _scrollOffsetX - _prevScrollOffsetX;
+        OnHorizontalScroll();
+        _prevScrollOffsetX = _scrollOffsetX;
+    }
 }
 
 ///<summary>
@@ -329,7 +380,7 @@ function UpdateHorizontalScrollVisual()
         {
             _horizThumb.style.width = proposedWidth;
         }
-        e;se
+        else
         {
             _horizThumb.style.width = _minThumbWidth;
         }
