@@ -1,3 +1,5 @@
+//This file is for events related to the file management buttons (load/save)
+
 //Methods
 openFolderButton.onclick = function(event) 
 {
@@ -41,8 +43,3 @@ openLevelButton.onclick = function(event)
     );
 }
 
-function ImageButtonOnClick(imageIndex)
-{
-    CurrentImageBrush = new ImageBrush(ImageCache[imageIndex].src);
-    console.log("Set image brush to: "+ImageCache[imageIndex].src);
-}
