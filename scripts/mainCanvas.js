@@ -23,6 +23,8 @@ var _scrollXDelta = 0;
 var _scrollYDelta = 0;
 var _prevScrollOffsetY = 0;
 var _prevScrollOffsetX = 0;
+var _levelWidth = 0;
+var _levelHeight = 0;
 var _selectedRectOverlay = undefined;
 const _minThumbWidth = 15;
 const _minThumbHeight = 15;
@@ -39,6 +41,8 @@ _horizThumb.style.cursor= "w-resize";
 _horizontalScroll.style.height = 25;
 _widthInputBox.value = _canvas.width;
 _heightInputBox.value = _canvas.height;
+_levelWidth = _canvas.width;
+_levelHeight = _canvas.height;
 
 //Rectangle Collection
 var _rectangles = [];
@@ -99,7 +103,7 @@ _canvas.onmousemove = function(e)
             {
                 if(_selectedRectOverlay != undefined)
                 {
-                    _selectedRectOverlay.OverlayMouseMove(currPoint.xCoordinate+_scrollOffsetX, currPoint.yCoordinate+_scrollOffsetY);
+                    _selectedRectOverlay.OverlayMouseMove(currPoint.xCoordinate+_scrollOffsetX, currPoint.yCoordinate+_scrollOffsetY, _levelWidth, _levelHeight);
                     _selectedRectOverlay.DrawRectCoords(_drawContext);
                 }
             }
@@ -154,6 +158,18 @@ window.onresize = function(e)
 {
     _canvas.width = _canvas.offsetWidth;
     _canvas.height = _canvas.offsetHeight;
+    if(_levelHeight < _canvas.height)
+    {
+        _heightInputBox.value = _canvas.height;
+        _levelHeight = _canvas.height;
+    }
+    
+    if(_levelWidth < _canvas.width)
+    {
+        _widthInputBox.value = _canvas.width;
+        _levelWidth = _canvas.width;
+    }
+    
     RefreshRectangles();
     UpdateScrollThumbs();
 }
@@ -199,11 +215,13 @@ function RefreshRectangles()
 _widthInputBox.onchange = function(e)
 {
     UpdateHorizontalScrollVisual();
+    _levelWidth = _widthInputBox.value;
 }
 
 _heightInputBox.onchange = function(e)
 {
     UpdateVerticalScrollVisual();
+    _levelHeight = _heightInputBox.value;
 }
 
 //Scroll Handling

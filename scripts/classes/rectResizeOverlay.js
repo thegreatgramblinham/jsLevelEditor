@@ -70,7 +70,7 @@ class RectResizeOverlay extends Overlay
         }
     }
     
-    OverlayMouseMove(clientX,clientY)
+    OverlayMouseMove(clientX,clientY,maxX,maxY)
     {
         if(this.thumbHit && this.currentThumb != undefined)
         {   
@@ -79,11 +79,19 @@ class RectResizeOverlay extends Overlay
                 var delta = new point((clientX-this.centerThumb.centerX),(clientY-this.centerThumb.centerY));
                 var xLoc = this.element.XLocation;
                 xLoc += delta.xCoordinate;
-                this.element.XLocation = xLoc;
-                
                 var yLoc = this.element.YLocation;
                 yLoc += delta.yCoordinate;
-                this.element.YLocation = yLoc;
+                
+                if(xLoc >= 0 && (xLoc + this.element.Width) <= maxX)
+                {
+                    this.element.XLocation = xLoc;
+                }
+                
+                if(yLoc>= 0 && (yLoc+this.element.Height)<=maxY)
+                {
+                    this.element.YLocation = yLoc;
+                }
+
                 
                 var newCenterX = this.element.XLocation + (this.element.Width/2);
                 var newCenterY = this.element.YLocation + (this.element.Height/2);
