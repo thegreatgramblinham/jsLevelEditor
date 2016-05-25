@@ -115,6 +115,16 @@ class RectResizeOverlay extends Overlay
         }
     }
     
+    DrawRectCoords(drawCtx)
+    {
+        var locationText = "(" + this.element.XLocation.toFixed(0) +","+this.element.YLocation.toFixed(0)+")";
+        drawCtx.beginPath();
+        drawCtx.font = "16px Arial";
+        drawCtx.fillStyle = "DarkSlateGray";
+        drawCtx.fillText(locationText,this.element.XLocation-30, this.element.YLocation-20);
+        drawCtx.closePath();
+    }
+    
     CheckThumbBounds(hitX,hitY)
     {
         if(this.CheckHitThumb(hitX,hitY,this.centerThumb))
