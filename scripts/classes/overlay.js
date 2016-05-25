@@ -7,11 +7,11 @@ class Overlay
     
     RenderOverlay(drawingCtx){}
     
-    OverlayMouseDown(button){}
+    OverlayMouseDown(button, clientX, clientY){}
     
     OverlayMouseUp(button){}
     
-    OverlayMouseMove(){}
+    OverlayMouseMove(clientX, clientY){}
     
     OverlayKeyDown(key){}
     

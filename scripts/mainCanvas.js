@@ -47,14 +47,6 @@ var _currentRectangle = undefined;
 //Update the scrollbars on window load, they may not need to be visible
 UpdateScrollThumbs();
 
-//Internal use Point object
-//We may want to make a class file for this later
-function point(x,y)
-{
-    this.xCoordinate = x;
-    this.yCoordinate = y;
-}
-
 //Canvas Events
 _canvas.onmousedown = function(e)
 {
@@ -102,6 +94,14 @@ _canvas.onmousemove = function(e)
                 _drawContext.closePath();
 
                 _currentRectangle = new Rectangle(rectX, rectY,width,height,_rectangles.length.toString());
+            }
+            else if(CanvasMode == UIMode.Modify)
+            {
+                if(_selectedRectOverlay != undefined)
+                {
+                    _selectedRectOverlay.OverlayMouseMove(currPoint.xCoordinate+_scrollOffsetX, currPoint.yCoordinate+_scrollOffsetY);
+                    _downPoint = currPoint;
+                }
             }
         }
         else
@@ -454,7 +454,11 @@ function DetectRectangleHit(hitPoint)
             {
                 AddResizeOverlay(_rectangles[i]);
                 SelectedRectangle = _rectangles[i];
-            }            
+            }
+            else
+            {
+                _selectedRectOverlay.OverlayMouseDown(0,hitPoint.xCoordinate, hitPoint.yCoordinate);
+            }
         }
     }
     
