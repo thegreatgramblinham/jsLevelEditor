@@ -23,6 +23,9 @@ var _scrollXDelta = 0;
 var _scrollYDelta = 0;
 var _prevScrollOffsetY = 0;
 var _prevScrollOffsetX = 0;
+var _levelWidth = 0;
+var _levelHeight = 0;
+var _selectedRectOverlay = undefined;
 const _minThumbWidth = 15;
 const _minThumbHeight = 15;
 
@@ -38,6 +41,8 @@ _horizThumb.style.cursor= "w-resize";
 _horizontalScroll.style.height = 25;
 _widthInputBox.value = _canvas.width;
 _heightInputBox.value = _canvas.height;
+_levelWidth = _canvas.width;
+_levelHeight = _canvas.height;
 
 //Rectangle Collection
 var _rectangles = [];
@@ -46,14 +51,6 @@ var _currentRectangle = undefined;
 //Update the scrollbars on window load, they may not need to be visible
 UpdateScrollThumbs();
 
-//Internal use Point object
-//We may want to make a class file for this later
-function point(x,y)
-{
-    this.xCoordinate = x;
-    this.yCoordinate = y;
-}
-
 //Canvas Events
 _canvas.onmousedown = function(e)
 {
@@ -61,6 +58,11 @@ _canvas.onmousedown = function(e)
     {
         _mouseDown = true;
         _downPoint = GetMousePointInElement(_canvas,e.clientX,e.clientY);
+        if(CanvasMode == UIMode.Modify)
+        {
+            var hitPoint = new point(_downPoint.xCoordinate + _scrollOffsetX, _downPoint.yCoordinate + _scrollOffsetY);
+            DetectRectangleHit(hitPoint);
+        }
     }
     else
     {
@@ -79,21 +81,32 @@ _canvas.onmousemove = function(e)
         
         if(!_ctrlPressed)
         {
-            var rectX = Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
-            var rectY =  Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
+            if(CanvasMode == UIMode.Add)
+            {
+                var rectX = Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
+                var rectY =  Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
 
-            var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
-            var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
+                var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
+                var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
 
 
-            _drawContext.beginPath();
-            _drawContext.setLineDash([3,4])
-            _drawContext.strokeStyle = "#D1A147"
-            _drawContext.rect(rectX, rectY,width,height, 1);
-            _drawContext.stroke();
-            _drawContext.closePath();
+                _drawContext.beginPath();
+                _drawContext.setLineDash([3,4])
+                _drawContext.strokeStyle = "#D1A147"
+                _drawContext.rect(rectX, rectY,width,height, 1);
+                _drawContext.stroke();
+                _drawContext.closePath();
 
-            _currentRectangle = new Rectangle(rectX, rectY,width,height,_rectangles.length.toString());
+                _currentRectangle = new Rectangle(rectX, rectY,width,height,_rectangles.length.toString());
+            }
+            else if(CanvasMode == UIMode.Modify)
+            {
+                if(_selectedRectOverlay != undefined)
+                {
+                    _selectedRectOverlay.OverlayMouseMove(currPoint.xCoordinate+_scrollOffsetX, currPoint.yCoordinate+_scrollOffsetY, _levelWidth, _levelHeight);
+                    _selectedRectOverlay.DrawRectCoords(_drawContext);
+                }
+            }
         }
         else
         {
@@ -144,7 +157,7 @@ _canvas.onmouseup = function(e)
 window.onresize = function(e)
 {
     _canvas.width = _canvas.offsetWidth;
-    _canvas.height = _canvas.offsetHeight;
+    _canvas.height = _canvas.offsetHeight;    
     RefreshRectangles();
     UpdateScrollThumbs();
 }
@@ -179,17 +192,24 @@ function RefreshRectangles()
         _drawContext.fillRect(refreshRect.XLocation,refreshRect.YLocation, refreshRect.Width,refreshRect.Height);
         _drawContext.closePath();
     }
+    
+    if(_selectedRectOverlay != undefined && SelectedRectangle != undefined)
+    {
+        _selectedRectOverlay.RenderOverlay(_drawContext);
+    }
 }
 
 //Input Events
 _widthInputBox.onchange = function(e)
 {
     UpdateHorizontalScrollVisual();
+    _levelWidth = _widthInputBox.value;
 }
 
 _heightInputBox.onchange = function(e)
 {
     UpdateVerticalScrollVisual();
+    _levelHeight = _heightInputBox.value;
 }
 
 //Scroll Handling
@@ -425,6 +445,58 @@ function IsValidRectangle(rect)
     
     return true;
     
+}
+
+function DetectRectangleHit(hitPoint)
+{
+    var rectHit = false;
+    var i = 0;
+    for(i = 0; i <_rectangles.length; i++)
+    {
+        if(CheckPointWithinRectBounds(hitPoint,_rectangles[i]))
+        {
+            rectHit = true;
+            if(_rectangles[i] != SelectedRectangle)
+            {
+                AddResizeOverlay(_rectangles[i]);
+                SelectedRectangle = _rectangles[i];
+            }
+            else
+            {
+                _selectedRectOverlay.OverlayMouseDown(0,hitPoint.xCoordinate, hitPoint.yCoordinate);
+            }
+        }
+    }
+    
+    if(!rectHit)
+    {
+        SelectedRectangle = undefined;
+        _selectedRectOverlay = undefined;
+    }
+}
+
+function CheckPointWithinRectBounds(point,rectangle)
+{
+    var top = rectangle.YLocation;
+    var left = rectangle.XLocation;
+    var bottom = top + rectangle.Height;
+    var right = left + rectangle.Width;
+    
+    if(point.xCoordinate >= left && point.xCoordinate <= right)
+    {
+        if(point.yCoordinate >= top && point.yCoordinate <= bottom)
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+function AddResizeOverlay(rectangle)
+{
+    _selectedRectOverlay = new RectResizeOverlay(rectangle);
+    _selectedRectOverlay.RenderOverlay(_drawContext);
 }
     
 ///<summary>
