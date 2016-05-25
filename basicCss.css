@@ -43,8 +43,10 @@ td.buttonMenuCell {
 
 td.globalPropertyCell {
     width: 5%;
-    height: 100%;
-    float: left;
+    height: 30px;
+    vertical-align: top;
+    padding-left: 5;
+    float: inherit;
 }
 
 span.propertyItem {
