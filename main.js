@@ -69,13 +69,17 @@ var filesInGlobalBuild =
     //IMPORT FILE
     "/scripts/build/imports.js",
     //ENUMS
-    "/scripts/enums.js", 
+    "/scripts/enums.js",
+    //UTILS
+    "/scripts/utils.js",
     //GLOBAL VARABLES
     "/scripts/build/globalVariables.js",
     //CLASSES
     "/scripts/classes/rectangle.js",
     "/scripts/classes/imageRectangle.js",
     "/scripts/imageLoading/imageBrush.js",
+    "/scripts/classes/overlay.js",
+    "/scripts/classes/rectResizeOverlay.js",
     //END CLASSES
     //START EVENT HANDLERS
     "/scripts/mainCanvas.js",
