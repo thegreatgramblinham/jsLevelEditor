@@ -11,7 +11,6 @@ class RectResizeOverlay extends Overlay
         this.centerThumb = undefined;
         this.thumbHit = false;
         this.currentThumb = undefined;
-        this.hitPoint = undefined;
     }
 
     RenderOverlay(drawingCtx)
@@ -68,55 +67,51 @@ class RectResizeOverlay extends Overlay
         if(button == 0)
         {
             this.CheckThumbBounds(clientX,clientY);
-            if(this.thumbHit)
-            {
-                this.hitPoint = [clientX,clientY];
-            }
         }
     }
     
     OverlayMouseMove(clientX,clientY)
     {
         if(this.thumbHit && this.currentThumb != undefined)
-        {
-            var delta = [(clientX-this.hitPoint[0]),(clientY-this.hitPoint[1])];
-            
+        {   
             if(this.CheckThumbEquality(this.currentThumb,this.centerThumb))
             {
+                var delta = new point((clientX-this.centerThumb.centerX),(clientY-this.centerThumb.centerY));
                 var xLoc = this.element.XLocation;
-                xLoc += delta[0];
+                xLoc += delta.xCoordinate;
                 this.element.XLocation = xLoc;
                 
                 var yLoc = this.element.YLocation;
-                yLoc += delta[1];
+                yLoc += delta.yCoordinate;
                 this.element.YLocation = yLoc;
                 
-                this.hitPoint = [clientX,clientY];
-                
                 var newCenterX = this.element.XLocation + (this.element.Width/2);
-                var newCenterY = this.element.YLocaiton + (this.element.Height/2);
+                var newCenterY = this.element.YLocation + (this.element.Height/2);
                 this.currentThumb = new resizeThumb(newCenterX,newCenterY,10);
+                return;
             }
             
-            if(this.currentThumb == this.topLeftThumb)
+            if(this.currentThumb === this.topLeftThumb)
             {
-                
+                return;
             }
             
             if(this.currentThumb == this.bottomLeftThumb)
             {
-                
+                return;
             }
             
             if(this.currentThumb == this.bottomRightThumb)
             {
-                
+                return;
             }
             
             if(this.currentThumb == this.topRightThumb)
             {
-                
+                return;
             }
+            console.log("thumb not found");
+            return;
         }
     }
     

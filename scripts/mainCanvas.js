@@ -100,7 +100,6 @@ _canvas.onmousemove = function(e)
                 if(_selectedRectOverlay != undefined)
                 {
                     _selectedRectOverlay.OverlayMouseMove(currPoint.xCoordinate+_scrollOffsetX, currPoint.yCoordinate+_scrollOffsetY);
-                    _downPoint = currPoint;
                 }
             }
         }
