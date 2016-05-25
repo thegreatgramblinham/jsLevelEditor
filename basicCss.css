@@ -49,6 +49,12 @@ td.globalPropertyCell {
     float: inherit;
 }
 
+td.propertyMenuCell {
+    float: left;
+    height: 100%;
+    width: 12%;
+}
+
 span.propertyItem {
     font-size: 10px;
     font-family: monospace;
