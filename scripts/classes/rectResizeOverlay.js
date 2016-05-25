@@ -99,26 +99,106 @@ class RectResizeOverlay extends Overlay
                 return;
             }
             
-            if(this.currentThumb === this.topLeftThumb)
+            if(this.CheckThumbEquality(this.currentThumb,this.topLeftThumb))
             {
+                var delta = new point((clientX-this.topLeftThumb.centerX),(clientY-this.topLeftThumb.centerY));
+                var oldBottom = this.element.Height + this.element.YLocation;
+                var oldRight = this.element.Width + this.element.XLocation;
+                
+                var xLoc = this.element.XLocation + delta.xCoordinate;
+                var yLoc = this.element.YLocation + delta.yCoordinate;
+                
+                if(xLoc >= 0 && (xLoc + this.element.Width) <= maxX)
+                {
+                     this.element.XLocation = xLoc;
+                     this.element.Width = Math.abs(this.element.XLocation - oldRight);
+                }
+                
+                if(yLoc>= 0 && (yLoc+this.element.Height)<=maxY)
+                {
+                    this.element.YLocation = yLoc;
+                    this.element.Height = Math.abs(this.element.YLocation - oldBottom);
+                }
+                
+                var newTopLeftX = this.element.XLocation;
+                var newTopLeftY = this.element.YLocation;
+                this.currentThumb = new resizeThumb(newTopLeftX, newTopLeftY, 10);
                 return;
             }
             
-            if(this.currentThumb == this.bottomLeftThumb)
+            if(this.CheckThumbEquality(this.currentThumb,this.bottomLeftThumb))
             {
+                var delta = new point((clientX-this.bottomLeftThumb.centerX),(clientY-this.bottomLeftThumb.centerY));
+                var oldRight = this.element.Width + this.element.XLocation;
+                var xLoc = this.element.XLocation + delta.xCoordinate;
+                var newHeight = this.element.Height + delta.yCoordinate;
+                var proposedBottom = newHeight + this.element.YLocation;
+                
+                if(xLoc >= 0 && (xLoc + this.element.Width) <= maxX)
+                {
+                     this.element.XLocation = xLoc;
+                     this.element.Width = Math.abs(this.element.XLocation - oldRight);
+                }
+                
+                if(proposedBottom >= 0 && proposedBottom <= maxY)
+                {
+                    this.element.Height = newHeight;
+                }
+                
+                var actualBottom = this.element.YLocation + this.element.Height;
+                this.currentThumb = new resizeThumb(this.element.XLocation,actualBottom,10);
                 return;
             }
             
-            if(this.currentThumb == this.bottomRightThumb)
+            if(this.CheckThumbEquality(this.currentThumb, this.bottomRightThumb))
             {
+                var delta = new point((clientX-this.bottomRightThumb.centerX),(clientY-this.bottomRightThumb.centerY));
+                var newWidth = this.element.Width + delta.xCoordinate;
+                var newHeight = this.element.Height + delta.yCoordinate;
+                var proposedRight = this.element.XLocation + newWidth;
+                var proposedBottom = this.element.YLocation + newHeight;
+                
+                if(proposedRight >= 0 && proposedRight <= maxX)
+                {
+                    this.element.Width = newWidth;
+                }
+                
+                if(proposedBottom >= 0 && proposedBottom <= maxY)
+                {
+                    this.element.Height = newHeight;
+                }
+                
+                var actualRight = this.element.XLocation + this.element.Width;
+                var actualBottom = this.element.YLocation + this.element.Height;
+                this.currentThumb = new resizeThumb(actualRight, actualBottom, 10);
                 return;
             }
             
-            if(this.currentThumb == this.topRightThumb)
+            if(this.CheckThumbEquality(this.currentThumb, this.topRightThumb))
             {
+                var delta = new point((clientX-this.topRightThumb.centerX),(clientY-this.topRightThumb.centerY));
+                var oldBottom = this.element.Height + this.element.YLocation;
+                var yLoc = this.element.YLocation + delta.yCoordinate;
+                var newWidth = this.element.Width + delta.xCoordinate;
+                var proposedRight = this.element.XLocation + newWidth;
+                
+                if(proposedRight >= 0 && proposedRight <= maxX)
+                {
+                    this.element.Width = newWidth;
+                }
+                
+                if(yLoc >= 0 && yLoc <= maxY)
+                {
+                    this.element.YLocation = yLoc;
+                    this.element.Height = Math.abs(this.element.YLocation - oldBottom);
+                }
+                
+                var actualTop = this.element.YLocation;
+                var actualRight = this.element.XLocation + this.element.Width;
+                this.currentThumb = new resizeThumb(actualRight,actualTop,10);
+                
                 return;
             }
-            console.log("thumb not found");
             return;
         }
     }
