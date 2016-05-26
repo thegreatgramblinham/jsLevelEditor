@@ -79,6 +79,24 @@ input[type='number'] {
     font-family: monospace;
 }
 
+span.layerChildSpan
+{
+    font-size: 10px;
+    font-family:monospace;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    color: "indigo"
+}
+
+button.layerButton
+{
+    width:100%;
+    height:30px;
+    border: 1px solid darkcyan;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
 
 /* Image Sidebar */
 button.imageListButton {

@@ -7,6 +7,7 @@ class Rectangle
         this.xLocation = x;
         this.yLocation = y;
         this.id = id;
+        this.renderIdx = 0;
     }
     
     get XLocation()
@@ -34,6 +35,11 @@ class Rectangle
         return this.id;
     }
     
+    get RenderIdx()
+    {
+        return this.renderIdx;
+    }
+    
     set Id(idString)
     {
         this.id = idString;
@@ -57,6 +63,11 @@ class Rectangle
     set XLocation(xLoc)
     {
         this.xLocation = xLoc;
+    }
+    
+    set RenderIdx(idx)
+    {
+        this.renderIdx = idx;
     }
     
     calcArea()
