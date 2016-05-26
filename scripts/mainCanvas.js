@@ -87,7 +87,11 @@ _canvas.onmousemove = function(e)
 
                 var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
                 var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
-
+                
+                rectX = Number(rectX.toFixed(0));
+                rectY = Number(rectY.toFixed(0));
+                width = Number(width.toFixed(0));
+                height = Number(height.toFixed(0));
 
                 _drawContext.beginPath();
                 _drawContext.setLineDash([3,4])
@@ -166,6 +170,13 @@ window.onkeydown = function(e)
     if(e.keyCode == "17")
     {
      _ctrlPressed = true;
+    }
+    else if(e.keyCode == "46" || e.keyCode == "8")
+    {
+        if(CanvasMode == UIMode.Modify && SelectedRectangle != undefined)
+        {
+            RemoveSelectedRectangle();   
+        }
     }
 }
 
@@ -425,6 +436,20 @@ function AddRectangle()
     var addRect = new Rectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, _rectangles.length.toString());
     _rectangles.push(addRect);
     _currentRectangle = undefined;
+}
+
+function RemoveSelectedRectangle()
+{
+    var rectToRemove = SelectedRectangle;
+    var rectIdx = _rectangles.indexOf(rectToRemove);
+    if(rectIdx > -1)
+    {
+        _rectangles.splice(rectIdx,1);
+        SelectedRectangle = undefined;
+        OnSelectedRectangleChanged();
+        _selectedRectOverlay = undefined;
+        RefreshRectangles();
+    }
 }
 
 ///<summary>
