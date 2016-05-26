@@ -45,11 +45,14 @@ _levelWidth = _canvas.width;
 _levelHeight = _canvas.height;
 
 //Rectangle Collection
-var _rectangles = [];
 var _currentRectangle = undefined;
+var _currLayer = undefined;
 
 //Update the scrollbars on window load, they may not need to be visible
 UpdateScrollThumbs();
+InitLayers();
+
+//Initialize Layers
 
 //Canvas Events
 _canvas.onmousedown = function(e)
@@ -87,7 +90,11 @@ _canvas.onmousemove = function(e)
 
                 var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
                 var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
-
+                
+                rectX = Number(rectX.toFixed(0));
+                rectY = Number(rectY.toFixed(0));
+                width = Number(width.toFixed(0));
+                height = Number(height.toFixed(0));
 
                 _drawContext.beginPath();
                 _drawContext.setLineDash([3,4])
@@ -96,7 +103,7 @@ _canvas.onmousemove = function(e)
                 _drawContext.stroke();
                 _drawContext.closePath();
 
-                _currentRectangle = new Rectangle(rectX, rectY,width,height,_rectangles.length.toString());
+                _currentRectangle = new Rectangle(rectX, rectY,width,height,_currLayer.ChildCount().toString());
             }
             else if(CanvasMode == UIMode.Modify)
             {
@@ -167,6 +174,13 @@ window.onkeydown = function(e)
     {
      _ctrlPressed = true;
     }
+    else if(e.keyCode == "46" || e.keyCode == "8")
+    {
+        if(CanvasMode == UIMode.Modify && SelectedRectangle != undefined)
+        {
+            RemoveSelectedRectangle();   
+        }
+    }
 }
 
 window.onkeyup = function(e)
@@ -184,13 +198,9 @@ function RefreshRectangles()
 {
     clearCanvas();
     var i;
-    for(i=0; i<_rectangles.length; i++)
+    for(i=0; i<LayerCollection.length; i++)
     {
-        var refreshRect = _rectangles[i];
-        _drawContext.beginPath();
-        _drawContext.fillStyle="#4FD921";
-        _drawContext.fillRect(refreshRect.XLocation,refreshRect.YLocation, refreshRect.Width,refreshRect.Height);
-        _drawContext.closePath();
+        LayerCollection[i].RefreshLayer(_drawContext);
     }
     
     if(_selectedRectOverlay != undefined && SelectedRectangle != undefined)
@@ -346,6 +356,31 @@ function UpdateScrollThumbs()
 }
 
 ///<summary>
+/// Initializes the first canvas layer
+///</summary>
+function InitLayers()
+{
+    LayerCollection.push(new RenderLayer(LayerCollection.length));
+    _currLayer = LayerCollection[0];
+}
+
+function AddLayer()
+{
+    LayerCollection.push(new RenderLayer(LayerCollection.length));
+    _currLayer = LayerCollection[LayerCollection.length-1];
+    OnLayerAdded();
+}
+
+function RemoveLayer(layerIdx)
+{
+    if(layerIdx > -1 && LayerCollection.length > 1)
+    {
+        LayerCollection.splice(layerIdx, 1);
+        _currLayer = LayerCollection[LayerCollection.length-1]; 
+    }
+}
+
+///<summary>
 /// Updates the vertical scroll bar thumb based on height of window or level height
 ///</summary>
 function UpdateVerticalScrollVisual()
@@ -422,9 +457,23 @@ function UpdateHorizontalScrollVisual()
 ///</summary>
 function AddRectangle()
 {
-    var addRect = new Rectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, _rectangles.length.toString());
-    _rectangles.push(addRect);
+    var addRect = new Rectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, _currLayer.ChildCount());
+    _currLayer.AddRectangle(addRect);
     _currentRectangle = undefined;
+    OnLayerChildAdded();
+}
+
+function RemoveSelectedRectangle()
+{
+    var rectToRemove = SelectedRectangle;
+    if(rectToRemove != undefined)
+    {
+        _currLayer.RemoveRectangle(rectToRemove);
+        SelectedRectangle = undefined;
+        OnSelectedRectangleChanged();
+        _selectedRectOverlay = undefined;
+        RefreshRectangles();
+    }
 }
 
 ///<summary>
@@ -438,7 +487,7 @@ function IsValidRectangle(rect)
         rect = _currentRectangle;
     }
     
-    if(_rectangles.length == 0)
+    if(_currLayer.ChildCount() == 0)
     {
         return true;
     }
@@ -451,15 +500,15 @@ function DetectRectangleHit(hitPoint)
 {
     var rectHit = false;
     var i = 0;
-    for(i = 0; i <_rectangles.length; i++)
+    for(i = 0; i <_currLayer.ChildCount(); i++)
     {
-        if(CheckPointWithinRectBounds(hitPoint,_rectangles[i]))
+        if(CheckPointWithinRectBounds(hitPoint,_currLayer.GetRectangle(i)))
         {
             rectHit = true;
-            if(_rectangles[i] != SelectedRectangle)
+            if(_currLayer.GetRectangle(i) != SelectedRectangle)
             {
-                AddResizeOverlay(_rectangles[i]);
-                SelectedRectangle = _rectangles[i];
+                AddResizeOverlay(_currLayer.GetRectangle(i));
+                SelectedRectangle = _currLayer.GetRectangle(i);
                 OnSelectedRectangleChanged();
             }
             else

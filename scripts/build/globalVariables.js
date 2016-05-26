@@ -6,3 +6,5 @@ var CurrentImageBrush = undefined; //Holds the current ImageBrush after a button
 var SelectedRectangle = undefined; //Holds the currently selected rectangle.
 var CanvasMode = UIMode.Add; //Holds the enum defining what happens when the canvas is clicked.
 var BrushSelection = BrushMode.BasicRect; //Hold the state of ui brush selection.
+var LayerCollection = [] //Holds the collection of layers for use in the canvas and loader classes
+
