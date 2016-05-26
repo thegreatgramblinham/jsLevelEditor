@@ -85,6 +85,7 @@ var filesInGlobalBuild =
     "/scripts/mainCanvas.js",
     "/scripts/buttons/imageButtonEvents.js",
     "/scripts/buttons/importExportButtonEvents.js",
+    "/scripts/buttons/propertyButtonEvents.js",
     //END EVENT HANDLERS
     //START ENGINE FILES
     "/scripts/imageLoading/imageLoader.js"

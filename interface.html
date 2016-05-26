@@ -57,32 +57,90 @@
                     </div>
                 </td>
             </tr>
+            
             <tr style="height: 20%;">
                 <td style="height: 100%; width: 80%;">
                     <div>
-                        <!-- Canvas Properties -->
                         <table>
-                            <tr style="height: 20%;">
-                                <td class="globalPropertyCell">
-                                    <span class="propertyItem">Level Width:</span>
-                                </td>                              
-                                <td class="globalPropertyCell">
-                                    <input id="levelWidthBox" type="number" min="1" class="globalNumericInput"/>
+                            <tr>
+                                <td class="propertyMenuCell">
+                                    <!-- Canvas Properties -->
+                                    <table>
+                                        <tr class="propertyRow">
+                                            <td class="propertyCell">
+                                                <span class="propertyItem">Level Width:</span>
+                                            </td>                              
+                                            <td class="propertyCell">
+                                                <input id="levelWidthBox" type="number" min="1" class="numericInput"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="propertyRow">
+                                            <td class="propertyCell">
+                                                <span class="propertyItem">Level Height:</span>                           
+                                            </td>
+                                            <td class="propertyCell">
+                                                <input id="levelHeightBox" type="number" min="1" class="numericInput"/>
+                                            </td>
+                                        </tr>
+                                        <tr></tr>
+                                    </table>                                                                   
                                 </td>
+                                
+                                <!-- Selected Rect Properties -->
+                                <td class="propertyMenuCell">
+                                     <table>
+                                        <tr class="propertyRow">
+                                            <td class="propertyCell">
+                                                <span class="propertyItem">Rect XPos:</span>
+                                            </td>                              
+                                            <td class="propertyCell">
+                                                <input id="rectXBox" type="number" min="0" class="numericInput"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="propertyRow">
+                                            <td class="propertyCell">
+                                                <span class="propertyItem">Rect YPos:</span>
+                                            </td>                              
+                                            <td class="propertyCell">
+                                                <input id="rectYBox" type="number" min="0" class="numericInput"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="propertyRow">
+                                            <td class="propertyCell">
+                                                <span class="propertyItem">Rect Width:</span>
+                                            </td>                              
+                                            <td class="propertyCell">
+                                                <input id="rectWidthBox" type="number" min="0" class="numericInput"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="propertyRow">
+                                            <td class="propertyCell">
+                                                <span class="propertyItem">Rect Height:</span>
+                                            </td>                              
+                                            <td class="propertyCell">
+                                                <input id="rectHeightBox" type="number" min="0" class="numericInput"/>
+                                            </td>
+                                        </tr>
+                                        <tr></tr>
+                                    </table>                                    
+                                </td>
+                                <!-- Template for property list cell 
+                                <td class="propertyMenuCell">
+                                     <table>
+                                        <tr>
+                                            <td>
+                                                
+                                            </td>
+                                        </tr>
+                                    </table>                                    
+                                </td>
+                                -->
                             </tr>
-                            <tr style="height: 20%;">
-                                <td class="globalPropertyCell">
-                                    <span class="propertyItem">Level Height:</span>                           
-                                </td>
-                                <td class="globalPropertyCell">
-                                    <input id="levelHeightBox" type="number" min="1" class="globalNumericInput"/>
-                                </td>
-                            </tr>
-                            <tr></tr>
-                        </table>     
+                        </table>         
                         <!-- Other Properties -->                        
                     </div>
                 </td>
+                
                 <td style="width: 20%;">
                     <div>
                         <!-- File Management Buttons --> 
@@ -105,6 +163,7 @@
                         </table>    
                     </div>
                 </td>
+                
             </tr>
         </table>
         

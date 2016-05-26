@@ -105,6 +105,7 @@ _canvas.onmousemove = function(e)
                 {
                     _selectedRectOverlay.OverlayMouseMove(currPoint.xCoordinate+_scrollOffsetX, currPoint.yCoordinate+_scrollOffsetY, _levelWidth, _levelHeight);
                     _selectedRectOverlay.DrawRectCoords(_drawContext);
+                    OnSelectedRectangleChanged();
                 }
             }
         }
@@ -460,6 +461,7 @@ function DetectRectangleHit(hitPoint)
             {
                 AddResizeOverlay(_rectangles[i]);
                 SelectedRectangle = _rectangles[i];
+                OnSelectedRectangleChanged();
             }
             else
             {
@@ -471,6 +473,7 @@ function DetectRectangleHit(hitPoint)
     if(!rectHit)
     {
         SelectedRectangle = undefined;
+        OnSelectedRectangleChanged();
         _selectedRectOverlay = undefined;
     }
 }
