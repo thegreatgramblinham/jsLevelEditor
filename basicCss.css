@@ -1,3 +1,5 @@
+
+/* General */
 body {
     background-color: slategray;
 }
@@ -36,6 +38,8 @@ button {
     height: 100%;
 }
 
+
+/* Bottom Property Bar */
 tr.propertyRow {
     height: 20%;
 }
@@ -75,10 +79,29 @@ input[type='number'] {
     font-family: monospace;
 }
 
+
+/* Image Sidebar */
 button.imageListButton {
-    width: 64;
-    height: 64;
-    padding: 0;
+    width: 66;
+    height: 68;
+    padding: 2;
+    border: none;
+    background: #686974;
+}
+
+div.imagePalette {
+    overflow-y: scroll;
+    border: 1px solid darkgoldenrod;
+}
+
+div.paletteDiv {
+    border: 1px solid darkgoldenrod;
+}
+
+button.brushButton {
+    width: 36px;
+    height: 36px;
+    padding: 2;
     border: none;
     background: #686974;
 }
@@ -96,6 +119,8 @@ button.canvasModeButton {
     border: 1px solid darkkhaki;
 }
 
+
+/* Main Canvas */
 .vertical-scroll
 {
     float: left;
