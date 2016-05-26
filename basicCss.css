@@ -83,6 +83,10 @@ button.imageListButton {
     background: #686974;
 }
 
+div.imagePallete {
+    overflow-y: scroll;
+}
+
 td.canvasModeButtonCell {
     width: 50%;
     height: 100%;
