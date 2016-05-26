@@ -36,17 +36,20 @@ function BuildChildren(layer,currDiv)
 {
     var i;
     var childTable = document.createElement("table");
+    childTable.className = "layerChildTable";
     for(i=0; i<layer.ChildCount(); i++)
     {
         var rect = layer.GetRectangle(i);
         if(rect != undefined)
         {
             var childRow = document.createElement("tr");
+            childRow.className="layerChildRow";
             var childData = document.createElement("td");
+            childData.className="layerChildCell";
             var textSpan = document.createElement("span");
             textSpan.innerHTML = rect.Id;
             textSpan.id = "layerChild"+layer.LayerIdx.toString();
-            textSpan.className="layerChildSpan"
+            textSpan.className="layerChildSpan";
             childData.appendChild(textSpan);
             childRow.appendChild(childData);
             childTable.appendChild(childRow);

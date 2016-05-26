@@ -36,6 +36,9 @@ tr {
 button {
     width: 100%;
     height: 100%;
+    background: #567179;
+    border: 1px solid #2f444a;
+    padding: 0;
 }
 
 
@@ -55,6 +58,8 @@ td.propertyCell {
     vertical-align: top;
     padding-left: 5;
     float: inherit;
+    vertical-align: middle;
+    background: #7c9197;
 }
 
 td.propertyMenuCell {
@@ -79,22 +84,50 @@ input[type='number'] {
     font-family: monospace;
 }
 
+table.layerChildTable
+{
+    width:80%;
+    background: #698188;
+    border: 0;
+}
+
+tr.layerChildRow
+{
+    width:100%;
+    display: inline-flex;
+    height: 20px;
+}
+
+td.layerChildCell 
+{
+    width:100%;
+    height: 20px;
+    display: inline-block;
+    padding-right: 15;
+    padding-left: 5;
+}
+
 span.layerChildSpan
 {
+    width: 100%;
+    height: 15px;
+    display: inline-block; 
     font-size: 10px;
-    font-family:monospace;
-    margin-left: 10px;
-    margin-bottom: 5px;
-    color: "indigo"
+    font-family: monospace;
+    border: 1px solid #283a40;
+    background: #567179;
+    padding-left: 10px;
+    align-content: left;
 }
 
 button.layerButton
 {
-    width:100%;
-    height:30px;
-    border: 1px solid darkcyan;
-    margin-left: 5px;
-    margin-bottom: 5px;
+    width: 100%;
+    height: 20px;
+    border: 1px solid #283a40;
+    background: #44626b;
+    padding: 0;
+    align-content: left;
 }
 
 
@@ -104,7 +137,7 @@ button.imageListButton {
     height: 68;
     padding: 2;
     border: none;
-    background: #686974;
+    background: #a1b0b5;
 }
 
 div.imagePalette {
@@ -121,7 +154,7 @@ button.brushButton {
     height: 36px;
     padding: 2;
     border: none;
-    background: #686974;
+    background: #a1b0b5;
 }
 
 td.canvasModeButtonCell {
@@ -132,9 +165,6 @@ td.canvasModeButtonCell {
 
 button.canvasModeButton {
     height: 24px;
-    padding: 0;
-    background: darkgrey;
-    border: 1px solid darkkhaki;
 }
 
 
