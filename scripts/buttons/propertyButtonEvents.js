@@ -10,10 +10,10 @@ function OnSelectedRectangleChanged()
 {
     if(SelectedRectangle != undefined)
     {
-        _xBox.value = SelectedRectangle.XLocation;
-        _yBox.value = SelectedRectangle.YLocation;
-        _widthBox.value = SelectedRectangle.Width;
-        _heightBox.value = SelectedRectangle.Height;
+        _xBox.value = Number(Number(SelectedRectangle.XLocation).toFixed(0));
+        _yBox.value =  Number(Number(SelectedRectangle.YLocation).toFixed(0));
+        _widthBox.value = Number(Number(SelectedRectangle.Width).toFixed(0));
+        _heightBox.value = Number(Number(SelectedRectangle.Height).toFixed(0));
     }
     else
     {
@@ -25,11 +25,12 @@ function OnSelectedRectangleChanged()
 
 }
 
+//Rect Controls
 _xBox.onchange = function(e)
 {
     if(SelectedRectangle != undefined)
     {
-        SelectedRectangle.XLocation = Number(_xBox.value);
+        SelectedRectangle.XLocation = Number(Number(_xBox.value).toFixed(0));
         RefreshRectangles(); //needs to be a canvas func for complete redraw. goes here.
     }
 }
@@ -38,7 +39,7 @@ _yBox.onchange = function(e)
 {
     if(SelectedRectangle != undefined)
     {
-        SelectedRectangle.YLocation = Number(_yBox.value);
+        SelectedRectangle.YLocation = Number(Number(_yBox.value).toFixed(0));
         RefreshRectangles();
     }
 }
@@ -47,7 +48,7 @@ _widthBox.onchange = function(e)
 {
     if(SelectedRectangle != undefined)
     {
-        SelectedRectangle.Width = Number(_widthBox.value);
+        SelectedRectangle.Width = Number(Number(_widthBox.value).toFixed(0));
         RefreshRectangles();
     }
 }
@@ -56,7 +57,9 @@ _heightBox.onchange = function(e)
 {
     if(SelectedRectangle != undefined)
     {
-        SelectedRectangle.Height = Number(_heightBox.value);
+        SelectedRectangle.Height = Number(Number(_heightBox.value).toFixed(0));
         RefreshRectangles();
     }
 }
+
+//Render Controls
