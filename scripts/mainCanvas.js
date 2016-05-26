@@ -392,7 +392,7 @@ function RemoveLayer(layerIdx)
     }
 }
 
-function RectRenderLayerChanged()
+function RectRenderLayerChanged(oldLayerIdx)
 {
     if(SelectedRectangle != undefined)
     {
@@ -405,12 +405,17 @@ function RectRenderLayerChanged()
            {
                AddLayer();
            }
-           CurrentLayer.RemoveRectangle(SelectedRectangle);
-           
-           var newLayer = LayerCollection[newLayerIdx];
-           newLayer.AddRectangle(SelectedRectangle);
-           RefreshLayerControls();
+            CurrentLayer.RemoveRectangle(SelectedRectangle);  
         }
+        else
+        {
+            var oldLayer = LayerCollection[oldLayerIdx];
+            oldLayer.RemoveRectangle(SelectedRectangle);
+        }
+       
+        var newLayer = LayerCollection[newLayerIdx];
+        newLayer.AddRectangle(SelectedRectangle);
+        RefreshLayerControls();
         RefreshRectangles();
     }
 }
