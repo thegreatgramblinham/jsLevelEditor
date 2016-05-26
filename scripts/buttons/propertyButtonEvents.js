@@ -19,6 +19,7 @@ _xBox.onchange = function(e)
     if(SelectedRectangle != undefined)
     {
         SelectedRectangle.XLocation = _xBox.value;
+        RefreshRectangles(); //needs to be a canvas func for complete redraw. goes here.
     }
 }
 
@@ -27,6 +28,7 @@ _yBox.onchange = function(e)
     if(SelectedRectangle != undefined)
     {
         SelectedRectangle.YLocation = _yBox.value;
+        RefreshRectangles();
     }
 }
 
@@ -35,6 +37,7 @@ _widthBox.onchange = function(e)
     if(SelectedRectangle != undefined)
     {
         SelectedRectangle.Width = _widthBox.value;
+        RefreshRectangles();
     }
 }
 
@@ -43,5 +46,6 @@ _heightBox.onchange = function(e)
     if(SelectedRectangle != undefined)
     {
         SelectedRectangle.Height = _heightBox.value;
+        RefreshRectangles();
     }
 }
