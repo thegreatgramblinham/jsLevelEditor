@@ -73,7 +73,6 @@ _canvas.onmousedown = function(e)
 
 _canvas.onmousemove = function(e)
 {
-    clearCanvas();
     RefreshRectangles();
     if(_mouseDown && _downPoint != undefined)
     {
@@ -144,7 +143,6 @@ _canvas.onmouseup = function(e)
     {
         _mouseDown = false;
         _downPoint = undefined;
-        clearCanvas();
         if(_currentRectangle != undefined && IsValidRectangle())
         {
             AddRectangle();
@@ -184,6 +182,7 @@ window.onkeyup = function(e)
 ///</summary>
 function RefreshRectangles()
 {
+    clearCanvas();
     var i;
     for(i=0; i<_rectangles.length; i++)
     {
@@ -537,14 +536,12 @@ function clearCanvas() {
 function OnHorizontalScroll()
 {
     _drawContext.translate(-_scrollXDelta, 0);
-    clearCanvas();
     RefreshRectangles();
 }
 
 function OnVerticalScroll()
 {
      _drawContext.translate(0, -_scrollYDelta);
-    clearCanvas();
     RefreshRectangles();
 }
 
