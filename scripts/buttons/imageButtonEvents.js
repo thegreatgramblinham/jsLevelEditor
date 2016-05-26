@@ -11,16 +11,8 @@ function ImageButtonOnClick(imageIndex, button)
 {
     CurrentImageBrush = new ImageBrush(ImageCache[imageIndex].src);
     console.log("Set image brush to: "+ImageCache[imageIndex].src);
-     
-    if(_currentlySelectedButton != undefined)
-    {
-        _currentlySelectedButton.style.border = "";
-        _currentlySelectedButton.style.padding = SELECTED_BRUSH_PADDING;
-    }
     
-    button.style.border = SELECTED_BRUSH_PADDING + " solid fuchsia";
-    button.style.padding = "0px";
-    _currentlySelectedButton = button;
+    SetButtonAsSelected(button);
 }
 
 //Main
@@ -29,6 +21,13 @@ SwitchToAdd();
 //Mode Button Events
 addModeButton.onclick = SwitchToAdd;
 modfiyModeButton.onclick = SwitchToModify;
+
+basicRectButton.onclick = function(e)
+{
+    SetButtonAsSelected(basicRectButton);
+    console.log("Set non-image brush to: BasicRect");
+}
+
 
 //Private Methods
 function SwitchToAdd(e)
@@ -45,4 +44,22 @@ function SwitchToModify(e)
     console.log("Switched to image MODIFY mode.");
     document.getElementById("addModeButton").style.backgroundColor = "darkgrey";
     document.getElementById("modfiyModeButton").style.backgroundColor = "red";
+}
+
+function SetButtonAsSelected(button)
+{
+    ResetOldBrushSelection();
+    
+    button.style.border = SELECTED_BRUSH_PADDING + " solid fuchsia";
+    button.style.padding = "0px";
+    _currentlySelectedButton = button;
+}
+
+function ResetOldBrushSelection()
+{
+    if(_currentlySelectedButton != undefined)
+    {
+        _currentlySelectedButton.style.border = "";
+        _currentlySelectedButton.style.padding = SELECTED_BRUSH_PADDING;
+    }
 }
