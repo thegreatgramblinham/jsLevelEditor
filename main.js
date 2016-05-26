@@ -80,6 +80,7 @@ var filesInGlobalBuild =
     "/scripts/imageLoading/imageBrush.js",
     "/scripts/classes/overlay.js",
     "/scripts/classes/rectResizeOverlay.js",
+    "/scripts/classes/renderLayer.js",
     //END CLASSES
     //START EVENT HANDLERS
     "/scripts/mainCanvas.js",
@@ -88,7 +89,8 @@ var filesInGlobalBuild =
     "/scripts/buttons/propertyButtonEvents.js",
     //END EVENT HANDLERS
     //START ENGINE FILES
-    "/scripts/imageLoading/imageLoader.js"
+    "/scripts/imageLoading/imageLoader.js",
+    "/scripts/layerLoading/layerLoader.js"
     //END ENGINE FILES
 ];
 ///////////////////////////////////////////
