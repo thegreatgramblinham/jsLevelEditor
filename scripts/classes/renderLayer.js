@@ -69,10 +69,19 @@ class RenderLayer
         for(i=0; i<this.rectangles.length; i++)
         {
             var refreshRect = this.rectangles[i];
-            drawingCtx.beginPath();
-            drawingCtx.fillStyle="#4FD921";
-            drawingCtx.fillRect(refreshRect.XLocation,refreshRect.YLocation, refreshRect.Width,refreshRect.Height);
-            drawingCtx.closePath();
+            if(!(refreshRect instanceof ImageRectangle))
+            {
+                drawingCtx.beginPath();
+                drawingCtx.fillStyle="#4FD921";
+                drawingCtx.fillRect(refreshRect.XLocation,refreshRect.YLocation, refreshRect.Width,refreshRect.Height);
+                drawingCtx.closePath();
+            }
+            else
+            {
+                drawingCtx.beginPath();
+                drawingCtx.drawImage(refreshRect.Image,refreshRect.XLocation,refreshRect.YLocation);
+            }
+            
         }
     }
 }
