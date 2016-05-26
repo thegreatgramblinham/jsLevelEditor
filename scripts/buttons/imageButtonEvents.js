@@ -43,7 +43,7 @@ function SwitchToModify(e)
 function SwitchToBasicRectBrush(e)
 {
     SetButtonAsSelected(basicRectButton);
-    BrushSelection = BrushMode.BasicRect;
+    BrushSelection = BrushType.BasicRect;
     
     console.log("Set non-image brush to: BasicRect");
 }
@@ -51,7 +51,7 @@ function SwitchToBasicRectBrush(e)
 function SwitchToImageBrush(imageIndex)
 {
     CurrentImageBrush = new ImageBrush(ImageCache[imageIndex].src);
-    BrushSelection = BrushMode.Image;
+    BrushSelection = BrushType.Image;
     
     console.log("Set image brush to: "+ImageCache[imageIndex].src);   
 }
