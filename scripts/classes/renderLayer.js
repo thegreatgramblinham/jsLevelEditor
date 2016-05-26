@@ -71,9 +71,10 @@ class RenderLayer
             var refreshRect = this.rectangles[i];
             if(!(refreshRect instanceof ImageRectangle))
             {
+                drawingCtx.setLineDash([0]);
                 drawingCtx.beginPath();
-                drawingCtx.fillStyle="#4FD921";
-                drawingCtx.fillRect(refreshRect.XLocation,refreshRect.YLocation, refreshRect.Width,refreshRect.Height);
+                drawingCtx.strokeStyle="#4FD921";
+                drawingCtx.strokeRect(refreshRect.XLocation,refreshRect.YLocation, refreshRect.Width,refreshRect.Height);
                 drawingCtx.closePath();
             }
             else
