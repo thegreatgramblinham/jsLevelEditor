@@ -1,10 +1,10 @@
 //Global Variables
 var ImageCache = [];
 var ImageDiv = document.createElement("DIV");
-var ImagePalleteDiv = document.getElementById("ImagePalleteDiv");
+var ImagePaletteDiv = document.getElementById("ImagePaletteDiv");
 
 //Main
-ImagePalleteDiv.appendChild(ImageDiv);
+ImagePaletteDiv.appendChild(ImageDiv);
 
 //Methods
 function LoadImagesFromDirectory(directoryPath)
@@ -66,6 +66,6 @@ function BuildItemsControl()
         div.appendChild(button);
     }
     
-    ImagePalleteDiv.replaceChild(div, ImageDiv);
+    ImagePaletteDiv.replaceChild(div, ImageDiv);
     ImageDiv = div;
 }

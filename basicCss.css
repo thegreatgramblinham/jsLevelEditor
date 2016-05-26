@@ -83,8 +83,13 @@ button.imageListButton {
     background: #686974;
 }
 
-div.imagePallete {
+div.imagePalette {
     overflow-y: scroll;
+    border: 1px solid darkgoldenrod;
+}
+
+div.paletteDiv {
+    border: 1px solid darkgoldenrod;
 }
 
 td.canvasModeButtonCell {
