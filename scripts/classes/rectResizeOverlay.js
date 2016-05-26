@@ -27,39 +27,39 @@ class RectResizeOverlay extends Overlay
         {
             drawingCtx.beginPath();
             drawingCtx.fillStyle = "DarkOrange"
-            drawingCtx.arc(left,top,10,0,2*Math.PI);
+            drawingCtx.rect(left,top,20,20);
             drawingCtx.fill();
             drawingCtx.closePath();
-            this.topLeftThumb = new resizeThumb(left,top,10);
+            this.topLeftThumb = new resizeThumb(left,top,20);
 
             drawingCtx.beginPath();
             drawingCtx.fillStyle = "DarkOrange"
-            drawingCtx.arc(right,top,10,0,2*Math.PI);
+            drawingCtx.rect(right-20,top,20,20);
             drawingCtx.fill();
             drawingCtx.closePath();
-            this.topRightThumb = new resizeThumb(right,top,10);
+            this.topRightThumb = new resizeThumb(right-20,top,20);
 
             drawingCtx.beginPath();
             drawingCtx.fillStyle = "DarkOrange"
-            drawingCtx.arc(left,bottom,10,0,2*Math.PI);
+            drawingCtx.rect(left,bottom-20,20,20);
             drawingCtx.fill();
             drawingCtx.closePath();
-            this.bottomLeftThumb = new resizeThumb(left,bottom,10);
+            this.bottomLeftThumb = new resizeThumb(left,bottom-20,20);
 
             drawingCtx.beginPath();
             drawingCtx.fillStyle = "DarkOrange"
-            drawingCtx.arc(right,bottom,10,0,2*Math.PI);
+            drawingCtx.rect(right-20,bottom-20,20,20);
             drawingCtx.fill();
             drawingCtx.closePath();
-            this.bottomRightThumb = new resizeThumb(right,bottom,10);
+            this.bottomRightThumb = new resizeThumb(right-20,bottom-20,20);
         }
 
         drawingCtx.beginPath();
         drawingCtx.fillStyle = "DarkViolet"
-        drawingCtx.arc(centerX,centerY,10,0,2*Math.PI);
+        drawingCtx.rect(centerX-10,centerY-10,20,20)
         drawingCtx.fill();
         drawingCtx.closePath();
-        this.centerThumb = new resizeThumb(centerX,centerY,10);
+        this.centerThumb = new resizeThumb(centerX-10,centerY-10,20);
     }
     
     OverlayMouseDown(button,clientX,clientY)
@@ -95,7 +95,7 @@ class RectResizeOverlay extends Overlay
                 
                 var newCenterX = this.element.XLocation + (this.element.Width/2);
                 var newCenterY = this.element.YLocation + (this.element.Height/2);
-                this.currentThumb = new resizeThumb(newCenterX,newCenterY,10);
+                this.currentThumb = new resizeThumb(newCenterX-10,newCenterY-10,20);
                 return;
             }
             
@@ -122,7 +122,7 @@ class RectResizeOverlay extends Overlay
                 
                 var newTopLeftX = this.element.XLocation;
                 var newTopLeftY = this.element.YLocation;
-                this.currentThumb = new resizeThumb(newTopLeftX, newTopLeftY, 10);
+                this.currentThumb = new resizeThumb(newTopLeftX, newTopLeftY, 20);
                 return;
             }
             
@@ -146,7 +146,7 @@ class RectResizeOverlay extends Overlay
                 }
                 
                 var actualBottom = this.element.YLocation + this.element.Height;
-                this.currentThumb = new resizeThumb(this.element.XLocation,actualBottom,10);
+                this.currentThumb = new resizeThumb(this.element.XLocation,actualBottom-20,20);
                 return;
             }
             
@@ -170,7 +170,7 @@ class RectResizeOverlay extends Overlay
                 
                 var actualRight = this.element.XLocation + this.element.Width;
                 var actualBottom = this.element.YLocation + this.element.Height;
-                this.currentThumb = new resizeThumb(actualRight, actualBottom, 10);
+                this.currentThumb = new resizeThumb(actualRight-20, actualBottom-20, 20);
                 return;
             }
             
@@ -195,7 +195,7 @@ class RectResizeOverlay extends Overlay
                 
                 var actualTop = this.element.YLocation;
                 var actualRight = this.element.XLocation + this.element.Width;
-                this.currentThumb = new resizeThumb(actualRight,actualTop,10);
+                this.currentThumb = new resizeThumb(actualRight-20,actualTop,20);
                 
                 return;
             }
@@ -268,12 +268,12 @@ class RectResizeOverlay extends Overlay
         
     CheckHitThumb(hitX,hitY,thumb)
     {
-        return Math.pow((hitX - thumb.centerX),2) + Math.pow((hitY-thumb.centerY),2) < Math.pow(thumb.radius,2);
+        return hitX>=thumb.left && hitX<=thumb.right && hitY >= thumb.top && hitY <= thumb.bottom;
     }
     
     
     CheckThumbEquality(thumbA, thumbB)
     {
-        return thumbA.centerX == thumbB.centerX && thumbA.centerY == thumbB.centerY && thumbA.radius == thumbB.radius;
+        return thumbA.left == thumbB.left && thumbA.top == thumbB.top;
     }
 }

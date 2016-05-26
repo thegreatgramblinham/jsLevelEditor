@@ -1,10 +1,15 @@
 //This is the Utils file, mainly for small structures that we don't neet fully fleshed out
 //classes for
-function resizeThumb(tCenterX,tCenterY,radius)
+function resizeThumb(left,top,heightAndWidth)
 {
-    this.centerX = tCenterX;
-    this.centerY = tCenterY;
-    this.radius = radius;
+    this.left = left;
+    this.top = top;
+    this.width = heightAndWidth;
+    this.height = heightAndWidth;
+    this.right = this.left+this.width;
+    this.bottom = this.top+this.height;
+    this.centerX = this.left + (this.width/2);
+    this.centerY = this.top + (this.height/2); 
 }
 
 function point(x,y)
