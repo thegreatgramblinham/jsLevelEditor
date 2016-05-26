@@ -1,32 +1,26 @@
 //This file is for button events related to the image selection sidebar.
 
 //Private Constants
-var SELECTED_BRUSH_PADDING = "2px"
+var SELECTED_BRUSH_PADDING = "2px";
 
 //Private Variables
-var _currentlySelectedButton = undefined
+var _currentlySelectedButton = undefined;
 
 //Public Methods
 function ImageButtonOnClick(imageIndex, button)
 {
-    CurrentImageBrush = new ImageBrush(ImageCache[imageIndex].src);
-    console.log("Set image brush to: "+ImageCache[imageIndex].src);
-    
+    SwitchToImageBrush(imageIndex);
     SetButtonAsSelected(button);
 }
 
 //Main
 SwitchToAdd();
+SwitchToBasicRectBrush();
 
 //Mode Button Events
 addModeButton.onclick = SwitchToAdd;
 modfiyModeButton.onclick = SwitchToModify;
-
-basicRectButton.onclick = function(e)
-{
-    SetButtonAsSelected(basicRectButton);
-    console.log("Set non-image brush to: BasicRect");
-}
+basicRectButton.onclick = SwitchToBasicRectBrush;
 
 
 //Private Methods
@@ -44,6 +38,22 @@ function SwitchToModify(e)
     console.log("Switched to image MODIFY mode.");
     document.getElementById("addModeButton").style.backgroundColor = "darkgrey";
     document.getElementById("modfiyModeButton").style.backgroundColor = "fuchsia";
+}
+
+function SwitchToBasicRectBrush(e)
+{
+    SetButtonAsSelected(basicRectButton);
+    BrushSelection = BrushMode.BasicRect;
+    
+    console.log("Set non-image brush to: BasicRect");
+}
+
+function SwitchToImageBrush(imageIndex)
+{
+    CurrentImageBrush = new ImageBrush(ImageCache[imageIndex].src);
+    BrushSelection = BrushMode.Image;
+    
+    console.log("Set image brush to: "+ImageCache[imageIndex].src);   
 }
 
 function SetButtonAsSelected(button)
