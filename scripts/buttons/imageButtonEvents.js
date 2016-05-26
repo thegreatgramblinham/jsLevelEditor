@@ -1,5 +1,6 @@
 //This file is for button events related to the image selection sidebar.
 
+//Public Methods
 function ImageButtonOnClick(imageIndex)
 {
     CurrentImageBrush = new ImageBrush(ImageCache[imageIndex].src);
