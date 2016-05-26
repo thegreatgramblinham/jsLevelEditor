@@ -34,7 +34,7 @@ function SwitchToAdd(e)
 {
     CanvasMode = UIMode.Add;
     console.log("Switched to image ADD mode.");
-    document.getElementById("addModeButton").style.backgroundColor = "red";
+    document.getElementById("addModeButton").style.backgroundColor = "fuchsia";
     document.getElementById("modfiyModeButton").style.backgroundColor = "darkgrey";
 }
 
@@ -43,7 +43,7 @@ function SwitchToModify(e)
     CanvasMode = UIMode.Modify;
     console.log("Switched to image MODIFY mode.");
     document.getElementById("addModeButton").style.backgroundColor = "darkgrey";
-    document.getElementById("modfiyModeButton").style.backgroundColor = "red";
+    document.getElementById("modfiyModeButton").style.backgroundColor = "fuchsia";
 }
 
 function SetButtonAsSelected(button)
