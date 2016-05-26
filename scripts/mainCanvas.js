@@ -210,7 +210,7 @@ function RefreshRectangles()
 {
     clearCanvas();
     var i;
-    for(i=LayerCollection.length-1; i>-1; i--)
+    for(i=0; i<LayerCollection.length; i++)
     {
         LayerCollection[i].RefreshLayer(_drawContext);
     }
