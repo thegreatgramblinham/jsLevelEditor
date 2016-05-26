@@ -5,6 +5,7 @@ var _xBox = document.getElementById("rectXBox");
 var _yBox = document.getElementById("rectYBox");
 var _widthBox = document.getElementById("rectWidthBox");
 var _heightBox = document.getElementById("rectHeightBox");
+var _renderIdxBox = document.getElementById("rectRenderIdxBox");
 
 function OnSelectedRectangleChanged()
 {
@@ -14,6 +15,7 @@ function OnSelectedRectangleChanged()
         _yBox.value =  Number(Number(SelectedRectangle.YLocation).toFixed(0));
         _widthBox.value = Number(Number(SelectedRectangle.Width).toFixed(0));
         _heightBox.value = Number(Number(SelectedRectangle.Height).toFixed(0));
+        _renderIdxBox.value = SelectedRectangle.RenderIdx;
     }
     else
     {
@@ -21,6 +23,7 @@ function OnSelectedRectangleChanged()
         _yBox.value = 0;
         _widthBox.value = 0;
         _heightBox.value = 0;
+        _renderIdxBox.value = 0;
     }
 
 }
@@ -59,6 +62,15 @@ _heightBox.onchange = function(e)
     {
         SelectedRectangle.Height = Number(Number(_heightBox.value).toFixed(0));
         RefreshRectangles();
+    }
+}
+
+_renderIdxBox.onchange = function(e)
+{
+    if(SelectedRectangle != undefined)
+    {
+        SelectedRectangle.RenderIdx = Number(_renderIdxBox.value);
+        RectRenderLayerChanged();
     }
 }
 

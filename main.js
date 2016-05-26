@@ -87,6 +87,7 @@ var filesInGlobalBuild =
     "/scripts/buttons/imageButtonEvents.js",
     "/scripts/buttons/importExportButtonEvents.js",
     "/scripts/buttons/propertyButtonEvents.js",
+    "/scripts/buttons/layerButtonEvents.js",
     //END EVENT HANDLERS
     //START ENGINE FILES
     "/scripts/imageLoading/imageLoader.js",
