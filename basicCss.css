@@ -68,6 +68,19 @@ td.propertyMenuCell {
     width: 12%;
 }
 
+tr.layerRow
+{
+    display: inline-table;
+}
+
+td.layerMenuCell
+{
+    width: 20%; 
+    height: 100%;
+    float: right;
+    overflow-y: scroll;
+}
+
 span.propertyItem {
     font-size: 10px;
     font-family: monospace;
