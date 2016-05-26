@@ -46,7 +46,6 @@ _levelHeight = _canvas.height;
 
 //Rectangle Collection
 var _currentRectangle = undefined;
-var _currLayer = undefined;
 
 //Update the scrollbars on window load, they may not need to be visible
 UpdateScrollThumbs();
@@ -103,7 +102,7 @@ _canvas.onmousemove = function(e)
                 _drawContext.stroke();
                 _drawContext.closePath();
 
-                _currentRectangle = new Rectangle(rectX, rectY,width,height,_currLayer.ChildCount().toString());
+                _currentRectangle = new Rectangle(rectX, rectY,width,height,CurrentLayer.ChildCount().toString());
             }
             else if(CanvasMode == UIMode.Modify)
             {
@@ -198,7 +197,7 @@ function RefreshRectangles()
 {
     clearCanvas();
     var i;
-    for(i=0; i<LayerCollection.length; i++)
+    for(i=LayerCollection.length-1; i>-1; i--)
     {
         LayerCollection[i].RefreshLayer(_drawContext);
     }
@@ -361,14 +360,14 @@ function UpdateScrollThumbs()
 function InitLayers()
 {
     LayerCollection.push(new RenderLayer(LayerCollection.length));
-    _currLayer = LayerCollection[0];
+    CurrentLayer = LayerCollection[0];
+    CurrentLayer.IsSelected = true;
 }
 
 function AddLayer()
 {
     LayerCollection.push(new RenderLayer(LayerCollection.length));
-    _currLayer = LayerCollection[LayerCollection.length-1];
-    OnLayerAdded();
+    RefreshLayerControls();
 }
 
 function RemoveLayer(layerIdx)
@@ -376,7 +375,30 @@ function RemoveLayer(layerIdx)
     if(layerIdx > -1 && LayerCollection.length > 1)
     {
         LayerCollection.splice(layerIdx, 1);
-        _currLayer = LayerCollection[LayerCollection.length-1]; 
+        CurrentLayer = LayerCollection[LayerCollection.length-1]; 
+    }
+}
+
+function RectRenderLayerChanged()
+{
+    if(SelectedRectangle != undefined)
+    {
+        var newLayerIdx = SelectedRectangle.RenderIdx;
+        if(newLayerIdx > LayerCollection.length-1)
+        {
+           var layersToAdd = newLayerIdx - (LayerCollection.length-1);
+           var i;
+           for(i=0; i<layersToAdd; i++)
+           {
+               AddLayer();
+           }
+           CurrentLayer.RemoveRectangle(SelectedRectangle);
+           
+           var newLayer = LayerCollection[newLayerIdx];
+           newLayer.AddRectangle(SelectedRectangle);
+           RefreshLayerControls();
+        }
+        RefreshRectangles();
     }
 }
 
@@ -457,10 +479,10 @@ function UpdateHorizontalScrollVisual()
 ///</summary>
 function AddRectangle()
 {
-    var addRect = new Rectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, _currLayer.ChildCount());
-    _currLayer.AddRectangle(addRect);
+    var addRect = new Rectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, CurrentLayer.ChildCount());
+    CurrentLayer.AddRectangle(addRect);
     _currentRectangle = undefined;
-    OnLayerChildAdded();
+    RefreshLayerControls();
 }
 
 function RemoveSelectedRectangle()
@@ -468,10 +490,11 @@ function RemoveSelectedRectangle()
     var rectToRemove = SelectedRectangle;
     if(rectToRemove != undefined)
     {
-        _currLayer.RemoveRectangle(rectToRemove);
+        CurrentLayer.RemoveRectangle(rectToRemove);
         SelectedRectangle = undefined;
         OnSelectedRectangleChanged();
         _selectedRectOverlay = undefined;
+        RefreshLayerControls();
         RefreshRectangles();
     }
 }
@@ -487,7 +510,7 @@ function IsValidRectangle(rect)
         rect = _currentRectangle;
     }
     
-    if(_currLayer.ChildCount() == 0)
+    if(CurrentLayer.ChildCount() == 0)
     {
         return true;
     }
@@ -500,15 +523,15 @@ function DetectRectangleHit(hitPoint)
 {
     var rectHit = false;
     var i = 0;
-    for(i = 0; i <_currLayer.ChildCount(); i++)
+    for(i = 0; i <CurrentLayer.ChildCount(); i++)
     {
-        if(CheckPointWithinRectBounds(hitPoint,_currLayer.GetRectangle(i)))
+        if(CheckPointWithinRectBounds(hitPoint,CurrentLayer.GetRectangle(i)))
         {
             rectHit = true;
-            if(_currLayer.GetRectangle(i) != SelectedRectangle)
+            if(CurrentLayer.GetRectangle(i) != SelectedRectangle)
             {
-                AddResizeOverlay(_currLayer.GetRectangle(i));
-                SelectedRectangle = _currLayer.GetRectangle(i);
+                AddResizeOverlay(CurrentLayer.GetRectangle(i));
+                SelectedRectangle = CurrentLayer.GetRectangle(i);
                 OnSelectedRectangleChanged();
             }
             else

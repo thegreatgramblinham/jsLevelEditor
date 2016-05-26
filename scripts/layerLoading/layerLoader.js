@@ -16,9 +16,24 @@ function RefreshLayerControls()
         var currDiv = document.createElement("div");
         var currButton = document.createElement("button");
         var nameSpan = document.createElement("span");
+        currButton.id = currLayer.LayerIdx.toString();
         nameSpan.innerHTML = currLayer.LayerIdx.toString();
         currButton.appendChild(nameSpan);
+        if(currLayer.IsSelected)
+        {
+           currButton.style.border = "2px solid fuchsia"
+        }
+        else
+        {
+            currButton.style.border = "none";
+        }
         currButton.className = "layerButton"
+        
+        currButton.onclick = function()
+        {
+            OnCurrentLayerSelected(Number(this.id));
+        };
+        
         currDiv.appendChild(currButton);
         if(currLayer.HasChildren())
         {
@@ -53,15 +68,4 @@ function BuildChildren(layer,currDiv)
         }
     }
     currDiv.appendChild(childTable);
-}
-
-function OnLayerAdded()
-{
-    RefreshLayerControls();   
-}
-
-function OnLayerChildAdded()
-{
-    RefreshLayerControls();
-    
 }

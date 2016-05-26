@@ -3,13 +3,24 @@ class RenderLayer
     constructor(layerIdx)
     {
         this.rectangles = [];
-        this.layerIndex = 0;
+        this.layerIndex = layerIdx;
         this.isVisible = true;
+        this.isSelected = false;
     }
     
     get LayerIdx()
     {
         return this.layerIndex;
+    }
+    
+    get IsSelected()
+    {
+        return this.isSelected;
+    }
+    
+    set IsSelected(selected)
+    {
+        this.isSelected = selected;
     }
     
     ChildCount()
@@ -34,13 +45,13 @@ class RenderLayer
     
     AddRectangle(rect)
     {
-        rect.RenderIdx = this.layerIdx;
+        rect.RenderIdx = this.layerIndex;
         this.rectangles.push(rect);
     }
     
     RemoveRectangle(rect)
     {
-        var rectIdx = _rectangles.indexOf(rect);
+        var rectIdx = this.rectangles.indexOf(rect);
         if(rectIdx > -1)
         {
             this.rectangles.splice(rectIdx,1);
