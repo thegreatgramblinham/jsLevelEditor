@@ -60,7 +60,7 @@ function BuildItemsControl()
         button.id="imageListButton."+ i;
         button.onclick = function() 
             { 
-                ImageButtonOnClick(this.id.split('.').pop());
+                ImageButtonOnClick(this.id.split('.').pop(), this);
             };
         button.appendChild(ImageCache[i]);
         div.appendChild(button);
