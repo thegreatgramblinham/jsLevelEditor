@@ -45,6 +45,9 @@ function SwitchToBasicRectBrush(e)
     SetButtonAsSelected(basicRectButton);
     BrushSelection = BrushType.BasicRect;
     
+    document.getElementById("rectWidthBox").disabled = false;
+    document.getElementById("rectHeightBox").disabled = false;
+    
     console.log("Set non-image brush to: BasicRect");
 }
 
@@ -52,6 +55,9 @@ function SwitchToImageBrush(imageIndex)
 {
     CurrentImageBrush = new ImageBrush(ImageCache[imageIndex].src);
     BrushSelection = BrushType.Image;
+    
+    document.getElementById("rectWidthBox").disabled = true;
+    document.getElementById("rectHeightBox").disabled = true;
     
     console.log("Set image brush to: "+ImageCache[imageIndex].src);   
 }
