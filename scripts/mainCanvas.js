@@ -30,6 +30,7 @@ var _prevScrollOffsetY = 0;
 var _prevScrollOffsetX = 0;
 var _levelWidth = 0;
 var _levelHeight = 0;
+var _scale = 1;
 var _selectedRectOverlay = undefined;
 const _minThumbWidth = 15;
 const _minThumbHeight = 15;
@@ -193,7 +194,7 @@ window.onkeydown = function(e)
     {
      _ctrlPressed = true;
     }
-    else if(e.keyCode == "46" || e.keyCode == "8")
+    else if(e.keyCode == "46")
     {
         if(CanvasMode == UIMode.Modify && SelectedRectangle != undefined)
         {
@@ -574,6 +575,7 @@ function DetectRectangleHit(hitPoint)
                 AddResizeOverlay(CurrentLayer.GetRectangle(i));
                 SelectedRectangle = CurrentLayer.GetRectangle(i);
                 OnSelectedRectangleChanged();
+                RefreshLayerControls();
             }
             else
             {
@@ -587,6 +589,56 @@ function DetectRectangleHit(hitPoint)
         SelectedRectangle = undefined;
         OnSelectedRectangleChanged();
         _selectedRectOverlay = undefined;
+        RefreshLayerControls();
+    }
+}
+
+function SelectRectangleByGuid(rectGuid)
+{
+    if(!_ctrlPressed)
+    {
+        if(!CurrentLayer.IsRectInLayer(rectGuid))
+        {
+            var newLayerIdx = GetLayerByRectGuid(rectGuid);
+            if(newLayerIdx < 0)
+            {
+                return;
+            }
+            OnCurrentLayerSelected(newLayerIdx);
+        }
+        
+        var rect = CurrentLayer.GetRectangleByGuid(rectGuid);
+        if(rect != undefined)
+        {
+            AddResizeOverlay(rect);
+            SelectedRectangle = rect;
+            OnSelectedRectangleChanged();
+            RefreshRectangles();
+            RefreshLayerControls();
+        }
+    }
+}
+
+function GetLayerByRectGuid(rectGuid)
+{
+    var i;
+    for(i=0; i<LayerCollection.length; i++)
+    {
+        if(LayerCollection[i].IsRectInLayer(rectGuid))
+        {
+            return LayerCollection[i].LayerIdx;
+        }
+    }
+    
+    return -1;
+}
+
+function EditRectName(rectGuid,newName)
+{
+    if(CurrentLayer.IsRectInLayer(rectGuid))
+    {
+        var rect = CurrentLayer.GetRectangleByGuid(rectGuid);
+        rect.Name = newName;
     }
 }
 

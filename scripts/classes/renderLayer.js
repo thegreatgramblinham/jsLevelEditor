@@ -38,6 +38,32 @@ class RenderLayer
         return undefined;
     }
     
+    GetRectangleByGuid(rectGuid)
+    {
+        var i;
+        for(i=0; i<this.rectangles.length; i++)
+        {
+            if(rectGuid == this.rectangles[i].Id)
+            {
+                return this.rectangles[i];
+            }
+        }
+        return undefined;
+    }
+    
+    IsRectInLayer(rectGuid)
+    {
+        var i;
+        for(i=0; i<this.rectangles.length; i++)
+        {
+            if(rectGuid == this.rectangles[i].Id)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     HasChildren()
     {
         return this.rectangles.length > 0;
