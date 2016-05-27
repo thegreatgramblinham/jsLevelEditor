@@ -1,3 +1,4 @@
+//This file is for events pertaining to the layer controls
 function OnCurrentLayerSelected(layerIdx)
 {
     var i;
@@ -16,13 +17,26 @@ function OnCurrentLayerSelected(layerIdx)
 
 function OnRectChildSelected(rectGuid)
 {
-    if(CanvasMode == UIMode.Modify)
+    if(CanvasMode == UIMode.Add)
     {
-        SelectRectangleByGuid(rectGuid);
+        SwitchToModify();
+    }
+        
+    SelectRectangleByGuid(rectGuid);
+}
+
+function OnRectChildEditMode(spanElement)
+{
+    var actualSpan = document.getElementById(spanElement.id);
+    actualSpan.contentEditable = true;
+    actualSpan.focus();
+    actualSpan.onblur = function()
+    {
+        OnApplyRectangleName(actualSpan.id,actualSpan.innerHTML)
     }
 }
 
-function OnRectChildEditMode(rectGuid)
+function OnApplyRectangleName(rectGuid,name)
 {
-    
+    EditRectName(rectGuid,name);
 }

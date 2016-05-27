@@ -68,7 +68,7 @@ function BuildChildren(layer,currDiv)
             
             if(SelectedRectangle != undefined && rect == SelectedRectangle)
             {
-                textSpan.style.border = "1px solid crimson";
+                textSpan.style.border = "1px solid fuchsia";
             }
             else
             {
@@ -82,7 +82,7 @@ function BuildChildren(layer,currDiv)
             
             textSpan.ondblclick = function()
             {
-                OnRectNameEditMode(this.id);
+                OnRectChildEditMode(this);
             }
             
             childData.appendChild(textSpan);

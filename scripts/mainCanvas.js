@@ -194,7 +194,7 @@ window.onkeydown = function(e)
     {
      _ctrlPressed = true;
     }
-    else if(e.keyCode == "46" || e.keyCode == "8")
+    else if(e.keyCode == "46")
     {
         if(CanvasMode == UIMode.Modify && SelectedRectangle != undefined)
         {
@@ -631,6 +631,15 @@ function GetLayerByRectGuid(rectGuid)
     }
     
     return -1;
+}
+
+function EditRectName(rectGuid,newName)
+{
+    if(CurrentLayer.IsRectInLayer(rectGuid))
+    {
+        var rect = CurrentLayer.GetRectangleByGuid(rectGuid);
+        rect.Name = newName;
+    }
 }
 
 function CheckPointWithinRectBounds(point,rectangle)
