@@ -4,6 +4,7 @@ class NamedRectangle extends Rectangle
     {
         super(x,y,width,height);
         this.name = name;
+        this.category = "";
     }
     
     get Name()
@@ -11,8 +12,18 @@ class NamedRectangle extends Rectangle
         return this.name;
     }
     
+    get Category()
+    {
+        return this.Category;
+    }
+    
     set Name(name)
     {
         this.name = name;
+    }
+    
+    set Category(category)
+    {
+        this.category = category;
     }
 }
