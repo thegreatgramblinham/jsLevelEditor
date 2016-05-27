@@ -52,6 +52,7 @@ openLevelButton.onclick = function(event)
         ]},
         function (fileNames) 
         {
+            ResetCanvas(); 
             if (fileNames === undefined) return;
             var fileName = fileNames[0];
             
@@ -64,7 +65,7 @@ openLevelButton.onclick = function(event)
             else if(ext === SAM_LEVEL_EXT)
             {
                 //Call sam's level reconst function here.
-            } 
+            }
         }
     );
 }

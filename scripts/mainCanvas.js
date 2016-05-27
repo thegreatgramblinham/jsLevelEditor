@@ -710,4 +710,43 @@ function OnVerticalScroll()
     RefreshRectangles();
 }
 
+//Reset and clear all canvas properties and setting canvas on load
+function ResetCanvas()
+{
+    var currentLeft = _horizThumb.style.left;
+    var newLeft = 0;
+    newLeft = Number(currentLeft.substr(0,currentLeft.length-2));
+    MoveHorizontalThumb((-newLeft));
+    var currentTop = _verticalThumb.style.top;
+    var newTop = 0;
+    newTop = Number(currentTop.substr(0,currentTop.length-2));
+    MoveVerticalThumb((-newTop));
+    LayerCollection = [];
+    SelectedRectangle = undefined;
+    CurrentLayer = undefined;
+    _selectedRectOverlay = undefined;
+    InitLayers();
+    RefreshLayerControls();
+    OnSelectedRectangleChanged();
+    RefreshRectangles();
+}
+
+//Set level height and width on load
+function ImportLevelBounds(levelHeight,levelWidth)
+{
+    
+}
+
+//Import basic rectangles
+function ImportRectangles(rectArray)
+{
+    
+}
+
+//Import images
+function ImportImages(imageArray)
+{
+    
+}
+
 
