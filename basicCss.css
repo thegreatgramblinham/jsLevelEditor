@@ -47,6 +47,18 @@ tr.propertyRow {
     height: 20%;
 }
 
+tr.propertyTitleRow
+{
+    height: 12px;
+}
+
+span.propertyGroupTitle
+{
+    font-size: 12px;
+    font-family: monospace;
+    float: left;
+}
+
 td.buttonMenuCell {
     width: 100%;
     height: 33%;
