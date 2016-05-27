@@ -1,7 +1,7 @@
 //This file is for loading categories from a serialized Xml file into the app
 
 //Private Variables
-var _xmlCatagoryFilePath = "D:/Documents/personalRepos/jsLevelEditor/config/categories.xml";
+var _xmlCatagoryFilePath = __dirname + "/config/categories.xml";
 var _xmlCatagoryXPath = "/Categories/Category";
 var _categoryCollection = [];
 
