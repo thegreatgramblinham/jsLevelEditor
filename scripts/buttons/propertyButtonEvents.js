@@ -7,6 +7,7 @@ var _widthBox = document.getElementById("rectWidthBox");
 var _heightBox = document.getElementById("rectHeightBox");
 var _renderIdxBox = document.getElementById("rectRenderIdxBox");
 
+//Public Methods
 function OnSelectedRectangleChanged()
 {
     if(SelectedRectangle != undefined)
@@ -25,7 +26,6 @@ function OnSelectedRectangleChanged()
         _heightBox.value = 0;
         _renderIdxBox.value = 0;
     }
-
 }
 
 //Rect Controls
