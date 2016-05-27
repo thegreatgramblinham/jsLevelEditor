@@ -1,4 +1,8 @@
 //This file is for events related to the file management buttons (load/save)
+//Private Constants
+var MAASHES_LEVEL_EXT = "lvl";
+var SAM_LEVEL_EXT = "";
+
 
 //Methods
 openFolderButton.onclick = function(event) 
@@ -19,12 +23,23 @@ openFolderButton.onclick = function(event)
 saveLevelButton.onclick = function(event) 
 {
     dialog.showSaveDialog(
-        { filters: [{ name: 'JsLeveLEditor Files (*.msg)', extensions: ['msg'] }] },
+        { filters: [{ name: "Shade Level Files (*."+MAASHES_LEVEL_EXT+")", extensions: [MAASHES_LEVEL_EXT] },
+                    { name: "HERDERR Level Files (*."+SAM_LEVEL_EXT+")", extensions: [SAM_LEVEL_EXT] }
+        ]},
         function (fileName) 
         {
             if (fileName === undefined) return;
             
-            //Call xml writing function here.
+            var ext = fileName.split('.').pop();
+            
+            if(ext === MAASHES_LEVEL_EXT)
+            {
+                //Call maashes' xml writing function here.
+            }
+            else if(ext === SAM_LEVEL_EXT)
+            {
+                //Call sam's xml writing function here.
+            }       
         }
     );
 }
@@ -32,13 +47,24 @@ saveLevelButton.onclick = function(event)
 openLevelButton.onclick = function(event) 
 {
     dialog.showOpenDialog(
-        { filters: [{ name: 'JsLeveLEditor Files (*.msg)', extensions: ['msg'] }] },
+        { filters: [{ name: "Shade Level Files (*."+MAASHES_LEVEL_EXT+")", extensions: [MAASHES_LEVEL_EXT] },
+                    { name: "HERDERR Level Files (*."+SAM_LEVEL_EXT+")", extensions: [SAM_LEVEL_EXT] }
+        ]},
         function (fileNames) 
         {
             if (fileNames === undefined) return;
             var fileName = fileNames[0];
             
-            //Call level reconst function here.
+            var ext = fileName.split('.').pop();
+            
+            if(ext === MAASHES_LEVEL_EXT)
+            {
+                //Call maashes' level reconst function here.
+            }
+            else if(ext === SAM_LEVEL_EXT)
+            {
+                //Call sam's level reconst function here.
+            } 
         }
     );
 }
