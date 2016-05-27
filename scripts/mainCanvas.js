@@ -1,4 +1,6 @@
 //DOM Access and Setup
+
+//Private Constants
 var _widthInputBox = document.getElementById("levelWidthBox");
 var _heightInputBox = document.getElementById("levelHeightBox");
 var _canvas = document.getElementById("mainCanvas");
@@ -7,6 +9,9 @@ var _horizontalScroll = document.getElementById("hScroll");
 var _verticalThumb = document.getElementById("vThumb");
 var _horizThumb = document.getElementById("hThumb");
 var _drawContext = _canvas.getContext("2d");
+var CTRL_SCROLL_SPEED = .25;
+
+//Private Variables
 var _mouseDown = false;
 var _ctrlPressed = false;
 var _downPoint = undefined;
@@ -120,7 +125,9 @@ _canvas.onmousemove = function(e)
         }
         else
         {
-            var delta = new point(currPoint.xCoordinate - _downPoint.xCoordinate, currPoint.yCoordinate - _downPoint.yCoordinate);
+            var delta = new point(
+                (currPoint.xCoordinate - _downPoint.xCoordinate)*CTRL_SCROLL_SPEED,
+                (currPoint.yCoordinate - _downPoint.yCoordinate)*CTRL_SCROLL_SPEED);
             
             if(_horizScrollVisible)
             {

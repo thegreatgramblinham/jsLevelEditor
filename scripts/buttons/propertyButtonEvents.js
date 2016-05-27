@@ -6,6 +6,7 @@ var _yBox = document.getElementById("rectYBox");
 var _widthBox = document.getElementById("rectWidthBox");
 var _heightBox = document.getElementById("rectHeightBox");
 var _renderIdxBox = document.getElementById("rectRenderIdxBox");
+var _categoryComboBox = document.getElementById("categoryComboBox");
 
 //Public Methods
 function OnSelectedRectangleChanged()
@@ -17,6 +18,10 @@ function OnSelectedRectangleChanged()
         _widthBox.value = Number(Number(SelectedRectangle.Width).toFixed(0));
         _heightBox.value = Number(Number(SelectedRectangle.Height).toFixed(0));
         _renderIdxBox.value = SelectedRectangle.RenderIdx;
+        _categoryComboBox.value = SelectedRectangle.Category == undefined ||
+                                  SelectedRectangle.Category === ""
+                    ? "None" 
+                    : SelectedRectangle.Category;
     }
     else
     {
@@ -25,6 +30,7 @@ function OnSelectedRectangleChanged()
         _widthBox.value = 0;
         _heightBox.value = 0;
         _renderIdxBox.value = 0;
+        _categoryComboBox.value = "None";
     }
 }
 
@@ -65,6 +71,7 @@ _heightBox.onchange = function(e)
     }
 }
 
+//Grouping Controls
 _renderIdxBox.onchange = function(e)
 {
     if(SelectedRectangle != undefined)
@@ -75,4 +82,12 @@ _renderIdxBox.onchange = function(e)
     }
 }
 
-//Render Controls
+_categoryComboBox.onchange = function(e)
+{
+    if(SelectedRectangle != undefined 
+        && SelectedRectangle instanceof NamedRectangle)
+        {
+            SelectedRectangle.Category = _categoryComboBox.value;
+        }
+}
+

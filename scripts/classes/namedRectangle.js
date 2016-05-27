@@ -14,7 +14,7 @@ class NamedRectangle extends Rectangle
     
     get Category()
     {
-        return this.Category;
+        return this.category;
     }
     
     set Name(name)

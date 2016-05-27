@@ -92,7 +92,8 @@ var filesInGlobalBuild =
     //END EVENT HANDLERS
     //START ENGINE FILES
     "/scripts/imageLoading/imageLoader.js",
-    "/scripts/layerLoading/layerLoader.js"
+    "/scripts/layerLoading/layerLoader.js",
+    "/scripts/categoryLoading/categoryLoader.js"
     //END ENGINE FILES
 ];
 ///////////////////////////////////////////
