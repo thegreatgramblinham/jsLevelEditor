@@ -11,6 +11,11 @@ function ImageButtonOnClick(imageIndex, button)
 {
     SwitchToImageBrush(imageIndex);
     SetButtonAsSelected(button);
+    
+    if(CanvasMode == UIMode.Modify)
+    {
+        SwitchToAdd();
+    }
 }
 
 //Main
@@ -47,6 +52,11 @@ function SwitchToBasicRectBrush(e)
     
     document.getElementById("rectWidthBox").disabled = false;
     document.getElementById("rectHeightBox").disabled = false;
+    
+    if(CanvasMode == UIMode.Modify)
+    {
+        SwitchToAdd();
+    }
     
     console.log("Set non-image brush to: BasicRect");
 }
