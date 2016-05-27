@@ -104,7 +104,7 @@ _canvas.onmousemove = function(e)
                     _drawContext.stroke();
                     _drawContext.closePath();
 
-                    _currentRectangle = new Rectangle(rectX, rectY,width,height,CurrentLayer.ChildCount().toString());
+                    _currentRectangle = new NamedRectangle(rectX, rectY,width,height,CurrentLayer.ChildCount().toString());
                 }
                
             }
@@ -497,7 +497,7 @@ function UpdateHorizontalScrollVisual()
 ///</summary>
 function AddRectangle()
 {
-    var addRect = new Rectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, CurrentLayer.ChildCount());
+    var addRect = new NamedRectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, CurrentLayer.ChildCount());
     CurrentLayer.AddRectangle(addRect);
     _currentRectangle = undefined;
     RefreshLayerControls();

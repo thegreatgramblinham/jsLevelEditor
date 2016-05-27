@@ -62,7 +62,7 @@ function BuildChildren(layer,currDiv)
             var childData = document.createElement("td");
             childData.className="layerChildCell";
             var textSpan = document.createElement("span");
-            textSpan.innerHTML = rect.Id;
+            textSpan.innerHTML = rect.Name;
             textSpan.id = "layerChild"+layer.LayerIdx.toString();
             textSpan.className="layerChildSpan";
             childData.appendChild(textSpan);

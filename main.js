@@ -76,6 +76,7 @@ var filesInGlobalBuild =
     "/scripts/build/globalVariables.js",
     //CLASSES
     "/scripts/classes/rectangle.js",
+    "/scripts/classes/namedRectangle.js",
     "/scripts/classes/imageRectangle.js",
     "/scripts/imageLoading/imageBrush.js",
     "/scripts/classes/overlay.js",
