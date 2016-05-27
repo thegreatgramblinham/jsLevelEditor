@@ -25,6 +25,7 @@ var _prevScrollOffsetY = 0;
 var _prevScrollOffsetX = 0;
 var _levelWidth = 0;
 var _levelHeight = 0;
+var _scale = 1;
 var _selectedRectOverlay = undefined;
 const _minThumbWidth = 15;
 const _minThumbHeight = 15;
@@ -170,6 +171,28 @@ _canvas.onmouseup = function(e)
     }
     
 };
+
+_canvas.onmousewheel = function(e)
+{
+    if(!_ctrlPressed && !_mouseDown)
+    {
+        var scrollPoint = GetMousePointInElement(_canvas,e.clientX,e.clientY);
+        //wheelDelta comes in as either 120 or -120, so we just need 1 or -1 to determine whether we should zoom in out out
+        var wheel = e.wheelDelta/120;
+        if(wheel > 0)
+        {
+            _scale += .1;
+        }
+        else if(wheel < 0)
+        {
+            _scale -= .1;
+        }
+        _drawContext.translate(-_scrollXDelta, -_scrollYDelta);
+        _drawContext.scale(_scale,_scale);
+        RefreshRectangles();
+        console.log(_scale.toFixed(1));
+    }
+}
 
 //Window events
 window.onresize = function(e)
