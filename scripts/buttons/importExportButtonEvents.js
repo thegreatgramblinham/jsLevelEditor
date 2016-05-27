@@ -52,7 +52,6 @@ openLevelButton.onclick = function(event)
         ]},
         function (fileNames) 
         {
-            ResetCanvas(); 
             if (fileNames === undefined) return;
             var fileName = fileNames[0];
             

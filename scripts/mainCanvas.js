@@ -423,7 +423,7 @@ function RectRenderLayerChanged(oldLayerIdx)
        
         var newLayer = LayerCollection[newLayerIdx];
         newLayer.AddRectangle(SelectedRectangle);
-        RefreshLayerControls();
+        OnCurrentLayerSelected(newLayerIdx);
         RefreshRectangles();
     }
 }
