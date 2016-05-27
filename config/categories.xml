@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<categories>
+	<category>None</category>
+    <category>Enemy</category>
+    <category>Player</category>
+    <category>Prop</category>
+	<category>Backdrop</category>
+    <category>Platform</category>
+    <category>Wall</category>
+	<category>Floor</category>
+	<category>Trigger</category>
+</categories>
