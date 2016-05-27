@@ -98,11 +98,27 @@ _canvas.onmousemove = function(e)
                     var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
                     var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
                     
+                    if((rectX < 0 || rectX > _levelWidth) ||
+                        (rectY < 0 || rectY > _levelHeight))
+                    {
+                        _currentRectangle = undefined;
+                        return;
+                    }
+                    
+                    if(rectX + width > _levelWidth )
+                    {
+                        width = _levelWidth-rectX;
+                    }
+                    
+                    if(rectY + height > _levelHeight)
+                    {
+                        height = _levelHeight-rectY;
+                    }   
+                        
                     rectX = Number(rectX.toFixed(0));
                     rectY = Number(rectY.toFixed(0));
                     width = Number(width.toFixed(0));
                     height = Number(height.toFixed(0));
-
                     _drawContext.beginPath();
                     _drawContext.setLineDash([3,4])
                     _drawContext.strokeStyle = "#D1A147"
@@ -111,6 +127,7 @@ _canvas.onmousemove = function(e)
                     _drawContext.closePath();
 
                     _currentRectangle = new NamedRectangle(rectX, rectY,width,height,CurrentLayer.ChildCount().toString());
+                    
                 }
                
             }
@@ -423,7 +440,7 @@ function RectRenderLayerChanged(oldLayerIdx)
        
         var newLayer = LayerCollection[newLayerIdx];
         newLayer.AddRectangle(SelectedRectangle);
-        RefreshLayerControls();
+        OnCurrentLayerSelected(newLayerIdx);
         RefreshRectangles();
     }
 }
@@ -708,6 +725,45 @@ function OnVerticalScroll()
 {
      _drawContext.translate(0, -_scrollYDelta);
     RefreshRectangles();
+}
+
+//Reset and clear all canvas properties and setting canvas on load
+function ResetCanvas()
+{
+    var currentLeft = _horizThumb.style.left;
+    var newLeft = 0;
+    newLeft = Number(currentLeft.substr(0,currentLeft.length-2));
+    MoveHorizontalThumb((-newLeft));
+    var currentTop = _verticalThumb.style.top;
+    var newTop = 0;
+    newTop = Number(currentTop.substr(0,currentTop.length-2));
+    MoveVerticalThumb((-newTop));
+    LayerCollection = [];
+    SelectedRectangle = undefined;
+    CurrentLayer = undefined;
+    _selectedRectOverlay = undefined;
+    InitLayers();
+    RefreshLayerControls();
+    OnSelectedRectangleChanged();
+    RefreshRectangles();
+}
+
+//Set level height and width on load
+function ImportLevelBounds(levelHeight,levelWidth)
+{
+    
+}
+
+//Import basic rectangles
+function ImportRectangles(rectArray)
+{
+    
+}
+
+//Import images
+function ImportImages(imageArray)
+{
+    
 }
 
 

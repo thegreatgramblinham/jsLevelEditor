@@ -64,7 +64,7 @@ openLevelButton.onclick = function(event)
             else if(ext === SAM_LEVEL_EXT)
             {
                 //Call sam's level reconst function here.
-            } 
+            }
         }
     );
 }
