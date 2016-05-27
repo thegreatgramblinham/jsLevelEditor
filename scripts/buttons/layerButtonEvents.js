@@ -13,3 +13,16 @@ function OnCurrentLayerSelected(layerIdx)
     CurrentLayer = layer;
     RefreshLayerControls();
 }
+
+function OnRectChildSelected(rectGuid)
+{
+    if(CanvasMode == UIMode.Modify)
+    {
+        SelectRectangleByGuid(rectGuid);
+    }
+}
+
+function OnRectChildEditMode(rectGuid)
+{
+    
+}

@@ -17,7 +17,7 @@ function RefreshLayerControls()
         var currButton = document.createElement("button");
         var nameSpan = document.createElement("span");
         currButton.id = currLayer.LayerIdx.toString();
-        nameSpan.innerHTML = currLayer.LayerIdx.toString();
+        nameSpan.innerHTML = "Layer "+ currLayer.LayerIdx.toString();
         currButton.appendChild(nameSpan);
         if(currLayer.IsSelected)
         {
@@ -63,8 +63,28 @@ function BuildChildren(layer,currDiv)
             childData.className="layerChildCell";
             var textSpan = document.createElement("span");
             textSpan.innerHTML = rect.Name;
-            textSpan.id = "layerChild"+layer.LayerIdx.toString();
+            textSpan.id = rect.Id;
             textSpan.className="layerChildSpan";
+            
+            if(SelectedRectangle != undefined && rect == SelectedRectangle)
+            {
+                textSpan.style.border = "1px solid crimson";
+            }
+            else
+            {
+                textSpan.style.border = "1px solid #283a40";
+            }
+            
+            textSpan.onclick = function()
+            {
+                OnRectChildSelected(this.id);
+            }
+            
+            textSpan.ondblclick = function()
+            {
+                OnRectNameEditMode(this.id);
+            }
+            
             childData.appendChild(textSpan);
             childRow.appendChild(childData);
             childTable.appendChild(childRow);
