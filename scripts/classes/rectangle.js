@@ -1,12 +1,12 @@
 class Rectangle
 {
-    constructor(x,y,width,height,id)
+    constructor(x,y,width,height)
     {
         this.height = height;
         this.width = width;
         this.xLocation = x;
         this.yLocation = y;
-        this.id = id;
+        this.id = guid();
         this.renderIdx = 0;
     }
     
