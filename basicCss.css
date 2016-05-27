@@ -121,6 +121,15 @@ td.layerMenuCell
     overflow-y: scroll;
 }
 
+td.categoryMenuCell
+{
+    width: 15%; 
+    height: 100%;
+    float: left;
+    background: #99a9ae;
+    overflow-y: scroll;
+}
+
 span.propertyItem {
     font-size: 10px;
     font-family: monospace;

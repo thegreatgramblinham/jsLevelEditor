@@ -5,10 +5,47 @@ var _xmlCatagoryFilePath = __dirname + "/config/categories.xml";
 var _xmlCatagoryXPath = "/Categories/Category";
 var _categoryCollection = [];
 
+var _categoryDiv = document.getElementById("categoryGroupDiv");
+var _categoryContent = document.createElement("DIV");
+
 //Main
 InitCategories();
+_categoryDiv.appendChild(_categoryContent);
+RefreshCategoryView();
 
 //Public Methods
+
+function RefreshCategoryView()
+{  
+    var categoryCollections = []; //dictionary keyed on categoryName
+    
+    for(var i = 0; i < LayerCollection.length; i++)
+    {
+        var layer = LayerCollection[i];
+        
+        for(var j = 0; j < layer.ChildCount(); j++)
+        {
+            var rect = layer.GetRectangle(j);
+            
+            if(!(rect instanceof NamedRectangle)) continue;
+            
+            if(categoryCollections[rect.Category] == undefined)
+                categoryCollections[rect.Category] = [rect];
+            else
+                categoryCollections[rect.Category].push(rect);
+        }
+    }   
+}
+
+function BuildCategoryList(categoryCollections)
+{
+    var newCategoryContentDiv = document.createElement("DIV");
+    
+    //todo construct here
+}
+
+
+//Private Methods
 function InitCategories()
 {
     LoadXmlCategories();
