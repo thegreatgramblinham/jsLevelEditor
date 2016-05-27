@@ -12,7 +12,7 @@ InitCategories();
 function InitCategories()
 {
     LoadXmlCategories();
-    InitCategoryComboBox
+    InitCategoryComboBox();
 }
 
 function LoadXmlCategories()
@@ -33,5 +33,14 @@ function LoadXmlCategories()
 
 function InitCategoryComboBox()
 {
+    var cateComboBox = document.getElementById("categoryComboBox");
     
+    for(var i = 0; i < _categoryCollection.length; i++)
+    {
+        var option = document.createElement("OPTION");
+        option.value = _categoryCollection[i];
+        option.innerHTML = _categoryCollection[i];
+        
+        cateComboBox.appendChild(option);
+    }
 }
