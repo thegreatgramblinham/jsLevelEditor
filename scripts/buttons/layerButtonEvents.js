@@ -34,6 +34,15 @@ function OnRectChildEditMode(spanElement)
     {
         OnApplyRectangleName(actualSpan.id,actualSpan.innerHTML)
     }
+    
+    actualSpan.onkeydown = function(e)
+    {
+        if(e.keyCode == "13")
+        {
+            this.contentEditable = false;
+            this.blur();
+        }
+    }
 }
 
 function OnApplyRectangleName(rectGuid,name)
