@@ -93,7 +93,9 @@ var filesInGlobalBuild =
     //START ENGINE FILES
     "/scripts/imageLoading/imageLoader.js",
     "/scripts/layerLoading/layerLoader.js",
-    "/scripts/categoryLoading/categoryLoader.js"
+    "/scripts/categoryLoading/categoryLoader.js",
+    "/scripts/exporting/lvlExporter.js",
+    "/scripts/importing/lvlImporter.js"
     //END ENGINE FILES
 ];
 ///////////////////////////////////////////
