@@ -69,8 +69,9 @@ _renderIdxBox.onchange = function(e)
 {
     if(SelectedRectangle != undefined)
     {
+        var oldValue = SelectedRectangle.RenderIdx;
         SelectedRectangle.RenderIdx = Number(_renderIdxBox.value);
-        RectRenderLayerChanged();
+        RectRenderLayerChanged(oldValue);
     }
 }
 
