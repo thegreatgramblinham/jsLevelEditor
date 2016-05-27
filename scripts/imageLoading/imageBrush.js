@@ -36,4 +36,9 @@ class ImageBrush
     {
         this.image = image;
     }
+    
+    GetFileName()
+    {
+       return this.imagePath.split('/').pop().split('.')[0];
+    }
 }
