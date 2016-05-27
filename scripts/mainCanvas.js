@@ -505,7 +505,7 @@ function UpdateHorizontalScrollVisual()
 ///</summary>
 function AddRectangle()
 {
-    var addRect = new NamedRectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, CurrentLayer.ChildCount());
+    var addRect = new NamedRectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, "Rectangle "+CurrentLayer.ChildCount());
     CurrentLayer.AddRectangle(addRect);
     _currentRectangle = undefined;
     RefreshLayerControls();
@@ -513,7 +513,7 @@ function AddRectangle()
 
 function AddImage(imageX,imageY)
 {
-    CurrentLayer.AddRectangle(new ImageRectangle(imageX,imageY, CurrentImageBrush.Image, CurrentLayer.ChildCount()));
+    CurrentLayer.AddRectangle(new ImageRectangle(imageX,imageY, CurrentImageBrush.Image, CurrentImageBrush.GetFileName()));
     RefreshLayerControls();
     if(imageX+CurrentImageBrush.Width > _levelWidth || imageY+CurrentImageBrush.Height > _levelWidth)
     {
