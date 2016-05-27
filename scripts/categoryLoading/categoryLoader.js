@@ -24,15 +24,11 @@ function LoadXmlCategories()
     parser = new DOMParser();
     var xmlDoc = parser.parseFromString(xmlCatagoryString,"text/xml");
     
-    //var xmlDoc = xml2js.parseFromString(xmlCatagoryString, function(err, result) {console.log(err);});
-    
-    var categories = xmlDoc.getElementsByTagName("category");
-    for(var i = 0; i < categories.length; i++)
+    var categories = xmlDoc.getElementsByTagName("categories");
+    for(var i = 0; i < categories[0].children.length; i++)
     {
-        _categoryCollection.push(categories[i].childNodes[0].nodeValue.toString());
+        _categoryCollection.push(categories[0].children[i].innerHTML);
     }
-    
-    return xmlDoc;
 }
 
 function InitCategoryComboBox()
