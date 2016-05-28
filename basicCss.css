@@ -129,7 +129,6 @@ td.buttonMenuCell {
 }
 
 td.propertyCell {
-    width: 5%;
     height: 30px;
     vertical-align: top;
     padding-left: 5;
@@ -151,9 +150,9 @@ tr.layerRow
 
 td.layerMenuCell
 {
-    width: 20%; 
+    width: 24%; 
     height: 100%;
-    float: right;
+    float: left;
     background: #567179;
     overflow-y: scroll;
 }
@@ -164,6 +163,7 @@ td.categoryMenuCell
     height: 100%;
     float: left;
     background: #99a9ae;
+    border-radius: 3px; 
     overflow-y: scroll;
 }
 
