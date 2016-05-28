@@ -33,7 +33,7 @@ function SwitchToAdd(e)
 {
     CanvasMode = UIMode.Add;
     console.log("Switched to image ADD mode.");
-    document.getElementById("addModeButton").style.backgroundColor = "fuchsia";
+    document.getElementById("addModeButton").style.backgroundColor = "darkgoldenrod";
     document.getElementById("modfiyModeButton").style.backgroundColor = "#567179";
 }
 
@@ -42,7 +42,7 @@ function SwitchToModify(e)
     CanvasMode = UIMode.Modify;
     console.log("Switched to image MODIFY mode.");
     document.getElementById("addModeButton").style.backgroundColor = "#567179";
-    document.getElementById("modfiyModeButton").style.backgroundColor = "fuchsia";
+    document.getElementById("modfiyModeButton").style.backgroundColor = "darkgoldenrod";
 }
 
 function SwitchToBasicRectBrush(e)
@@ -76,7 +76,7 @@ function SetButtonAsSelected(button)
 {
     ResetOldBrushSelection();
     
-    button.style.border = SELECTED_BRUSH_PADDING + " solid fuchsia";
+    button.style.border = SELECTED_BRUSH_PADDING + " solid darkgoldenrod";
     button.style.padding = "0px";
     _currentlySelectedButton = button;
 }
