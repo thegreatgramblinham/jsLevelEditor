@@ -88,6 +88,7 @@ _categoryComboBox.onchange = function(e)
         && SelectedRectangle instanceof NamedRectangle)
         {
             SelectedRectangle.Category = _categoryComboBox.value;
+            RefreshPropertyControls();
         }
 }
 
