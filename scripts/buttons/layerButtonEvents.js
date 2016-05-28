@@ -12,7 +12,7 @@ function OnCurrentLayerSelected(layerIdx)
         }
     }
     CurrentLayer = layer;
-    RefreshLayerControls();
+    RefreshPropertyControls();
 }
 
 function OnRectChildSelected(rectGuid)

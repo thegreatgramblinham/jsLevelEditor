@@ -48,11 +48,26 @@ span
     color: antiquewhite;
 }
 
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
 
 /* Bottom Property Bar */
 table.propertyTable
 {
     background: #4d656c;
+    padding-right: 2;
 }
 
 tr.propertyRow 
@@ -103,6 +118,16 @@ td.layerMenuCell
     width: 20%; 
     height: 100%;
     float: right;
+    background: #567179;
+    overflow-y: scroll;
+}
+
+td.categoryMenuCell
+{
+    width: 100%; 
+    height: 100%;
+    float: left;
+    background: #99a9ae;
     overflow-y: scroll;
 }
 
@@ -166,6 +191,27 @@ button.layerButton
     background: #44626b;
     padding: 0;
     align-content: left;
+}
+
+span.categoryTitle
+{
+    width: 100%;
+    height: 20px;
+    background: #6b7679;
+    font-family: monospace;
+    padding: 0;
+    display: table;
+}
+
+span.categoryChildRect
+{
+    width: 100%;
+    height: 15px;
+    display: table-footer-group;; 
+    font-size: 10px;
+    font-family: monospace;
+    background: #7a878b;
+    padding-left: 10px;
 }
 
 

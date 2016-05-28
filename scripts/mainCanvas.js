@@ -405,7 +405,7 @@ function InitLayers()
 function AddLayer()
 {
     LayerCollection.push(new RenderLayer(LayerCollection.length));
-    RefreshLayerControls();
+    RefreshPropertyControls();
 }
 
 function RemoveLayer(layerIdx)
@@ -525,13 +525,13 @@ function AddRectangle()
     var addRect = new NamedRectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, "Rectangle "+CurrentLayer.ChildCount());
     CurrentLayer.AddRectangle(addRect);
     _currentRectangle = undefined;
-    RefreshLayerControls();
+    RefreshPropertyControls();
 }
 
 function AddImage(imageX,imageY)
 {
     CurrentLayer.AddRectangle(new ImageRectangle(imageX,imageY, CurrentImageBrush.Image, CurrentImageBrush.GetFileName()));
-    RefreshLayerControls();
+    RefreshPropertyControls();
     if(imageX+CurrentImageBrush.Width > _levelWidth || imageY+CurrentImageBrush.Height > _levelWidth)
     {
         var newRight = imageX+CurrentImageBrush.Width;
@@ -553,7 +553,7 @@ function RemoveSelectedRectangle()
         SelectedRectangle = undefined;
         OnSelectedRectangleChanged();
         _selectedRectOverlay = undefined;
-        RefreshLayerControls();
+        RefreshPropertyControls();
         RefreshRectangles();
     }
 }
@@ -592,7 +592,7 @@ function DetectRectangleHit(hitPoint)
                 AddResizeOverlay(CurrentLayer.GetRectangle(i));
                 SelectedRectangle = CurrentLayer.GetRectangle(i);
                 OnSelectedRectangleChanged();
-                RefreshLayerControls();
+                RefreshPropertyControls();
             }
             else
             {
@@ -606,7 +606,7 @@ function DetectRectangleHit(hitPoint)
         SelectedRectangle = undefined;
         OnSelectedRectangleChanged();
         _selectedRectOverlay = undefined;
-        RefreshLayerControls();
+        RefreshPropertyControls();
     }
 }
 
@@ -631,7 +631,7 @@ function SelectRectangleByGuid(rectGuid)
             SelectedRectangle = rect;
             OnSelectedRectangleChanged();
             RefreshRectangles();
-            RefreshLayerControls();
+            RefreshPropertyControls();
         }
     }
 }
@@ -743,9 +743,15 @@ function ResetCanvas()
     CurrentLayer = undefined;
     _selectedRectOverlay = undefined;
     InitLayers();
-    RefreshLayerControls();
-    OnSelectedRectangleChanged();
+    RefreshPropertyControls();
     RefreshRectangles();
+}
+
+function RefreshPropertyControls()
+{
+    RefreshLayerControls();
+    RefreshCategoryView();
+    OnSelectedRectangleChanged();
 }
 
 //Set level height and width on load
