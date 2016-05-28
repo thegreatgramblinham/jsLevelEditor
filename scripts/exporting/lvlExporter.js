@@ -1,9 +1,10 @@
 class LvlExporter
 {
-    constructor(outputPath)
+    constructor(outputPath, layerCollection)
     {
         this.outputFilePath = outputPath;
         this.outputXml = new XmlStringBuilder();
+        this.layerCollection = layerCollection;
     }
     
     ExportLevel()
@@ -13,9 +14,9 @@ class LvlExporter
         var platforms = [];
         var enemies = [];
         var props = [];
-        for(var i = 0; i<LayerCollection.length; i++)
+        for(var i = 0; i<this.layerCollection.length; i++)
         {
-            var layer = LayerCollection[i];
+            var layer = this.layerCollection[i];
             var layerBackdrops = layer.GetAllRectsByCategory("Backdrop");
             backDrops = backDrops.concat(layerBackdrops);
             
