@@ -35,6 +35,9 @@ saveLevelButton.onclick = function(event)
             if(ext === MAASHES_LEVEL_EXT)
             {
                 //Call maashes' xml writing function here.
+                var lvlExporter = new LvlExporter(fileName);
+                var xml = lvlExporter.ExportLevel();
+                fs.writeFileSync(fileName, xml, "utf8");
             }
             else if(ext === SAM_LEVEL_EXT)
             {

@@ -51,6 +51,20 @@ class RenderLayer
         return undefined;
     }
     
+    GetAllRectsByCategory(categoryString)
+    {
+        var i;
+        var rects = [];
+        for(i=0; i <this.rectangles.length; i++)
+        {
+            if(this.rectangles[i].Category == categoryString)
+            {
+                rects.push(this.rectangles[i]);
+            }
+        }
+        return rects;
+    }
+    
     IsRectInLayer(rectGuid)
     {
         var i;
