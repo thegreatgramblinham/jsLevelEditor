@@ -7,6 +7,7 @@ var _widthBox = document.getElementById("rectWidthBox");
 var _heightBox = document.getElementById("rectHeightBox");
 var _renderIdxBox = document.getElementById("rectRenderIdxBox");
 var _categoryComboBox = document.getElementById("categoryComboBox");
+var _additionCategoryComboBox = document.getElementById("additionCategoryComboBox");
 
 //Public Methods
 function OnSelectedRectangleChanged()
@@ -90,5 +91,10 @@ _categoryComboBox.onchange = function(e)
             SelectedRectangle.Category = _categoryComboBox.value;
             RefreshPropertyControls();
         }
+}
+
+_additionCategoryComboBox.onchange = function(e)
+{
+    DefaultCategory = _additionCategoryComboBox.value;
 }
 

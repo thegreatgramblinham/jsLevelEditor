@@ -101,13 +101,20 @@ function LoadXmlCategories()
 function InitCategoryComboBox()
 {
     var cateComboBox = document.getElementById("categoryComboBox");
+    var additionCateComboBox = document.getElementById("additionCategoryComboBox");
     
     for(var i = 0; i < _categoryCollection.length; i++)
     {
+        //create one for the selected rect category
         var option = document.createElement("OPTION");
         option.value = _categoryCollection[i];
-        option.innerHTML = _categoryCollection[i];
-        
+        option.innerHTML = _categoryCollection[i];   
         cateComboBox.appendChild(option);
+        
+        //create one for the addition control
+        var option = document.createElement("OPTION");
+        option.value = _categoryCollection[i];
+        option.innerHTML = _categoryCollection[i]; 
+        additionCateComboBox.appendChild(option);
     }
 }
