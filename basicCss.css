@@ -192,6 +192,28 @@ button.layerButton
     align-content: left;
 }
 
+span.categoryTitle
+{
+    width: 100%;
+    height: 20px;
+    border: 1px solid #283a40;
+    background: #44626b;
+    font-family: monospace;
+    padding: 0;
+    display: table;
+}
+
+span.categoryChildRect
+{
+    width: 100%;
+    height: 15px;
+    display: table-footer-group;; 
+    font-size: 10px;
+    font-family: monospace;
+    background: #567179;
+    padding-left: 10px;
+}
+
 
 /* Image Sidebar */
 button.imageListButton {

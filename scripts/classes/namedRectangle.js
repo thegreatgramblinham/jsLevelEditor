@@ -4,7 +4,7 @@ class NamedRectangle extends Rectangle
     {
         super(x,y,width,height);
         this.name = name;
-        this.category = "";
+        this.category = "None";
     }
     
     get Name()

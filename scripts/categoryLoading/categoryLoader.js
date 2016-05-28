@@ -2,9 +2,6 @@
 
 //Private Variables
 var _xmlCatagoryFilePath = __dirname + "/config/categories.xml";
-var _xmlCatagoryXPath = "/Categories/Category";
-var _categoryCollection = [];
-
 var _categoryDiv = document.getElementById("categoryGroupDiv");
 var _categoryContent = document.createElement("DIV");
 
@@ -18,6 +15,7 @@ RefreshCategoryView();
 function RefreshCategoryView()
 {  
     var categoryCollections = []; //dictionary keyed on categoryName
+    var categoryKeys = []; //keys to above dictionary
     
     for(var i = 0; i < LayerCollection.length; i++)
     {
@@ -30,18 +28,50 @@ function RefreshCategoryView()
             if(!(rect instanceof NamedRectangle)) continue;
             
             if(categoryCollections[rect.Category] == undefined)
+            {
                 categoryCollections[rect.Category] = [rect];
+                categoryKeys.push(rect.Category);
+            }       
             else
                 categoryCollections[rect.Category].push(rect);
         }
     }   
+    
+    BuildCategoryList(categoryCollections, categoryKeys);
 }
 
-function BuildCategoryList(categoryCollections)
+function BuildCategoryList(categoryCollections, categoryKeys)
 {
+    _categoryDiv = document.getElementById("categoryGroupDiv");
     var newCategoryContentDiv = document.createElement("DIV");
     
-    //todo construct here
+    for(var i = 0; i < categoryKeys.length; i++)
+    {
+        var group = categoryCollections[categoryKeys[i]];
+        var currDiv = document.createElement("DIV");
+        var categorySpan = document.createElement("SPAN");
+        categorySpan.innerHTML = group[0].Category;
+        categorySpan.className = "categoryTitle";
+        currDiv.appendChild(categorySpan);
+        
+        for(var j = 0; j < group.length; j++)
+        {
+            var rect = group[j];
+            
+            var rectSpan = document.createElement("SPAN");
+            rectSpan.innerHTML = rect.Name;
+            rectSpan.className = "categoryChildRect";
+            
+            currDiv.appendChild(rectSpan);           
+        }
+        
+        newCategoryContentDiv.appendChild(currDiv);
+    }
+    
+    if(_categoryDiv.children.length > 0)    
+        _categoryDiv.replaceChild(newCategoryContentDiv, _categoryDiv.children[0]);   
+    else
+        _categoryDiv.appendChild(newCategoryContentDiv);
 }
 
 
