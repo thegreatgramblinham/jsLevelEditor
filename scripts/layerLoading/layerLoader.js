@@ -22,7 +22,7 @@ function RefreshLayerControls()
         currButton.appendChild(nameSpan);
         if(currLayer.IsSelected)
         {
-           currButton.style.border = "2px solid fuchsia"
+           currButton.style.border = "2px solid darkgoldenrod"
         }
                 
         currButton.onclick = function()
@@ -64,7 +64,7 @@ function BuildChildren(layer,currDiv)
             
             if(SelectedRectangle != undefined && rect == SelectedRectangle)
             {
-                textSpan.style.border = "1px solid fuchsia";
+                textSpan.style.border = "1px solid darkgoldenrod";
             }
             else
             {

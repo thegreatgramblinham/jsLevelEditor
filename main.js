@@ -71,7 +71,9 @@ var filesInGlobalBuild =
     //ENUMS
     "/scripts/enums.js",
     //UTILS
-    "/scripts/utils.js",
+    "/scripts/utils/utils.js",
+    "/scripts/utils/stringBuilder.js",
+    "/scripts/utils/xmlStringBuilder.js",
     //GLOBAL VARABLES
     "/scripts/build/globalVariables.js",
     //CLASSES
@@ -95,7 +97,8 @@ var filesInGlobalBuild =
     "/scripts/layerLoading/layerLoader.js",
     "/scripts/categoryLoading/categoryLoader.js",
     "/scripts/exporting/lvlExporter.js",
-    "/scripts/importing/lvlImporter.js"
+    "/scripts/importing/lvlImporter.js",
+    "/scripts/exporting/pldExporter.js"
     //END ENGINE FILES
 ];
 ///////////////////////////////////////////
