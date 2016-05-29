@@ -97,25 +97,10 @@ class PLDImporter
         
         if(backgroundContainer == undefined) return; //no background present
         
-        var background = backgroundContainer.children[0];
-         
+        var background = backgroundContainer.children[0];      
         var propertyArr = this.DeserializeRectProperties(background);
         
-        if(propertyArr[TYPE_TAG] == IMAGERECT_CLASS)
-        {
-            var image = GetImageElementByFileName(background.tagName);    
-            if(image == undefined)
-                throw "Could not find background "+ background.tagName +" in open images.";
-               
-            AddImage(propertyArr[X_TAG], propertyArr[Y_TAG], image, background.tagName);
-        }
-        else if(propertyArr[TYPE_TAG] == BASICRECT_CLASS)
-        {
-            
-        }
-        else   
-            throw "Rectangle type not intializable."
-
+        this.AddToCanvas(propertyArr, background);
     }
     
     //Private Methods
@@ -160,5 +145,26 @@ class PLDImporter
             throw rectTag.tagName + " RenderGroup not found.";
             
         return propertyArr;
+    }
+    
+    AddToCanvas(propertyArr, tag)
+    {
+        if(propertyArr[TYPE_TAG] == IMAGERECT_CLASS)
+        {
+            var image = GetImageElementByFileName(tag.tagName);    
+            if(image == undefined)
+                throw "Could not find file "+ tag.tagName +" in open images.";
+               
+            AddImage(propertyArr[X_TAG], propertyArr[Y_TAG], image, tag.tagName);
+        }
+        else if(propertyArr[TYPE_TAG] == BASICRECT_CLASS)
+        {
+            AddRectangle(propertyArr[X_TAG], propertyArr[Y_TAG], propertyArr[WIDTH_TAG],
+                propertyArr[HEIGHT_TAG], tag.tagName, BACKDROP_TAG);
+                
+            //todo support for render groups
+        }
+        else   
+            throw "Rectangle type not intializable."
     }
 }

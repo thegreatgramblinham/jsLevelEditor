@@ -178,7 +178,7 @@ _canvas.onmouseup = function(e)
         _downPoint = undefined;
         if(_currentRectangle != undefined && IsValidRectangle())
         {
-            AddRectangle();
+            AddRectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, "Rectangle "+CurrentLayer.ChildCount());
         }
         else if(BrushSelection == BrushType.Image && CanvasMode == UIMode.Add && !_ctrlPressed)
         {
@@ -518,13 +518,14 @@ function UpdateHorizontalScrollVisual()
 ///<summary>
 /// Adds a rectangle data object to the internal collection
 ///</summary>
-function AddRectangle()
+function AddRectangle(x, y, width, height, name, category)
 {
-    var addRect = new NamedRectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, "Rectangle "+CurrentLayer.ChildCount());
-    addRect.Category = DefaultCategory;
+    var addRect = new NamedRectangle(x, y, width, height, name);
+    addRect.Category = category == undefined ? DefaultCategory : category;
     CurrentLayer.AddRectangle(addRect);
     _currentRectangle = undefined;
     RefreshPropertyControls();
+    RefreshRectangles();
 }
 
 function AddImage(imageX,imageY, image, imageFileName)
@@ -533,10 +534,10 @@ function AddImage(imageX,imageY, image, imageFileName)
     imgRect.Category = DefaultCategory;
     CurrentLayer.AddRectangle(imgRect);
     RefreshPropertyControls();
-    if(imageX + image.Width > LevelWidth || imageY + image.Height > LevelWidth)
+    if(imageX + image.width > LevelWidth || imageY + image.height > LevelWidth)
     {
-        var newRight = imageX + image.Width;
-        var newBottom = imageY + image.Height;
+        var newRight = imageX + image.width;
+        var newBottom = imageY + image.height;
         _widthInputBox.value = newRight;
         _heightInputBox.value = newBottom;
         LevelWidth = newRight;
