@@ -91,25 +91,28 @@ class PLDImporter
     ReconstituteBackground()
     {
         var backgroundTags = this.xmlDoc.getElementsByTagName(BACKDROP_TAG);
-        var background = backgroundTags[0];
+        var backgroundContainer = backgroundTags[0];
         
-        if(background == undefined) return; //no background present
+        if(backgroundContainer == undefined) return; //no background present
         
-        var fileName = background.children[0].tagName;  
+        var fileName = backgroundContainer.children[0].tagName;  
+        var background = backgroundContainer.children[0];
         
         var type;
         var x;
         var y;       
-        for(var i = 0; i < background.children[0]; i++)
+        for(var i = 0; i < background.children.length; i++)
         {
-            if(child.tagName == TYPE_TAG)
-                type = child.innerHTML;
+            var propertyTag = background.children[i];
             
-            if(child.tagName == X_TAG)
-                x = Number(child.innerHTML);
+            if(propertyTag.tagName == TYPE_TAG)
+                type = propertyTag.innerHTML;
+            
+            if(propertyTag.tagName == X_TAG)
+                x = Number(propertyTag.innerHTML);
                 
-            if(child.tagName == Y_TAG)
-                y = Number(child.innerHTML);
+            if(propertyTag.tagName == Y_TAG)
+                y = Number(propertyTag.innerHTML);
         }
         
         if(type == undefined || type == "")
