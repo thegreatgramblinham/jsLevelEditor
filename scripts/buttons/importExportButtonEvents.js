@@ -78,6 +78,15 @@ openLevelButton.onclick = function(event)
             else if(ext === SAM_LEVEL_EXT)
             {
                 //Call sam's level reconst function here.
+                var pldImporter = new PLDImporter(filePath);      
+                try
+                {
+                   pldImporter.Import();  
+                }
+                catch(ex)
+                {
+                    dialog.showMessageBox({ message: "EXPORT FAILED: "+ex.toString(), buttons: ["OK"]})
+                }
             }
         }
     );
