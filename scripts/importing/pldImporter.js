@@ -41,6 +41,10 @@ class PLDImporter
         this.SetLevelBounds();
         
         this.ReconstituteBackground();
+        this.ReconstituteFloor();
+        this.ReconstituteWall();
+        this.ReconstituteProps();
+        this.ReconstituteEnemies();
     }
     
     OpenFile()
@@ -100,7 +104,65 @@ class PLDImporter
         var background = backgroundContainer.children[0];      
         var propertyArr = this.DeserializeRectProperties(background);
         
-        this.AddToCanvas(propertyArr, background);
+        this.AddToCanvas(propertyArr, background, BACKDROP_TAG);
+    }
+    
+    ReconstituteFloor()
+    {
+        var floorTags = this.xmlDoc.getElementsByTagName(FLOOR_TAG);
+        var floorContainer = floorTags[0];
+        
+        if(floorContainer == undefined) return; //no floor present
+        
+        var floor = floorContainer.children[0];      
+        var propertyArr = this.DeserializeRectProperties(floor);
+        
+        this.AddToCanvas(propertyArr, floor, FLOOR_TAG);
+    }
+    
+    ReconstituteWall()
+    {
+        var wallTags = this.xmlDoc.getElementsByTagName(WALL_TAG);
+        var wallContainer = wallTags[0];
+        
+        if(wallContainer == undefined) return; //no wall present
+        
+        var wall = wallContainer.children[0];      
+        var propertyArr = this.DeserializeRectProperties(wall);
+        
+        this.AddToCanvas(propertyArr, wall, WALL_TAG);
+    }
+    
+    ReconstituteProps()  
+    {
+        var propTags = this.xmlDoc.getElementsByTagName(PROP_TAG);
+        var propContainer = propTags[0];
+        
+        if(propContainer == undefined) return; //no props present
+        
+        for(var i = 0; i < propContainer.children.length; i++)
+        {
+            var prop = propContainer.children[i];
+
+            var propertyArr = this.DeserializeRectProperties(prop);       
+            this.AddToCanvas(propertyArr, prop, PROP_TAG);
+        }
+    }
+    
+    ReconstituteEnemies()
+    {
+        var enemyTags = this.xmlDoc.getElementsByTagName(ENEMY_TAG);
+        var enemyContainer = enemyTags[0];
+        
+        if(enemyContainer == undefined) return; //no enemy present
+        
+        for(var i = 0; i < enemyContainer.children.length; i++)
+        {
+            var enemy = enemyContainer.children[i];
+
+            var propertyArr = this.DeserializeRectProperties(enemy);       
+            this.AddToCanvas(propertyArr, enemy, ENEMY_TAG);
+        }
     }
     
     //Private Methods
@@ -147,7 +209,7 @@ class PLDImporter
         return propertyArr;
     }
     
-    AddToCanvas(propertyArr, tag)
+    AddToCanvas(propertyArr, tag, category)
     {
         if(propertyArr[TYPE_TAG] == IMAGERECT_CLASS)
         {
@@ -155,12 +217,12 @@ class PLDImporter
             if(image == undefined)
                 throw "Could not find file "+ tag.tagName +" in open images.";
                
-            AddImage(propertyArr[X_TAG], propertyArr[Y_TAG], image, tag.tagName);
+            AddImage(propertyArr[X_TAG], propertyArr[Y_TAG], image, tag.tagName, category);
         }
         else if(propertyArr[TYPE_TAG] == BASICRECT_CLASS)
         {
             AddRectangle(propertyArr[X_TAG], propertyArr[Y_TAG], propertyArr[WIDTH_TAG],
-                propertyArr[HEIGHT_TAG], tag.tagName, BACKDROP_TAG);
+                propertyArr[HEIGHT_TAG], tag.tagName, category);
                 
             //todo support for render groups
         }
