@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <categories>
 	<category>None</category>
+    <category>Backdrop</category>
     <category>Enemy</category>
+    <category>Entrance</category>
+    <category>Exit</category>
+    <category>Floor</category>
+    <category>Platform</category>
     <category>Player</category>
     <category>Prop</category>
-	<category>Backdrop</category>
-    <category>Platform</category>
-    <category>Wall</category>
-	<category>Floor</category>
-	<category>Trigger</category>
+    <category>Trigger</category>
+    <category>Wall</category>	
 </categories>
