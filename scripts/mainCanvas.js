@@ -186,7 +186,7 @@ _canvas.onmouseup = function(e)
             var imagePlacePoint = new point(canvasMouseUpPoint.xCoordinate+_scrollOffsetX,canvasMouseUpPoint.yCoordinate + _scrollOffsetY);
             if(CurrentImageBrush != undefined)
             {
-                AddImage(imagePlacePoint.xCoordinate, imagePlacePoint.yCoordinate);
+                AddImage(imagePlacePoint.xCoordinate, imagePlacePoint.yCoordinate, CurrentImageBrush.Image, CurrentImageBrush.GetFileName());
             }
         }
         RefreshRectangles();
@@ -527,16 +527,16 @@ function AddRectangle()
     RefreshPropertyControls();
 }
 
-function AddImage(imageX,imageY)
+function AddImage(imageX,imageY, image, imageFileName)
 {
-    var imgRect = new ImageRectangle(imageX,imageY, CurrentImageBrush.Image, CurrentImageBrush.GetFileName());
+    var imgRect = new ImageRectangle(imageX,imageY, image, imageFileName);
     imgRect.Category = DefaultCategory;
     CurrentLayer.AddRectangle(imgRect);
     RefreshPropertyControls();
-    if(imageX+CurrentImageBrush.Width > LevelWidth || imageY+CurrentImageBrush.Height > LevelWidth)
+    if(imageX + image.Width > LevelWidth || imageY + image.Height > LevelWidth)
     {
-        var newRight = imageX+CurrentImageBrush.Width;
-        var newBottom = imageY+CurrentImageBrush.Height;
+        var newRight = imageX + image.Width;
+        var newBottom = imageY + image.Height;
         _widthInputBox.value = newRight;
         _heightInputBox.value = newBottom;
         LevelWidth = newRight;

@@ -90,8 +90,49 @@ class PLDImporter
     
     ReconstituteBackground()
     {
-        var background = this.xmlDoc.getElementsByTagName(BACKDROP_TAG);
+        var backgroundTags = this.xmlDoc.getElementsByTagName(BACKDROP_TAG);
+        var background = backgroundTags[0];
         
+        if(background == undefined) return; //no background present
         
+        var fileName = background.children[0].tagName;  
+        
+        var type;
+        var x;
+        var y;       
+        for(var i = 0; i < background.children[0]; i++)
+        {
+            if(child.tagName == TYPE_TAG)
+                type = child.innerHTML;
+            
+            if(child.tagName == X_TAG)
+                x = Number(child.innerHTML);
+                
+            if(child.tagName == Y_TAG)
+                y = Number(child.innerHTML);
+        }
+        
+        if(type == undefined || type == "")
+            throw "Type not found.";
+        if(x == undefined || isNaN(x))
+            throw "X not found.";
+        if(y == undefined || isNaN(y))
+            throw "Y not found.";
+        
+        if(type == IMAGERECT_CLASS)
+        {
+            var image = GetImageElementByFileName(fileName);    
+            if(image == undefined)
+                throw "Could not find background "+fileName+" in open images.";
+               
+            AddImage(x, y, image, fileName);
+        }
+        else if(type == BASICRECT_CLASS)
+        {
+            
+        }
+        else   
+            throw "Rectangle type not intializable."
+
     }
 }

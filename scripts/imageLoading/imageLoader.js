@@ -68,3 +68,20 @@ function BuildItemsControl()
     _imagePaletteDiv.replaceChild(div, _imageDiv);
     _imageDiv = div;
 }
+
+function GetImageElementByFileName(fileName)
+{
+    if(ImageCache == undefined) return undefined;
+    
+    for(var i = 0; i < ImageCache.length; i++)
+    {
+        var image = ImageCache[i];        
+        var imgName = image.src.split("/").pop();
+        imgName = imgName.split('.')[0];
+        
+        if(imgName == fileName)
+            return image;
+    }
+    
+    return undefined;
+}
