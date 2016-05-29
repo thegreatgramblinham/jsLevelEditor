@@ -81,7 +81,7 @@ class PLDExporter
         if(walls.length > 1)
             throw "More than one wall defined.";
         if(walls.length == 1)
-            this.WriteFloor(walls[0]);
+            this.WriteWall(walls[0]);
             
         //Prop serialization
         if(props.length > 0)
@@ -110,7 +110,7 @@ class PLDExporter
     
     WriteFloor(floorRect)
     {
-        this.xmlBuilder.AddChild(FLOOR_TAG, true);
+        this.xmlBuilder.AddChild(FLOOR_TAG, false);
         this.xmlBuilder.AddChild(floorRect.Name, true);
         this.xmlBuilder.AddCompleteChild("X", floorRect.XLocation, true);
         this.xmlBuilder.AddCompleteChild("Y", floorRect.YLocation, false);
@@ -120,7 +120,7 @@ class PLDExporter
     
     WriteWall(wallRect)
     {
-        this.xmlBuilder.AddChild(WALL_TAG, true);
+        this.xmlBuilder.AddChild(WALL_TAG, false);
         this.xmlBuilder.AddChild(wallRect.Name, true);
         this.xmlBuilder.AddCompleteChild("X", wallRect.XLocation, true);
         this.xmlBuilder.AddCompleteChild("Y", wallRect.YLocation, false);
@@ -130,7 +130,7 @@ class PLDExporter
     
     WriteProps(props)
     {
-        this.xmlBuilder.AddChild(PROP_TAG, true);
+        this.xmlBuilder.AddChild(PROP_TAG, false);
         for(var i = 0; i < props.length; i++)
         {
             var prop = props[i];
@@ -145,7 +145,7 @@ class PLDExporter
     
     WriteEnemies(enemies)
     {
-        this.xmlBuilder.AddChild(ENEMY_TAG, true);
+        this.xmlBuilder.AddChild(ENEMY_TAG, false);
         for(var i = 0; i < enemies.length; i++)
         {
             var enemy = enemies[i];
