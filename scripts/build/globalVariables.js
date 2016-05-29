@@ -11,3 +11,4 @@ var LayerCollection = []; //Holds the collection of layers for use in the canvas
 var DefaultCategory = "None" //Holds the settable default category for new objects created.
 var LevelWidth = 0; //Holds current level width.
 var LevelHeight = 0; //Holds current level height.
+var ImageCache = []; //Holds all currently loaded images. IMG Elements.

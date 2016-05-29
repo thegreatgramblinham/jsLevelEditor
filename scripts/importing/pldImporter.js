@@ -20,6 +20,10 @@ var Y_TAG = "Y";
 var WIDTH_TAG = "Width";
 var HEIGHT_TAG = "Height";
 
+var TYPE_TAG = "Type";
+var IMAGERECT_CLASS = "ImageRectangle";
+var BASICRECT_CLASS = "NamedRectangle";
+
 class PLDImporter
 {
     constructor(filePath)
@@ -34,7 +38,7 @@ class PLDImporter
         
         this.SetLevelBounds();
         
-        
+        this.ReconstituteBackground();
     }
     
     OpenFile()
@@ -82,5 +86,12 @@ class PLDImporter
             throw "Level height not found.";
         
         ImportLevelBounds(width, height);
+    }
+    
+    ReconstituteBackground()
+    {
+        var background = this.xmlDoc.getElementsByTagName(BACKDROP_TAG);
+        
+        
     }
 }

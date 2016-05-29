@@ -1,5 +1,4 @@
 //Global Variables
-var ImageCache = [];
 var _imageDiv = document.createElement("DIV");
 var _imagePaletteDiv = document.getElementById("ImagePaletteDiv");
 

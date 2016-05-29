@@ -20,6 +20,9 @@ var Y_TAG = "Y";
 var WIDTH_TAG = "Width";
 var HEIGHT_TAG = "Height";
 
+var TYPE_TAG = "Type";
+var IMAGERECT_CLASS = "ImageRectangle";
+var BASICRECT_CLASS = "NamedRectangle";
 
 class PLDExporter
 {
@@ -121,7 +124,8 @@ class PLDExporter
     {
         this.xmlBuilder.AddChild(BACKDROP_TAG, true);
         this.xmlBuilder.AddChild(backdropRect.Name, true);
-        this.xmlBuilder.AddCompleteChild(X_TAG, backdropRect.XLocation, true);
+        this.WriteRectType(backdropRect, true);
+        this.xmlBuilder.AddCompleteChild(X_TAG, backdropRect.XLocation, false);
         this.xmlBuilder.AddCompleteChild(Y_TAG, backdropRect.YLocation, false);
         this.xmlBuilder.EndNode(backdropRect.Name);
         this.xmlBuilder.EndNode(BACKDROP_TAG);
@@ -131,7 +135,8 @@ class PLDExporter
     {
         this.xmlBuilder.AddChild(FLOOR_TAG, false);
         this.xmlBuilder.AddChild(floorRect.Name, true);
-        this.xmlBuilder.AddCompleteChild(X_TAG, floorRect.XLocation, true);
+        this.WriteRectType(floorRect, true);
+        this.xmlBuilder.AddCompleteChild(X_TAG, floorRect.XLocation, false);
         this.xmlBuilder.AddCompleteChild(Y_TAG, floorRect.YLocation, false);
         this.xmlBuilder.EndNode(floorRect.Name);
         this.xmlBuilder.EndNode(FLOOR_TAG);
@@ -141,7 +146,8 @@ class PLDExporter
     {
         this.xmlBuilder.AddChild(WALL_TAG, false);
         this.xmlBuilder.AddChild(wallRect.Name, true);
-        this.xmlBuilder.AddCompleteChild(X_TAG, wallRect.XLocation, true);
+        this.WriteRectType(wallRect, true);
+        this.xmlBuilder.AddCompleteChild(X_TAG, wallRect.XLocation, false);
         this.xmlBuilder.AddCompleteChild(Y_TAG, wallRect.YLocation, false);
         this.xmlBuilder.EndNode(wallRect.Name);
         this.xmlBuilder.EndNode(WALL_TAG);
@@ -154,8 +160,13 @@ class PLDExporter
         {
             var prop = props[i];
             
-            this.xmlBuilder.AddChild(prop.Name, true);
-            this.xmlBuilder.AddCompleteChild(X_TAG, prop.XLocation, true);
+            if(i == 0)
+                this.xmlBuilder.AddChild(prop.Name, true);
+            else
+                this.xmlBuilder.AddChild(prop.Name, false);
+                  
+            this.WriteRectType(prop, true);
+            this.xmlBuilder.AddCompleteChild(X_TAG, prop.XLocation, false);
             this.xmlBuilder.AddCompleteChild(Y_TAG, prop.YLocation, false);
             this.xmlBuilder.EndNode(prop.Name);
         } 
@@ -169,12 +180,34 @@ class PLDExporter
         {
             var enemy = enemies[i];
             
-            this.xmlBuilder.AddChild(enemy.Name, true);
-            this.xmlBuilder.AddCompleteChild(X_TAG, enemy.XLocation, true);
+            if(i == 0)
+                this.xmlBuilder.AddChild(enemy.Name, true);
+            else
+                this.xmlBuilder.AddChild(enemy.Name, false);
+                
+            this.WriteRectType(enemy, true);
+            this.xmlBuilder.AddCompleteChild(X_TAG, enemy.XLocation, false);
             this.xmlBuilder.AddCompleteChild(Y_TAG, enemy.YLocation, false);
             this.xmlBuilder.EndNode(enemy.Name);
         } 
         this.xmlBuilder.EndNode(ENEMY_TAG);
+    }
+    
+    WriteRectType(rect, isFirst)
+    {      
+        if(rect instanceof ImageRectangle)
+        {
+            this.xmlBuilder.AddCompleteChild(TYPE_TAG, IMAGERECT_CLASS, isFirst);
+            return;
+        }
+        
+        if(rect instanceof NamedRectangle)
+        {
+            this.xmlBuilder.AddCompleteChild(TYPE_TAG, BASICRECT_CLASS, isFirst);
+            return;
+        }
+            
+        throw "Invaild rectangle type serialization attempted.";
     }
     
     WriteExportFile()
