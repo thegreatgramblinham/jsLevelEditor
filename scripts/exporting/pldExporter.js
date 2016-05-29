@@ -109,10 +109,12 @@ class PLDExporter
     {
         this.xmlBuilder.AddChild(GLOBAL_TAG, true);
         this.xmlBuilder.AddChild(LEVEL_SIZE_TAG, true);
-        this.xmlBuilder.AddCompleteChild(WIDTH_TAG, this.levelWidth, true);
-        this.xmlBuilder.AddCompleteChild(HEIGHT_TAG, this.levelHeight, false);
+        this.xmlBuilder.AddCompleteChild(WIDTH_TAG, this.totalWidth, true);
+        this.xmlBuilder.AddCompleteChild(HEIGHT_TAG, this.totalHeight, false);
         this.xmlBuilder.EndNode(LEVEL_SIZE_TAG);
         this.xmlBuilder.EndNode(GLOBAL_TAG); 
+        
+        //todo viewport
     }
     
     WriteBackdrop(backdropRect)
