@@ -8,4 +8,6 @@ var CanvasMode = UIMode.Add; //Holds the enum defining what happens when the can
 var CurrentLayer = undefined; //Holds the currently selected layer
 var BrushSelection = BrushType.BasicRect; //Hold the state of ui brush selection.
 var LayerCollection = []; //Holds the collection of layers for use in the canvas and loader classes.
-var DefaultCategory = "None" //Hold the settable default category for new objects created.
+var DefaultCategory = "None" //Holds the settable default category for new objects created.
+var LevelWidth = 0; //Holds current level width.
+var LevelHeight = 0; //Holds current level height.

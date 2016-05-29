@@ -4,6 +4,8 @@
 var FILE_EXTENSION = "pld";
 
 var LEVEL_TAG = "Stage";
+var GLOBAL_TAG = "Global";
+var LEVEL_SIZE_TAG = "LevelSize";
 var BACKDROP_TAG = "Backdrop";
 var FLOOR_TAG = "Floor";
 var WALL_TAG = "Wall";
@@ -21,11 +23,13 @@ var HEIGHT_TAG = "Height";
 
 class PLDExporter
 {
-    constructor(outputFilePath, layerCollection)
+    constructor(outputFilePath, layerCollection, levelWidth, levelHeight)
     {
         this.outputPath = outputFilePath;
         this.xmlBuilder = new XmlStringBuilder();
         this.layers = layerCollection;
+        this.totalWidth = levelWidth;
+        this.totalHeight = levelHeight;
     }
     
     //Public Methods
@@ -37,7 +41,7 @@ class PLDExporter
     {
         if(this.layers == undefined) return false;   
         
-        this.xmlBuilder.BeginNode(LEVEL_TAG);
+        this.xmlBuilder.AddChild(LEVEL_TAG);
         
         var backdrops = [];
         var floors = []; 
@@ -64,6 +68,9 @@ class PLDExporter
             var layerEnemies = layer.GetAllRectsByCategory("Enemy");
             enemies = enemies.concat(layerEnemies);    
         }
+        
+        //Global property serialization
+        this.WriteGlobalLevelProperties();
         
         //Backdrop serialization
         if(backdrops.length > 1)
@@ -98,12 +105,22 @@ class PLDExporter
     }
     
     //Private Methods
+    WriteGlobalLevelProperties()
+    {
+        this.xmlBuilder.AddChild(GLOBAL_TAG, true);
+        this.xmlBuilder.AddChild(LEVEL_SIZE_TAG, true);
+        this.xmlBuilder.AddCompleteChild(WIDTH_TAG, this.levelWidth, true);
+        this.xmlBuilder.AddCompleteChild(HEIGHT_TAG, this.levelHeight, false);
+        this.xmlBuilder.EndNode(LEVEL_SIZE_TAG);
+        this.xmlBuilder.EndNode(GLOBAL_TAG); 
+    }
+    
     WriteBackdrop(backdropRect)
     {
         this.xmlBuilder.AddChild(BACKDROP_TAG, true);
         this.xmlBuilder.AddChild(backdropRect.Name, true);
-        this.xmlBuilder.AddCompleteChild("X", backdropRect.XLocation, true);
-        this.xmlBuilder.AddCompleteChild("Y", backdropRect.YLocation, false);
+        this.xmlBuilder.AddCompleteChild(X_TAG, backdropRect.XLocation, true);
+        this.xmlBuilder.AddCompleteChild(Y_TAG, backdropRect.YLocation, false);
         this.xmlBuilder.EndNode(backdropRect.Name);
         this.xmlBuilder.EndNode(BACKDROP_TAG);
     }
@@ -112,8 +129,8 @@ class PLDExporter
     {
         this.xmlBuilder.AddChild(FLOOR_TAG, false);
         this.xmlBuilder.AddChild(floorRect.Name, true);
-        this.xmlBuilder.AddCompleteChild("X", floorRect.XLocation, true);
-        this.xmlBuilder.AddCompleteChild("Y", floorRect.YLocation, false);
+        this.xmlBuilder.AddCompleteChild(X_TAG, floorRect.XLocation, true);
+        this.xmlBuilder.AddCompleteChild(Y_TAG, floorRect.YLocation, false);
         this.xmlBuilder.EndNode(floorRect.Name);
         this.xmlBuilder.EndNode(FLOOR_TAG);
     }
@@ -122,8 +139,8 @@ class PLDExporter
     {
         this.xmlBuilder.AddChild(WALL_TAG, false);
         this.xmlBuilder.AddChild(wallRect.Name, true);
-        this.xmlBuilder.AddCompleteChild("X", wallRect.XLocation, true);
-        this.xmlBuilder.AddCompleteChild("Y", wallRect.YLocation, false);
+        this.xmlBuilder.AddCompleteChild(X_TAG, wallRect.XLocation, true);
+        this.xmlBuilder.AddCompleteChild(Y_TAG, wallRect.YLocation, false);
         this.xmlBuilder.EndNode(wallRect.Name);
         this.xmlBuilder.EndNode(WALL_TAG);
     }
@@ -136,8 +153,8 @@ class PLDExporter
             var prop = props[i];
             
             this.xmlBuilder.AddChild(prop.Name, true);
-            this.xmlBuilder.AddCompleteChild("X", prop.XLocation, true);
-            this.xmlBuilder.AddCompleteChild("Y", prop.YLocation, false);
+            this.xmlBuilder.AddCompleteChild(X_TAG, prop.XLocation, true);
+            this.xmlBuilder.AddCompleteChild(Y_TAG, prop.YLocation, false);
             this.xmlBuilder.EndNode(prop.Name);
         } 
         this.xmlBuilder.EndNode(PROP_TAG);
@@ -151,8 +168,8 @@ class PLDExporter
             var enemy = enemies[i];
             
             this.xmlBuilder.AddChild(enemy.Name, true);
-            this.xmlBuilder.AddCompleteChild("X", enemy.XLocation, true);
-            this.xmlBuilder.AddCompleteChild("Y", enemy.YLocation, false);
+            this.xmlBuilder.AddCompleteChild(X_TAG, enemy.XLocation, true);
+            this.xmlBuilder.AddCompleteChild(Y_TAG, enemy.YLocation, false);
             this.xmlBuilder.EndNode(enemy.Name);
         } 
         this.xmlBuilder.EndNode(ENEMY_TAG);

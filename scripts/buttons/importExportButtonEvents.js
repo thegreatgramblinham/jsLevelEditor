@@ -42,7 +42,7 @@ saveLevelButton.onclick = function(event)
             else if(ext === SAM_LEVEL_EXT)
             {
                 //Call sam's xml writing function here.
-                var pldExporter = new PLDExporter(filePath, LayerCollection);
+                var pldExporter = new PLDExporter(filePath, LayerCollection, LevelWidth, LevelHeight);
                 
                 try
                 {
