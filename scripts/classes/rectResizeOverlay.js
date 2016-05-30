@@ -74,6 +74,11 @@ class RectResizeOverlay extends Overlay
     {
         if(this.thumbHit && this.currentThumb != undefined)
         {   
+            if(!LoadingLevel && !FileChangeMade)
+            {
+                FileChangeMade = true;
+            }
+            
             if(this.CheckThumbEquality(this.currentThumb,this.centerThumb))
             {
                 var delta = new point((clientX-this.centerThumb.centerX),(clientY-this.centerThumb.centerY));

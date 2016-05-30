@@ -43,6 +43,11 @@ _xBox.onchange = function(e)
         SelectedRectangle.XLocation = Number(Number(_xBox.value).toFixed(0));
         RefreshRectangles(); //needs to be a canvas func for complete redraw. goes here.
     }
+    
+    if(!LoadingLevel && !FileChangeMade)
+    {
+        FileChangeMade = true;
+    }
 }
 
 _yBox.onchange = function(e)
@@ -51,6 +56,11 @@ _yBox.onchange = function(e)
     {
         SelectedRectangle.YLocation = Number(Number(_yBox.value).toFixed(0));
         RefreshRectangles();
+    }
+    
+    if(!LoadingLevel && !FileChangeMade)
+    {
+        FileChangeMade = true;
     }
 }
 
@@ -61,6 +71,11 @@ _widthBox.onchange = function(e)
         SelectedRectangle.Width = Number(Number(_widthBox.value).toFixed(0));
         RefreshRectangles();
     }
+    
+    if(!LoadingLevel && !FileChangeMade)
+    {
+        FileChangeMade = true;
+    }
 }
 
 _heightBox.onchange = function(e)
@@ -69,6 +84,11 @@ _heightBox.onchange = function(e)
     {
         SelectedRectangle.Height = Number(Number(_heightBox.value).toFixed(0));
         RefreshRectangles();
+    }
+    
+    if(!LoadingLevel && !FileChangeMade)
+    {
+        FileChangeMade = true;
     }
 }
 
@@ -81,6 +101,11 @@ _renderIdxBox.onchange = function(e)
         SelectedRectangle.RenderIdx = Number(_renderIdxBox.value);
         RectRenderLayerChanged(oldValue);
     }
+    
+    if(!LoadingLevel && !FileChangeMade)
+    {
+        FileChangeMade = true;
+    }
 }
 
 _categoryComboBox.onchange = function(e)
@@ -91,6 +116,11 @@ _categoryComboBox.onchange = function(e)
             SelectedRectangle.Category = _categoryComboBox.value;
             RefreshPropertyControls();
         }
+        
+    if(!LoadingLevel && !FileChangeMade)
+    {
+        FileChangeMade = true;
+    }
 }
 
 _additionCategoryComboBox.onchange = function(e)
