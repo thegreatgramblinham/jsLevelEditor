@@ -253,12 +253,22 @@ _widthInputBox.onchange = function(e)
 {
     UpdateHorizontalScrollVisual();
     LevelWidth = _widthInputBox.value;
+    
+    if(!LoadingLevel && !FileChangeMade)
+    {
+        FileChangeMade = true;
+    }
 }
 
 _heightInputBox.onchange = function(e)
 {
     UpdateVerticalScrollVisual();
     LevelHeight = _heightInputBox.value;
+    
+    if(!LoadingLevel && !FileChangeMade)
+    {
+        FileChangeMade = true;
+    }
 }
 
 //Scroll Handling
@@ -410,6 +420,14 @@ function AddLayer()
     RefreshPropertyControls();
 }
 
+function AddMultipleLayers(layersToAdd)
+{
+    for(var i=0; i <layersToAdd; i++)
+    {
+        AddLayer();
+    }
+}
+
 function RemoveLayer(layerIdx)
 {
     if(layerIdx > -1 && LayerCollection.length > 1)
@@ -427,12 +445,8 @@ function RectRenderLayerChanged(oldLayerIdx)
         if(newLayerIdx > LayerCollection.length-1)
         {
            var layersToAdd = newLayerIdx - (LayerCollection.length-1);
-           var i;
-           for(i=0; i<layersToAdd; i++)
-           {
-               AddLayer();
-           }
-            CurrentLayer.RemoveRectangle(SelectedRectangle);  
+           AddMultipleLayers(layersToAdd); 
+           CurrentLayer.RemoveRectangle(SelectedRectangle);  
         }
         else
         {
@@ -530,6 +544,36 @@ function AddRectangle(x, y, width, height, name, category)
     _currentRectangle = undefined;
     RefreshPropertyControls();
     RefreshRectangles();
+    
+    if(!LoadingLevel && !FileChangeMade)
+    {
+        FileChangeMade = true;
+    }
+}
+
+function AddRectangleToLayer(x,y,width,height,name,category,layerIdx)
+{
+    if(layerIdx != CurrentLayer.LayerIdx)
+    {
+        var addRect = new NamedRectangle(x, y, width, height, name);
+        addRect.Category = category == undefined ? DefaultCategory : category;
+        
+        if(layerIdx > LayerCollection.length - 1)
+        {
+            var layersToAdd = layerIdx - (LayerCollection.length-1);
+            AddMultipleLayers(layersToAdd);
+        }
+
+        var newLayer = LayerCollection[layerIdx];
+        newLayer.AddRectangle(addRect);
+        OnCurrentLayerSelected(layerIdx);
+    }
+    else
+    {
+        AddRectangle(x,y,width,height,name,category);
+    }
+    
+    RefreshRectangles();
 }
 
 function AddImage(imageX,imageY, image, imageFileName, category)
@@ -549,6 +593,48 @@ function AddImage(imageX,imageY, image, imageFileName, category)
         UpdateScrollThumbs();
     }
     RefreshRectangles();
+    
+    if(!LoadingLevel && !FileChangeMade)
+    {
+        FileChangeMade = true;
+    }
+}
+
+function AddImageToLayer(imageX,imageY,image,imageFileName,category,layerIdx)
+{
+    if(layerIdx != CurrentLayer.LayerIdx)
+    {
+        var imgRect = new ImageRectangle(imageX,imageY, image, imageFileName);
+        imgRect.Category = category == undefined ? DefaultCategory : category;
+    
+        if(layerIdx > LayerCollection.length - 1)
+        {
+            var layersToAdd = layerIdx - (LayerCollection.length-1);
+            AddMultipleLayers(layersToAdd);
+        }
+
+        var newLayer = LayerCollection[layerIdx];
+        newLayer.AddRectangle(imgRect);
+        OnCurrentLayerSelected(layerIdx);
+        RefreshPropertyControls();
+        
+        if(imageX + image.width > LevelWidth || imageY + image.height > LevelWidth)
+        {
+            var newRight = imageX + image.width;
+            var newBottom = imageY + image.height;
+            _widthInputBox.value = newRight;
+            _heightInputBox.value = newBottom;
+            LevelWidth = newRight;
+            LevelHeight = newBottom;
+            UpdateScrollThumbs();
+        }
+    }
+    else
+    {
+        AddImage(imageX,imageY,image,imageFileName,category);
+    }
+    
+    RefreshRectangles();
 }
 
 function RemoveSelectedRectangle()
@@ -562,6 +648,11 @@ function RemoveSelectedRectangle()
         _selectedRectOverlay = undefined;
         RefreshPropertyControls();
         RefreshRectangles();
+    }
+    
+    if(!LoadingLevel && !FileChangeMade)
+    {
+        FileChangeMade = true;
     }
 }
 
@@ -737,14 +828,22 @@ function OnVerticalScroll()
 //Reset and clear all canvas properties and setting canvas on load
 function ResetCanvas()
 {
-    var currentLeft = _horizThumb.style.left;
-    var newLeft = 0;
-    newLeft = Number(currentLeft.substr(0,currentLeft.length-2));
-    MoveHorizontalThumb((-newLeft));
-    var currentTop = _verticalThumb.style.top;
-    var newTop = 0;
-    newTop = Number(currentTop.substr(0,currentTop.length-2));
-    MoveVerticalThumb((-newTop));
+    if(_horizScrollVisible)
+    {
+        var currentLeft = _horizThumb.style.left;
+        var newLeft = 0;
+        newLeft = Number(currentLeft.substr(0,currentLeft.length-2));
+        MoveHorizontalThumb((-newLeft));
+    }
+    
+    if(_verticalScrollVisible)
+    {
+        var currentTop = _verticalThumb.style.top;
+        var newTop = 0;
+        newTop = Number(currentTop.substr(0,currentTop.length-2));
+        MoveVerticalThumb((-newTop));
+    }
+
     LayerCollection = [];
     SelectedRectangle = undefined;
     CurrentLayer = undefined;
@@ -764,7 +863,29 @@ function RefreshPropertyControls()
 //Set level height and width on load
 function ImportLevelBounds(levelHeight,levelWidth)
 {
+    if(levelHeight != undefined)
+    {
+        LevelHeight = levelHeight;
+        _heightInputBox.value = levelHeight;
+    }
+    else
+    {
+        LevelHeight = _canvas.height;
+        _heightInputBox.value = _canvas.height;
+    }
     
+    if(levelWidth != undefined)
+    {
+        LevelWidth = levelWidth;
+        _widthInputBox.value = levelWidth;
+    }
+    else
+    {
+        LevelWidtrh = _canvas.width;
+        _widthInputBox.value = _canvas.Width;
+    }
+    
+    UpdateScrollThumbs();
 }
 
 //Import basic rectangles

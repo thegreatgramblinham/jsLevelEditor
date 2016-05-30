@@ -12,3 +12,5 @@ var DefaultCategory = "None" //Holds the settable default category for new objec
 var LevelWidth = 0; //Holds current level width.
 var LevelHeight = 0; //Holds current level height.
 var ImageCache = []; //Holds all currently loaded images. IMG Elements.
+var FileChangeMade = false; //Bool to determine whether or not changes were made to a saved level file.
+var LoadingLevel = false;
