@@ -3,6 +3,24 @@
 var MAASHES_LEVEL_EXT = "lvl";
 var SAM_LEVEL_EXT = "pld";
 
+window.addEventListener("beforeunload", function (event) {
+    if(FileChangeMade)
+    {
+      var decision = dialog.showMessageBox(
+                    {type:"warning", title:"Unsaved Changes",
+                    message:"You are about to close with unsaved changes!"+"\n"+"What do?",
+                    buttons:["Save","Discard","Cancel"]});
+                    
+        if(decision == 0)
+        {
+           SaveLevel();
+        }
+        else if(decision == 2)
+        {
+            return false;
+        }
+    }   
+});
 
 //Methods
 openFolderButton.onclick = function(event) 
@@ -22,45 +40,52 @@ openFolderButton.onclick = function(event)
 
 saveLevelButton.onclick = function(event) 
 {
-    dialog.showSaveDialog(
-        { filters: [{ name: "Shade Level Files (*."+MAASHES_LEVEL_EXT+")", extensions: [MAASHES_LEVEL_EXT] },
-                    { name: "HERDERR Level Files (*."+SAM_LEVEL_EXT+")", extensions: [SAM_LEVEL_EXT] }
-        ]},
-        function (filePath) 
-        {
-            if (filePath === undefined) return;
-            
-            var ext = filePath.split('.').pop();
-            
-            if(ext === MAASHES_LEVEL_EXT)
-            {
-                //Call maashes' xml writing function here.
-                var lvlExporter = new LvlExporter(filePath, LayerCollection, LevelHeight, LevelWidth);
-                
-                lvlExporter.ExportLevel();
-            }
-            else if(ext === SAM_LEVEL_EXT)
-            {
-                //Call sam's xml writing function here.
-                var pldExporter = new PLDExporter(filePath, LayerCollection, LevelWidth, LevelHeight);
-                
-                try
-                {
-                   pldExporter.Export();  
-                }
-                catch(ex)
-                {
-                    dialog.showMessageBox({ message: "EXPORT FAILED: "+ex.toString(), buttons: ["OK"]})
-                }
-                
-            }       
-        }
-    );
+    SaveLevel();
 }
 
 openLevelButton.onclick = function(event) 
 {
-    dialog.showOpenDialog(
+   OpenLevel();
+}
+
+function SaveLevel()
+{
+    var filePath =  dialog.showSaveDialog(
+        { filters: [{ name: "Shade Level Files (*."+MAASHES_LEVEL_EXT+")", extensions: [MAASHES_LEVEL_EXT] },
+                    { name: "HERDERR Level Files (*."+SAM_LEVEL_EXT+")", extensions: [SAM_LEVEL_EXT] }
+        ]});
+        
+        if (filePath === undefined) return false;
+        
+        var ext = filePath.split('.').pop();
+        
+        if(ext === MAASHES_LEVEL_EXT)
+        {
+            //Call maashes' xml writing function here.
+            var lvlExporter = new LvlExporter(filePath, LayerCollection, LevelHeight, LevelWidth);
+            
+            lvlExporter.ExportLevel();
+        }
+        else if(ext === SAM_LEVEL_EXT)
+        {
+            //Call sam's xml writing function here.
+            var pldExporter = new PLDExporter(filePath, LayerCollection, LevelWidth, LevelHeight);
+            
+            try
+            {
+                pldExporter.Export();  
+            }
+            catch(ex)
+            {
+                dialog.showMessageBox({ message: "EXPORT FAILED: "+ex.toString(), buttons: ["OK"]})
+            }
+            
+        } 
+}
+
+function OpenLevel()
+{
+     dialog.showOpenDialog(
         { filters: [{ name: "Shade Level Files (*."+MAASHES_LEVEL_EXT+")", extensions: [MAASHES_LEVEL_EXT] },
                     { name: "HERDERR Level Files (*."+SAM_LEVEL_EXT+")", extensions: [SAM_LEVEL_EXT] }
         ]},
@@ -77,12 +102,14 @@ openLevelButton.onclick = function(event)
                 var lvlImporter = new LvlImporter(filePath);
                 try
                 {
+                    LoadingLevel = true;
                     lvlImporter.ImportLvlFile();
                 }
                 catch(ex)
                 {
                     dialog.showMessageBox({ message: "IMPORT FAILED: "+ex.toString(), buttons: ["OK"]})
                 }
+                LoadingLevel = false;
             }
             else if(ext === SAM_LEVEL_EXT)
             {
@@ -90,12 +117,15 @@ openLevelButton.onclick = function(event)
                 var pldImporter = new PLDImporter(filePath);      
                 try
                 {
-                   pldImporter.Import();  
+                   LoadingLevel = true;
+                   pldImporter.Import();
+
                 }
                 catch(ex)
                 {
                     dialog.showMessageBox({ message: "IMPORT FAILED: "+ex.toString(), buttons: ["OK"]})
                 }
+                LoadingLevel = false;
             }
         }
     );

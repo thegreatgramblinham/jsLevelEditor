@@ -110,24 +110,29 @@ class LvlImporter
                 imageProperties[X_TAG] = Number(imageProperty.innerHTML);
             }
             
-            if(imageProperty.tagName == Y_TAG)
+            else if(imageProperty.tagName == Y_TAG)
             {
                 imageProperties[Y_TAG] = Number(imageProperty.innerHTML);
             }
             
-            if(imageProperty.tagName == WIDTH_TAG)
+            else if(imageProperty.tagName == WIDTH_TAG)
             {
                 imageProperties[WIDTH_TAG] = Number(imageProperty.innerHTML);
             }
             
-            if(imageProperty.tagName == HEIGHT_TAG)
+            else if(imageProperty.tagName == HEIGHT_TAG)
             {
                 imageProperties[HEIGHT_TAG] = Number(imageProperty.innerHTML);
             }
             
-            if(imageProperty.tagName == IMAGESOURCE_TAG)
+            else if(imageProperty.tagName == IMAGESOURCE_TAG)
             {
                 imageProperties[IMAGESOURCE_TAG] = imageProperty.innerHTML;
+            }
+            
+            else if(imageProperty.tagName == RENDERIDX_TAG)
+            {
+                imageProperties[RENDERIDX_TAG] = imageProperty.innerHTML;
             }
         }
         
@@ -181,14 +186,16 @@ class LvlImporter
     
     AddPlatformToCanvas(platformProperties,count)
     {
-        AddRectangle(platformProperties[X_TAG],platformProperties[Y_TAG],
-            platformProperties[WIDTH_TAG],platformProperties[HEIGHT_TAG],"Platform" + count,"Platform")
+        AddRectangleToLayer(platformProperties[X_TAG],platformProperties[Y_TAG],
+            platformProperties[WIDTH_TAG],platformProperties[HEIGHT_TAG],"Platform" + count,"Platform", 
+            platformProperties[RENDERIDX_TAG])
     }
     
     AddImageToCanvas(imageTypeName,imageProperties)
     {
         var image = document.createElement("img");
         image.src = imageProperties[IMAGESOURCE_TAG];
-        AddImage(imageProperties[X_TAG], imageProperties[Y_TAG],image,imageTypeName,"Backdrop");
+        AddImageToLayer(imageProperties[X_TAG], imageProperties[Y_TAG],image,imageTypeName,"Backdrop"
+        ,imageProperties[RENDERIDX_TAG]);
     }
 }

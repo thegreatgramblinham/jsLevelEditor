@@ -111,6 +111,7 @@ class LvlExporter
         this.outputXml.AddCompleteChild(Y_TAG,imageRect.YLocation,false);
         this.outputXml.AddCompleteChild(WIDTH_TAG,imageRect.Width,false);
         this.outputXml.AddCompleteChild(HEIGHT_TAG,imageRect.Height,false);
+        this.outputXml.AddCompleteChild(RENDERIDX_TAG,imageRect.RenderIdx,false);
         this.outputXml.EndNode(imageRect.Name);
     }
     
