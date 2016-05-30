@@ -10,10 +10,10 @@ var PLD_OBJECT_TAG = "Objects";
 var PLD_BACKDROP_TAG = "Backdrop";
 var PLD_FLOOR_TAG = "Floor";
 var PLD_WALL_TAG = "Wall";
-var PLD_PROP_TAG = "Props";
-var PLD_ENEMPLD_Y_TAG = "Enemies";
-var PLD_EXIT_TAG = "Exits";
-var PLD_ENTRY_POINT_TAG = "Entries";
+var PLD_PROP_TAG = "Prop";
+var PLD_ENEMY_TAG = "Enemy";
+var PLD_EXIT_TAG = "Exit";
+var PLD_ENTRY_POINT_TAG = "Entrance";
 //todo scripted event triggers.
 
 var PLD_X_TAG = "X";
@@ -130,11 +130,7 @@ class PLDExporter
         this.xmlBuilder.AddChild(PLD_BACKDROP_TAG, true);
         this.xmlBuilder.AddChild(backdropRect.Name, true);
         this.WriteRectType(backdropRect, true);
-        this.xmlBuilder.AddCompleteChild(PLD_X_TAG, backdropRect.XLocation, false);
-        this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, backdropRect.YLocation, false);
-        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, backdropRect.Width, false);
-        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, backdropRect.Height, false);
-        this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, backdropRect.RenderIdx, false);
+        this.WriteRectProperties(backdropRect);
         this.xmlBuilder.EndNode(backdropRect.Name);
         this.xmlBuilder.EndNode(PLD_BACKDROP_TAG);
     }
@@ -144,11 +140,7 @@ class PLDExporter
         this.xmlBuilder.AddChild(PLD_FLOOR_TAG, false);
         this.xmlBuilder.AddChild(floorRect.Name, true);
         this.WriteRectType(floorRect, true);
-        this.xmlBuilder.AddCompleteChild(PLD_X_TAG, floorRect.XLocation, false);
-        this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, floorRect.YLocation, false);
-        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, floorRect.Width, false);
-        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, floorRect.Height, false);
-        this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, floorRect.RenderIdx, false);
+        this.WriteRectProperties(floorRect);
         this.xmlBuilder.EndNode(floorRect.Name);
         this.xmlBuilder.EndNode(PLD_FLOOR_TAG);
     }
@@ -158,11 +150,7 @@ class PLDExporter
         this.xmlBuilder.AddChild(PLD_WALL_TAG, false);
         this.xmlBuilder.AddChild(wallRect.Name, true);
         this.WriteRectType(wallRect, true);
-        this.xmlBuilder.AddCompleteChild(PLD_X_TAG, wallRect.XLocation, false);
-        this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, wallRect.YLocation, false);
-        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, wallRect.Width, false);
-        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, wallRect.Height, false);
-        this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, wallRect.RenderIdx, false);
+        this.WriteRectProperties(wallRect);
         this.xmlBuilder.EndNode(wallRect.Name);
         this.xmlBuilder.EndNode(PLD_WALL_TAG);
     }
@@ -180,11 +168,8 @@ class PLDExporter
                 this.xmlBuilder.AddChild(prop.Name, false);
                   
             this.WriteRectType(prop, true);
-            this.xmlBuilder.AddCompleteChild(PLD_X_TAG, prop.XLocation, false);
-            this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, prop.YLocation, false);
-            this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, prop.Width, false);
-            this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, prop.Height, false);
-            this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, prop.RenderIdx, false);
+            this.WriteRectProperties(prop);    
+                
             this.xmlBuilder.EndNode(prop.Name);
         } 
         this.xmlBuilder.EndNode(PLD_PROP_TAG);
@@ -203,15 +188,21 @@ class PLDExporter
                 this.xmlBuilder.AddChild(enemy.Name, false);
                 
             this.WriteRectType(enemy, true);
-            this.xmlBuilder.AddCompleteChild(PLD_X_TAG, enemy.XLocation, false);
-            this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, enemy.YLocation, false);
-            this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, enemy.Width, false);
-            this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, enemy.Height, false);
-            this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, enemy.RenderIdx, false);
+            this.WriteRectProperties(enemy);
+
             this.xmlBuilder.EndNode(enemy.Name);
         } 
         this.xmlBuilder.EndNode(PLD_ENEMY_TAG);
     }
+    
+    WriteRectProperties(rect)
+    {
+        this.xmlBuilder.AddCompleteChild(PLD_X_TAG, rect.XLocation, false);
+        this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, rect.YLocation, false);
+        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, rect.Width, false);
+        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, rect.Height, false);
+        this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, rect.RenderIdx, false);
+    }    
     
     WriteRectType(rect, isFirst)
     {      
