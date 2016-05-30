@@ -1,3 +1,13 @@
+var IMAGE_TAG = "Images";
+var PLATFORMS_TAG = "Platforms";
+var PLATFORM_TAG = "Platform";
+var LEVEL_TAG = "Level";
+
+var X_TAG = "X";
+var Y_TAG = "Y";
+var WIDTH_TAG = "Width";
+var HEIGHT_TAG = "Height";
+
 class LvlExporter
 {
     constructor(outputPath, layerCollection)
@@ -9,7 +19,7 @@ class LvlExporter
     
     ExportLevel()
     {
-        this.outputXml.BeginNode("Level");
+        this.outputXml.BeginNode(LEVEL_TAG);
         var backDrops = [];
         var platforms = [];
         var enemies = [];
@@ -40,41 +50,41 @@ class LvlExporter
             this.WritePlatforms(platforms);
         }
 
-        this.outputXml.EndNode("Level");
+        this.outputXml.EndNode(LEVEL_TAG);
         
         return this.outputXml.GetXml();
     }
     
     WritePlatforms(platforms)
     {
-        this.outputXml.AddChild("Platforms",false);
+        this.outputXml.AddChild(PLATFORMS_TAG,false);
         for(var i=0; i<platforms.length; i++)
         {
             var isFirst = (i == 0);
             this.WritePlatform(platforms[i],isFirst);
         }
-        this.outputXml.EndNode("Platforms");
+        this.outputXml.EndNode(PLATFORMS_TAG);
     }
     
     WritePlatform(platformRect, isFirst)
     {
-        this.outputXml.AddChild("Platform",isFirst);
-        this.outputXml.AddCompleteChild("X",platformRect.XLocation,true);
-        this.outputXml.AddCompleteChild("Y",platformRect.YLocation,false);
-        this.outputXml.AddCompleteChild("Width",platformRect.Width,false);
-        this.outputXml.AddCompleteChild("Height",platformRect.Height,false);
-        this.outputXml.EndNode("Platform");
+        this.outputXml.AddChild(PLATFORM_TAG,isFirst);
+        this.outputXml.AddCompleteChild(X_TAG,platformRect.XLocation,true);
+        this.outputXml.AddCompleteChild(Y_TAG,platformRect.YLocation,false);
+        this.outputXml.AddCompleteChild(WIDTH_TAG,platformRect.Width,false);
+        this.outputXml.AddCompleteChild(HEIGHT_TAG,platformRect.Height,false);
+        this.outputXml.EndNode(PLATFORM_TAG);
     }
     
     WriteBackdrops(backdrops)
     {
-        this.outputXml.AddChild("Images",true);
+        this.outputXml.AddChild(IMAGE_TAG,true);
         for(var i=0; i<backdrops.length; i++)
         {
             var isFirst = (i == 0);
             this.WriteBackdrop(backdrops[i],isFirst);
         }
-        this.outputXml.EndNode("Images");
+        this.outputXml.EndNode(IMAGE_TAG);
     }
     
     WriteBackdrop(imageRect,isFirst)
