@@ -1,7 +1,7 @@
 //This file is for events related to the file management buttons (load/save)
 //Private Constants
 var MAASHES_LEVEL_EXT = "lvl";
-var SAM_LEVEL_EXT = "";
+var SAM_LEVEL_EXT = "pld";
 
 
 //Methods
@@ -9,13 +9,13 @@ openFolderButton.onclick = function(event)
 {
     dialog.showOpenDialog(
         { properties: ['openDirectory'] },
-        function (fileNames) 
+        function (filePaths) 
         {
-            if (fileNames === undefined) return;
-            var fileName = fileNames[0];
-            console.log(fileName + " has been selected.");
+            if (filePaths === undefined) return;
+            var filePath = filePaths[0];
+            console.log(filePath + " has been selected.");
             
-            LoadImagesFromDirectory(fileName);
+            LoadImagesFromDirectory(filePath);
         }
     );
 }
@@ -26,22 +26,33 @@ saveLevelButton.onclick = function(event)
         { filters: [{ name: "Shade Level Files (*."+MAASHES_LEVEL_EXT+")", extensions: [MAASHES_LEVEL_EXT] },
                     { name: "HERDERR Level Files (*."+SAM_LEVEL_EXT+")", extensions: [SAM_LEVEL_EXT] }
         ]},
-        function (fileName) 
+        function (filePath) 
         {
-            if (fileName === undefined) return;
+            if (filePath === undefined) return;
             
-            var ext = fileName.split('.').pop();
+            var ext = filePath.split('.').pop();
             
             if(ext === MAASHES_LEVEL_EXT)
             {
                 //Call maashes' xml writing function here.
                 var lvlExporter = new LvlExporter(fileName, LayerCollection);
                 var xml = lvlExporter.ExportLevel();
-                fs.writeFileSync(fileName, xml, "utf8");
+                fs.writeFileSync(filePath, xml, "utf8");
             }
             else if(ext === SAM_LEVEL_EXT)
             {
                 //Call sam's xml writing function here.
+                var pldExporter = new PLDExporter(filePath, LayerCollection);
+                
+                try
+                {
+                   pldExporter.Export();  
+                }
+                catch(ex)
+                {
+                    dialog.showMessageBox({ message: "EXPORT FAILED: "+ex.toString(), buttons: ["OK"]})
+                }
+                
             }       
         }
     );
@@ -53,12 +64,12 @@ openLevelButton.onclick = function(event)
         { filters: [{ name: "Shade Level Files (*."+MAASHES_LEVEL_EXT+")", extensions: [MAASHES_LEVEL_EXT] },
                     { name: "HERDERR Level Files (*."+SAM_LEVEL_EXT+")", extensions: [SAM_LEVEL_EXT] }
         ]},
-        function (fileNames) 
+        function (filePaths) 
         {
-            if (fileNames === undefined) return;
-            var fileName = fileNames[0];
+            if (filePaths === undefined) return;
+            var filePath = filePaths[0];
             
-            var ext = fileName.split('.').pop();
+            var ext = filePath.split('.').pop();
             
             if(ext === MAASHES_LEVEL_EXT)
             {

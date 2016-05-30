@@ -10,7 +10,7 @@ class XmlStringBuilder extends StringBuilder
     BeginNode(nodeName)
     {
         this.MaintainDepth();
-        super.AppendLine("<"+nodeName+">")
+        super.AppendLine("<"+ this.CleanNodeName(nodeName) +">")
     }
     
     AddCompleteChild(childName, childValue, isFirst)
@@ -41,17 +41,19 @@ class XmlStringBuilder extends StringBuilder
     {
         this.depth--;
         this.MaintainDepth();
-        super.AppendLine("</"+nodeName+">");
+        super.AppendLine("</"+ this.CleanNodeName(nodeName) +">");
     }
     
     AddCompleteNode(nodeName,nodeValue)
     {
-        super.AppendLine("<"+nodeName+">"+nodeValue+"</"+nodeName+">");
+        var name = this.CleanNodeName(nodeName);
+        super.AppendLine("<"+name+">"+nodeValue+"</"+name+">");
     }
     
     BeginNodeWidthAttributes(nodeName)
     {
-        super.Append("<"+nodeName);
+        var name = this.CleanNodeName(nodeName);
+        super.Append("<"+name);
     }
     
     AddNodeAttribute(attribueName,attributeValue)
@@ -67,6 +69,26 @@ class XmlStringBuilder extends StringBuilder
     MaintainDepth()
     {
         super.MultiTabIndent(this.depth);
+    }
+    
+    CleanNodeName(nodeName)
+    {
+        var charArr = nodeName.split('');
+        var newNodeName = "";
+        for(var i = 0; i < charArr.length; i++)
+        {
+            var char = charArr[i];
+            
+            //chars to skip here
+            if(char == " ") continue;
+            
+            newNodeName += char;
+        }
+        
+        //Remove non-breaking space placeholders too.
+        newNodeName = newNodeName.split("&nbsp;").join("");
+        
+        return newNodeName;
     }
     
     GetXml()
