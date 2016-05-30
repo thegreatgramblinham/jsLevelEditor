@@ -88,7 +88,7 @@ function LoadXmlCategories()
     
     var xmlCatagoryString = fs.readFileSync(_xmlCatagoryFilePath, 'utf8');
      
-    parser = new DOMParser();
+    var parser = new DOMParser();
     var xmlDoc = parser.parseFromString(xmlCatagoryString,"text/xml");
     
     var categories = xmlDoc.getElementsByTagName("categories");

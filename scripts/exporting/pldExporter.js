@@ -1,31 +1,40 @@
 //This class is for the exporting of .pld level files.
 
 //Private Constants
-var FILE_EXTENSION = "pld";
+var PLD_FILE_EXTENSION = "pld";
 
-var LEVEL_TAG = "Stage";
-var BACKDROP_TAG = "Backdrop";
-var FLOOR_TAG = "Floor";
-var WALL_TAG = "Wall";
-var PROP_TAG = "Props";
-var ENEMY_TAG = "Enemies";
-var EXIT_TAG = "Exits";
-var ENTRY_POINT_TAG = "Entries";
+var PLD_LEVEL_TAG = "Stage";
+var PLD_GLOBAL_TAG = "Global";
+var PLD_LEVEL_SIZE_TAG = "LevelSize";
+var PLD_OBJECT_TAG = "Objects";
+var PLD_BACKDROP_TAG = "Backdrop";
+var PLD_FLOOR_TAG = "Floor";
+var PLD_WALL_TAG = "Wall";
+var PLD_PROP_TAG = "Props";
+var PLD_ENEMPLD_Y_TAG = "Enemies";
+var PLD_EXIT_TAG = "Exits";
+var PLD_ENTRY_POINT_TAG = "Entries";
 //todo scripted event triggers.
 
-var X_TAG = "X";
-var Y_TAG = "Y";
-var WIDTH_TAG = "Width";
-var HEIGHT_TAG = "Height";
+var PLD_X_TAG = "X";
+var PLD_Y_TAG = "Y";
+var PLD_WIDTH_TAG = "Width";
+var PLD_HEIGHT_TAG = "Height";
+var PLD_RENDER_TAG = "RenderLayer";
 
+var PLD_TYPE_TAG = "Type";
+var PLD_IMAGERECT_CLASS = "ImageRectangle";
+var PLD_BASICRECT_CLASS = "NamedRectangle";
 
 class PLDExporter
 {
-    constructor(outputFilePath, layerCollection)
+    constructor(outputFilePath, layerCollection, levelWidth, levelHeight)
     {
         this.outputPath = outputFilePath;
         this.xmlBuilder = new XmlStringBuilder();
         this.layers = layerCollection;
+        this.totalWidth = levelWidth;
+        this.totalHeight = levelHeight;
     }
     
     //Public Methods
@@ -37,7 +46,7 @@ class PLDExporter
     {
         if(this.layers == undefined) return false;   
         
-        this.xmlBuilder.BeginNode(LEVEL_TAG);
+        this.xmlBuilder.AddChild(PLD_LEVEL_TAG);
         
         var backdrops = [];
         var floors = []; 
@@ -65,6 +74,11 @@ class PLDExporter
             enemies = enemies.concat(layerEnemies);    
         }
         
+        //Global property serialization
+        this.WriteGlobalLevelProperties();
+        
+        this.xmlBuilder.AddChild(PLD_OBJECT_TAG, false);
+        
         //Backdrop serialization
         if(backdrops.length > 1)
             throw "More than one backdrop defined.";
@@ -91,71 +105,129 @@ class PLDExporter
         if(enemies.length > 0)
             this.WriteEnemies(enemies);
         
+        this.xmlBuilder.EndNode(PLD_OBJECT_TAG);
         
-        this.xmlBuilder.EndNode(LEVEL_TAG);
+        this.xmlBuilder.EndNode(PLD_LEVEL_TAG);
         
         this.WriteExportFile();
     }
     
     //Private Methods
+    WriteGlobalLevelProperties()
+    {
+        this.xmlBuilder.AddChild(PLD_GLOBAL_TAG, true);
+        this.xmlBuilder.AddChild(PLD_LEVEL_SIZE_TAG, true);
+        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, this.totalWidth, true);
+        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, this.totalHeight, false);
+        this.xmlBuilder.EndNode(PLD_LEVEL_SIZE_TAG);
+        this.xmlBuilder.EndNode(PLD_GLOBAL_TAG); 
+        
+        //todo viewport
+    }
+    
     WriteBackdrop(backdropRect)
     {
-        this.xmlBuilder.AddChild(BACKDROP_TAG, true);
+        this.xmlBuilder.AddChild(PLD_BACKDROP_TAG, true);
         this.xmlBuilder.AddChild(backdropRect.Name, true);
-        this.xmlBuilder.AddCompleteChild("X", backdropRect.XLocation, true);
-        this.xmlBuilder.AddCompleteChild("Y", backdropRect.YLocation, false);
+        this.WriteRectType(backdropRect, true);
+        this.xmlBuilder.AddCompleteChild(PLD_X_TAG, backdropRect.XLocation, false);
+        this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, backdropRect.YLocation, false);
+        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, backdropRect.Width, false);
+        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, backdropRect.Height, false);
+        this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, backdropRect.RenderIdx, false);
         this.xmlBuilder.EndNode(backdropRect.Name);
-        this.xmlBuilder.EndNode(BACKDROP_TAG);
+        this.xmlBuilder.EndNode(PLD_BACKDROP_TAG);
     }
     
     WriteFloor(floorRect)
     {
-        this.xmlBuilder.AddChild(FLOOR_TAG, false);
+        this.xmlBuilder.AddChild(PLD_FLOOR_TAG, false);
         this.xmlBuilder.AddChild(floorRect.Name, true);
-        this.xmlBuilder.AddCompleteChild("X", floorRect.XLocation, true);
-        this.xmlBuilder.AddCompleteChild("Y", floorRect.YLocation, false);
+        this.WriteRectType(floorRect, true);
+        this.xmlBuilder.AddCompleteChild(PLD_X_TAG, floorRect.XLocation, false);
+        this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, floorRect.YLocation, false);
+        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, floorRect.Width, false);
+        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, floorRect.Height, false);
+        this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, floorRect.RenderIdx, false);
         this.xmlBuilder.EndNode(floorRect.Name);
-        this.xmlBuilder.EndNode(FLOOR_TAG);
+        this.xmlBuilder.EndNode(PLD_FLOOR_TAG);
     }
     
     WriteWall(wallRect)
     {
-        this.xmlBuilder.AddChild(WALL_TAG, false);
+        this.xmlBuilder.AddChild(PLD_WALL_TAG, false);
         this.xmlBuilder.AddChild(wallRect.Name, true);
-        this.xmlBuilder.AddCompleteChild("X", wallRect.XLocation, true);
-        this.xmlBuilder.AddCompleteChild("Y", wallRect.YLocation, false);
+        this.WriteRectType(wallRect, true);
+        this.xmlBuilder.AddCompleteChild(PLD_X_TAG, wallRect.XLocation, false);
+        this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, wallRect.YLocation, false);
+        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, wallRect.Width, false);
+        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, wallRect.Height, false);
+        this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, wallRect.RenderIdx, false);
         this.xmlBuilder.EndNode(wallRect.Name);
-        this.xmlBuilder.EndNode(WALL_TAG);
+        this.xmlBuilder.EndNode(PLD_WALL_TAG);
     }
     
     WriteProps(props)
     {
-        this.xmlBuilder.AddChild(PROP_TAG, false);
+        this.xmlBuilder.AddChild(PLD_PROP_TAG, false);
         for(var i = 0; i < props.length; i++)
         {
             var prop = props[i];
             
-            this.xmlBuilder.AddChild(prop.Name, true);
-            this.xmlBuilder.AddCompleteChild("X", prop.XLocation, true);
-            this.xmlBuilder.AddCompleteChild("Y", prop.YLocation, false);
+            if(i == 0)
+                this.xmlBuilder.AddChild(prop.Name, true);
+            else
+                this.xmlBuilder.AddChild(prop.Name, false);
+                  
+            this.WriteRectType(prop, true);
+            this.xmlBuilder.AddCompleteChild(PLD_X_TAG, prop.XLocation, false);
+            this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, prop.YLocation, false);
+            this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, prop.Width, false);
+            this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, prop.Height, false);
+            this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, prop.RenderIdx, false);
             this.xmlBuilder.EndNode(prop.Name);
         } 
-        this.xmlBuilder.EndNode(PROP_TAG);
+        this.xmlBuilder.EndNode(PLD_PROP_TAG);
     }
     
     WriteEnemies(enemies)
     {
-        this.xmlBuilder.AddChild(ENEMY_TAG, false);
+        this.xmlBuilder.AddChild(PLD_ENEMY_TAG, false);
         for(var i = 0; i < enemies.length; i++)
         {
             var enemy = enemies[i];
             
-            this.xmlBuilder.AddChild(enemy.Name, true);
-            this.xmlBuilder.AddCompleteChild("X", enemy.XLocation, true);
-            this.xmlBuilder.AddCompleteChild("Y", enemy.YLocation, false);
+            if(i == 0)
+                this.xmlBuilder.AddChild(enemy.Name, true);
+            else
+                this.xmlBuilder.AddChild(enemy.Name, false);
+                
+            this.WriteRectType(enemy, true);
+            this.xmlBuilder.AddCompleteChild(PLD_X_TAG, enemy.XLocation, false);
+            this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, enemy.YLocation, false);
+            this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, enemy.Width, false);
+            this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, enemy.Height, false);
+            this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, enemy.RenderIdx, false);
             this.xmlBuilder.EndNode(enemy.Name);
         } 
-        this.xmlBuilder.EndNode(ENEMY_TAG);
+        this.xmlBuilder.EndNode(PLD_ENEMY_TAG);
+    }
+    
+    WriteRectType(rect, isFirst)
+    {      
+        if(rect instanceof ImageRectangle)
+        {
+            this.xmlBuilder.AddCompleteChild(PLD_TYPE_TAG, PLD_IMAGERECT_CLASS, isFirst);
+            return;
+        }
+        
+        if(rect instanceof NamedRectangle)
+        {
+            this.xmlBuilder.AddCompleteChild(PLD_TYPE_TAG, PLD_BASICRECT_CLASS, isFirst);
+            return;
+        }
+            
+        throw "Invaild rectangle type serialization attempted.";
     }
     
     WriteExportFile()

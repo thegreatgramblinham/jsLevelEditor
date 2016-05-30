@@ -98,7 +98,8 @@ var filesInGlobalBuild =
     "/scripts/categoryLoading/categoryLoader.js",
     "/scripts/exporting/lvlExporter.js",
     "/scripts/importing/lvlImporter.js",
-    "/scripts/exporting/pldExporter.js"
+    "/scripts/exporting/pldExporter.js",
+    "/scripts/importing/pldImporter.js"  
     //END ENGINE FILES
 ];
 ///////////////////////////////////////////

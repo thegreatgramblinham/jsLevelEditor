@@ -28,8 +28,6 @@ var _scrollXDelta = 0;
 var _scrollYDelta = 0;
 var _prevScrollOffsetY = 0;
 var _prevScrollOffsetX = 0;
-var _levelWidth = 0;
-var _levelHeight = 0;
 var _scale = 1;
 var _selectedRectOverlay = undefined;
 const _minThumbWidth = 15;
@@ -47,8 +45,8 @@ _horizThumb.style.cursor= "w-resize";
 _horizontalScroll.style.height = 25;
 _widthInputBox.value = _canvas.width;
 _heightInputBox.value = _canvas.height;
-_levelWidth = _canvas.width;
-_levelHeight = _canvas.height;
+LevelWidth = _canvas.width;
+LevelHeight = _canvas.height;
 
 //Rectangle Collection
 var _currentRectangle = undefined;
@@ -95,24 +93,26 @@ _canvas.onmousemove = function(e)
                     var rectX = Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
                     var rectY =  Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
 
-                    var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
-                    var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
+                    var width = Math.max(_downPoint.xCoordinate+_scrollOffsetX,currPoint.xCoordinate+_scrollOffsetX) 
+                        - Math.min(_downPoint.xCoordinate+_scrollOffsetX, currPoint.xCoordinate+_scrollOffsetX);
+                    var height = Math.max(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY) 
+                        - Math.min(_downPoint.yCoordinate+_scrollOffsetY, currPoint.yCoordinate+_scrollOffsetY);
                     
-                    if((rectX < 0 || rectX > _levelWidth) ||
-                        (rectY < 0 || rectY > _levelHeight))
+                    if((rectX < 0 || rectX > LevelWidth) ||
+                        (rectY < 0 || rectY > LevelHeight))
                     {
                         _currentRectangle = undefined;
                         return;
                     }
                     
-                    if(rectX + width > _levelWidth )
+                    if(rectX + width > LevelWidth )
                     {
-                        width = _levelWidth-rectX;
+                        width = LevelWidth-rectX;
                     }
                     
-                    if(rectY + height > _levelHeight)
+                    if(rectY + height > LevelHeight)
                     {
-                        height = _levelHeight-rectY;
+                        height = LevelHeight-rectY;
                     }   
                         
                     rectX = Number(rectX.toFixed(0));
@@ -135,7 +135,7 @@ _canvas.onmousemove = function(e)
             {
                 if(_selectedRectOverlay != undefined)
                 {
-                    _selectedRectOverlay.OverlayMouseMove(currPoint.xCoordinate+_scrollOffsetX, currPoint.yCoordinate+_scrollOffsetY, _levelWidth, _levelHeight);
+                    _selectedRectOverlay.OverlayMouseMove(currPoint.xCoordinate+_scrollOffsetX, currPoint.yCoordinate+_scrollOffsetY, LevelWidth, LevelHeight);
                     _selectedRectOverlay.DrawRectCoords(_drawContext);
                     OnSelectedRectangleChanged();
                 }
@@ -180,7 +180,8 @@ _canvas.onmouseup = function(e)
         _downPoint = undefined;
         if(_currentRectangle != undefined && IsValidRectangle())
         {
-            AddRectangle();
+            AddRectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width,
+                _currentRectangle.Height, "Rectangle "+CurrentLayer.ChildCount(), DefaultCategory);
         }
         else if(BrushSelection == BrushType.Image && CanvasMode == UIMode.Add && !_ctrlPressed)
         {
@@ -188,7 +189,8 @@ _canvas.onmouseup = function(e)
             var imagePlacePoint = new point(canvasMouseUpPoint.xCoordinate+_scrollOffsetX,canvasMouseUpPoint.yCoordinate + _scrollOffsetY);
             if(CurrentImageBrush != undefined)
             {
-                AddImage(imagePlacePoint.xCoordinate, imagePlacePoint.yCoordinate);
+                AddImage(imagePlacePoint.xCoordinate, imagePlacePoint.yCoordinate, CurrentImageBrush.Image,
+                     CurrentImageBrush.GetFileName(), DefaultCategory);
             }
         }
         RefreshRectangles();
@@ -250,13 +252,13 @@ function RefreshRectangles()
 _widthInputBox.onchange = function(e)
 {
     UpdateHorizontalScrollVisual();
-    _levelWidth = _widthInputBox.value;
+    LevelWidth = _widthInputBox.value;
 }
 
 _heightInputBox.onchange = function(e)
 {
     UpdateVerticalScrollVisual();
-    _levelHeight = _heightInputBox.value;
+    LevelHeight = _heightInputBox.value;
 }
 
 //Scroll Handling
@@ -520,31 +522,33 @@ function UpdateHorizontalScrollVisual()
 ///<summary>
 /// Adds a rectangle data object to the internal collection
 ///</summary>
-function AddRectangle()
+function AddRectangle(x, y, width, height, name, category)
 {
-    var addRect = new NamedRectangle(_currentRectangle.XLocation, _currentRectangle.YLocation, _currentRectangle.Width, _currentRectangle.Height, "Rectangle "+CurrentLayer.ChildCount());
-    addRect.Category = DefaultCategory;
+    var addRect = new NamedRectangle(x, y, width, height, name);
+    addRect.Category = category == undefined ? DefaultCategory : category;
     CurrentLayer.AddRectangle(addRect);
     _currentRectangle = undefined;
     RefreshPropertyControls();
+    RefreshRectangles();
 }
 
-function AddImage(imageX,imageY)
+function AddImage(imageX,imageY, image, imageFileName, category)
 {
-    var imgRect = new ImageRectangle(imageX,imageY, CurrentImageBrush.Image, CurrentImageBrush.GetFileName());
-    imgRect.Category = DefaultCategory;
+    var imgRect = new ImageRectangle(imageX,imageY, image, imageFileName);
+    imgRect.Category = category == undefined ? DefaultCategory : category;
     CurrentLayer.AddRectangle(imgRect);
     RefreshPropertyControls();
-    if(imageX+CurrentImageBrush.Width > _levelWidth || imageY+CurrentImageBrush.Height > _levelWidth)
+    if(imageX + image.width > LevelWidth || imageY + image.height > LevelWidth)
     {
-        var newRight = imageX+CurrentImageBrush.Width;
-        var newBottom = imageY+CurrentImageBrush.Height;
+        var newRight = imageX + image.width;
+        var newBottom = imageY + image.height;
         _widthInputBox.value = newRight;
         _heightInputBox.value = newBottom;
-        _levelWidth = newRight;
-        _levelHeight = newBottom;
+        LevelWidth = newRight;
+        LevelHeight = newBottom;
         UpdateScrollThumbs();
     }
+    RefreshRectangles();
 }
 
 function RemoveSelectedRectangle()
