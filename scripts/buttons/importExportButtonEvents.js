@@ -35,9 +35,9 @@ saveLevelButton.onclick = function(event)
             if(ext === MAASHES_LEVEL_EXT)
             {
                 //Call maashes' xml writing function here.
-                var lvlExporter = new LvlExporter(fileName, LayerCollection);
-                var xml = lvlExporter.ExportLevel();
-                fs.writeFileSync(filePath, xml, "utf8");
+                var lvlExporter = new LvlExporter(filePath, LayerCollection, LevelHeight, LevelWidth);
+                
+                lvlExporter.ExportLevel();
             }
             else if(ext === SAM_LEVEL_EXT)
             {
@@ -74,6 +74,15 @@ openLevelButton.onclick = function(event)
             if(ext === MAASHES_LEVEL_EXT)
             {
                 //Call maashes' level reconst function here.
+                var lvlImporter = new LvlImporter(filePath);
+                try
+                {
+                    lvlImporter.ImportLvlFile();
+                }
+                catch(ex)
+                {
+                    dialog.showMessageBox({ message: "IMPORT FAILED: "+ex.toString(), buttons: ["OK"]})
+                }
             }
             else if(ext === SAM_LEVEL_EXT)
             {
@@ -85,7 +94,7 @@ openLevelButton.onclick = function(event)
                 }
                 catch(ex)
                 {
-                    dialog.showMessageBox({ message: "EXPORT FAILED: "+ex.toString(), buttons: ["OK"]})
+                    dialog.showMessageBox({ message: "IMPORT FAILED: "+ex.toString(), buttons: ["OK"]})
                 }
             }
         }

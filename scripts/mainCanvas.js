@@ -737,14 +737,22 @@ function OnVerticalScroll()
 //Reset and clear all canvas properties and setting canvas on load
 function ResetCanvas()
 {
-    var currentLeft = _horizThumb.style.left;
-    var newLeft = 0;
-    newLeft = Number(currentLeft.substr(0,currentLeft.length-2));
-    MoveHorizontalThumb((-newLeft));
-    var currentTop = _verticalThumb.style.top;
-    var newTop = 0;
-    newTop = Number(currentTop.substr(0,currentTop.length-2));
-    MoveVerticalThumb((-newTop));
+    if(_horizScrollVisible)
+    {
+        var currentLeft = _horizThumb.style.left;
+        var newLeft = 0;
+        newLeft = Number(currentLeft.substr(0,currentLeft.length-2));
+        MoveHorizontalThumb((-newLeft));
+    }
+    
+    if(_verticalScrollVisible)
+    {
+        var currentTop = _verticalThumb.style.top;
+        var newTop = 0;
+        newTop = Number(currentTop.substr(0,currentTop.length-2));
+        MoveVerticalThumb((-newTop));
+    }
+
     LayerCollection = [];
     SelectedRectangle = undefined;
     CurrentLayer = undefined;
@@ -764,7 +772,29 @@ function RefreshPropertyControls()
 //Set level height and width on load
 function ImportLevelBounds(levelHeight,levelWidth)
 {
+    if(levelHeight != undefined)
+    {
+        LevelHeight = levelHeight;
+        _heightInputBox.value = levelHeight;
+    }
+    else
+    {
+        LevelHeight = _canvas.height;
+        _heightInputBox.value = _canvas.height;
+    }
     
+    if(levelWidth != undefined)
+    {
+        LevelWidth = levelWidth;
+        _widthInputBox.value = levelWidth;
+    }
+    else
+    {
+        LevelWidtrh = _canvas.width;
+        _widthInputBox.value = _canvas.Width;
+    }
+    
+    UpdateScrollThumbs();
 }
 
 //Import basic rectangles
