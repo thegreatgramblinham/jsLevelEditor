@@ -10,10 +10,10 @@ var PLD_OBJECT_TAG = "Objects";
 var PLD_BACKDROP_TAG = "Backdrop";
 var PLD_FLOOR_TAG = "Floor";
 var PLD_WALL_TAG = "Wall";
-var PLD_PROP_TAG = "Props";
-var PLD_ENEMY_TAG = "Enemies";
-var PLD_EXIT_TAG = "Exits";
-var PLD_ENTRY_POINT_TAG = "Entries";
+var PLD_PROP_TAG = "Prop";
+var PLD_ENEMY_TAG = "Enemy";
+var PLD_EXIT_TAG = "Exit";
+var PLD_ENTRY_POINT_TAG = "Entrance";
 //todo scripted event triggers.
 
 var PLD_X_TAG = "X";
@@ -217,12 +217,13 @@ class PLDImporter
             if(image == undefined)
                 throw "Could not find file "+ tag.tagName +" in open images.";
                
-            AddImage(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], image, tag.tagName, category);
+            AddImageToLayer(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], image, tag.tagName,
+                category, propertyArr[PLD_RENDER_TAG]);
         }
         else if(propertyArr[PLD_TYPE_TAG] == PLD_BASICRECT_CLASS)
         {
-            AddRectangle(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], propertyArr[PLD_WIDTH_TAG],
-                propertyArr[PLD_HEIGHT_TAG], tag.tagName, category);
+            AddRectangleToLayer(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], propertyArr[PLD_WIDTH_TAG],
+                propertyArr[PLD_HEIGHT_TAG], tag.tagName, category, propertyArr[PLD_RENDER_TAG]);
                 
             //todo support for render groups
         }

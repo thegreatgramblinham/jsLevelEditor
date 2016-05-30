@@ -80,7 +80,12 @@ function GetImageElementByFileName(fileName)
         imgName = imgName.split('.')[0];
         
         if(imgName == fileName)
-            return image;
+        {
+            var fullsizeImage = document.createElement("IMG");
+            fullsizeImage.src = image.src;
+            return fullsizeImage;
+        }
+            
     }
     
     return undefined;
