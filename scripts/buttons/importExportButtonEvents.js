@@ -86,8 +86,9 @@ function SaveLevel()
 function OpenLevel()
 {
     var filePaths = dialog.showOpenDialog(
-        { filters: [{ name: "Shade Level Files (*."+MAASHES_LEVEL_EXT+")", extensions: [MAASHES_LEVEL_EXT] },
-                    { name: "HERDERR Level Files (*."+SAM_LEVEL_EXT+")", extensions: [SAM_LEVEL_EXT] }
+        { filters: [
+            { name: "Shade Level Files (*."+MAASHES_LEVEL_EXT+"), Penguin Level Designs (*."+SAM_LEVEL_EXT+") ",
+              extensions: [MAASHES_LEVEL_EXT, SAM_LEVEL_EXT] }
         ]});
         
     if (filePaths == undefined || filePaths.length == 0) return;
