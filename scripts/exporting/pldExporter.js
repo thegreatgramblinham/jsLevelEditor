@@ -118,8 +118,8 @@ class PLDExporter
     {
         this.xmlBuilder.AddChild(PLD_GLOBAL_TAG, true);
         this.xmlBuilder.AddChild(PLD_LEVEL_SIZE_TAG, true);
-        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, this.totalWidth, true);
-        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, this.totalHeight, false);
+        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, this.totalWidth.toFixed(0), true);
+        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, this.totalHeight.toFixed(0), false);
         this.xmlBuilder.EndNode(PLD_LEVEL_SIZE_TAG);
         this.xmlBuilder.EndNode(PLD_GLOBAL_TAG); 
         
@@ -201,11 +201,11 @@ class PLDExporter
     
     WriteRectProperties(rect)
     {
-        this.xmlBuilder.AddCompleteChild(PLD_X_TAG, rect.XLocation, false);
-        this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, rect.YLocation, false);
-        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, rect.Width, false);
-        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, rect.Height, false);
-        this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, rect.RenderIdx, false);
+        this.xmlBuilder.AddCompleteChild(PLD_X_TAG, rect.XLocation.toFixed(0), false);
+        this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, rect.YLocation.toFixed(0), false);
+        this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, rect.Width.toFixed(0), false);
+        this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, rect.Height.toFixed(0), false);
+        this.xmlBuilder.AddCompleteChild(PLD_RENDER_TAG, rect.RenderIdx.toFixed(0), false);
     }    
     
     WriteRectType(rect, isFirst)
