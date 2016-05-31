@@ -106,8 +106,7 @@ class LvlExporter
     WriteBackdrop(imageRect,isFirst)
     {
         this.outputXml.AddChild(imageRect.Name,isFirst);
-        this.outputXml.AddCompleteChild(IMAGESOURCE_TAG,imageRect.Image.src,true);
-        this.outputXml.AddCompleteChild(X_TAG,imageRect.XLocation,false);
+        this.outputXml.AddCompleteChild(X_TAG,imageRect.XLocation,true);
         this.outputXml.AddCompleteChild(Y_TAG,imageRect.YLocation,false);
         this.outputXml.AddCompleteChild(WIDTH_TAG,imageRect.Width,false);
         this.outputXml.AddCompleteChild(HEIGHT_TAG,imageRect.Height,false);

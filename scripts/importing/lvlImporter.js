@@ -1,7 +1,6 @@
 var IMAGE_TAG = "Images";
 var PLATFORM_TAG = "Platform";
-var DIMENSIONS_TAG = "Dimensions"
-var IMAGESOURCE_TAG = "Source";
+var DIMENSIONS_TAG = "Dimensions";
 
 var X_TAG = "X";
 var Y_TAG = "Y";
@@ -115,11 +114,6 @@ class LvlImporter
                 imageProperties[HEIGHT_TAG] = Number(imageProperty.innerHTML);
             }
             
-            else if(imageProperty.tagName == IMAGESOURCE_TAG)
-            {
-                imageProperties[IMAGESOURCE_TAG] = imageProperty.innerHTML;
-            }
-            
             else if(imageProperty.tagName == RENDERIDX_TAG)
             {
                 imageProperties[RENDERIDX_TAG] = imageProperty.innerHTML;
@@ -183,8 +177,10 @@ class LvlImporter
     
     AddImageToCanvas(imageTypeName,imageProperties)
     {
-        var image = document.createElement("img");
-        image.src = imageProperties[IMAGESOURCE_TAG];
+       var image = GetImageElementByFileName(imageTypeName);    
+       if(image == undefined)
+                throw "Could not find file "+ imageTypeName +" in open images.";
+                
         AddImageToLayer(imageProperties[X_TAG], imageProperties[Y_TAG],image,imageTypeName,"Backdrop"
         ,imageProperties[RENDERIDX_TAG]);
     }
