@@ -3,27 +3,32 @@
 //Private Constants
 var PLD_FILE_EXTENSION = "pld";
 
+//Labeling Tags
 var PLD_LEVEL_TAG = "Stage";
 var PLD_GLOBAL_TAG = "Global";
-var PLD_LEVEL_SIZE_TAG = "LevelSize";
+var PLD_TRIGGER_TAG = "Triggers";
 var PLD_OBJECT_TAG = "Objects";
+var PLD_GROUP_TAG = "Group";
+
+//Category Tags
 var PLD_BACKDROP_TAG = "Backdrop";
 var PLD_FLOOR_TAG = "Floor";
 var PLD_WALL_TAG = "Wall";
 var PLD_PROP_TAG = "Prop";
 var PLD_ENEMY_TAG = "Enemy";
-var PLD_GROUP_TAG = "Group";
 var PLD_EXIT_TAG = "Exit";
 var PLD_ENTRANCE_TAG = "Entrance";
-//todo scripted event triggers.
 
+//Value Tags
+var PLD_LEVEL_SIZE_TAG = "LevelSize";
 var PLD_X_TAG = "X";
 var PLD_Y_TAG = "Y";
 var PLD_WIDTH_TAG = "Width";
 var PLD_HEIGHT_TAG = "Height";
 var PLD_RENDER_TAG = "RenderLayer";
-
 var PLD_TYPE_TAG = "Type";
+
+//Const Inner Values
 var PLD_IMAGERECT_CLASS = "ImageRectangle";
 var PLD_BASICRECT_CLASS = "NamedRectangle";
 
@@ -85,8 +90,45 @@ class PLDExporter
         }
         
         //Global property serialization
-        this.WriteGlobalLevelProperties(entrances, exits);
+        this.WriteGlobalLevelProperties();
         
+        //Trigger serialziation
+        this.WriteTriggers(entrances, exits);
+        
+        //Object serialization
+        this.WriteObjects(backdrops, floors, walls, props, enemies);
+             
+        this.xmlBuilder.EndNode(PLD_LEVEL_TAG);
+        
+        this.WriteExportFile();
+    }
+    
+    //Private Methods
+    WriteGlobalLevelProperties()
+    {
+        this.xmlBuilder.AddChild(PLD_GLOBAL_TAG, true);
+        
+        this.WriteLevelSize();   
+        //todo Viewport
+        
+        this.xmlBuilder.EndNode(PLD_GLOBAL_TAG);       
+    }
+    
+    WriteTriggers(entrances, exits)
+    {
+        this.xmlBuilder.AddChild(PLD_TRIGGER_TAG, false);
+        
+        if(exits.length > 0)
+            this.WriteExits(exits);
+            
+        if(entrances.length > 0)
+            this.WriteEntrance(entrances);
+        
+        this.xmlBuilder.EndNode(PLD_TRIGGER_TAG);
+    }
+    
+    WriteObjects(backdrops, floors, walls, props, enemies)
+    {
         this.xmlBuilder.AddChild(PLD_OBJECT_TAG, false);
         
         //Backdrop serialization
@@ -116,29 +158,13 @@ class PLDExporter
             this.WriteEnemies(enemies);
         
         this.xmlBuilder.EndNode(PLD_OBJECT_TAG);
-        
-        this.xmlBuilder.EndNode(PLD_LEVEL_TAG);
-        
-        this.WriteExportFile();
-    }
-    
-    //Private Methods
-    WriteGlobalLevelProperties(entrances, exits)
-    {
-        this.xmlBuilder.AddChild(PLD_GLOBAL_TAG, true);
-        
-        this.WriteLevelSize();
-        this.WriteExits(exits);
-        this.WriteEntrance(entrances);
-        
-        //todo Viewport
-        
-        this.xmlBuilder.EndNode(PLD_GLOBAL_TAG); 
-       
     }
     
     WriteLevelSize()
     {
+        if(totalWidth == undefined || totalHeight == undefined)
+            throw "Invalid level bounds.";
+        
         this.xmlBuilder.AddChild(PLD_LEVEL_SIZE_TAG, true);
         this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, this.totalWidth.toFixed(0), true);
         this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, this.totalHeight.toFixed(0), false);
@@ -147,7 +173,9 @@ class PLDExporter
     
     WriteExits(exits)
     {
-        this.xmlBuilder.AddChild(PLD_EXIT_TAG);
+        if(exits == undefined || exits.length == 0) return;
+        
+        this.xmlBuilder.AddChild(PLD_EXIT_TAG, true);
         
         for(var i = 0; i < exits.length; i++)
         {
@@ -178,7 +206,9 @@ class PLDExporter
     
     WriteEntrance(entrances)
     {
-        this.xmlBuilder.AddChild(PLD_ENTRANCE_TAG);
+        if(entrances == undefined || entrances.length == 0) return;
+        
+        this.xmlBuilder.AddChild(PLD_ENTRANCE_TAG, false);
         
         for(var i = 0; i < entrances.length; i++)
         {
@@ -209,6 +239,8 @@ class PLDExporter
     
     WriteBackdrop(backdropRect)
     {
+        if(backdropRect == undefined) return;
+        
         this.xmlBuilder.AddChild(PLD_BACKDROP_TAG, true);
         this.xmlBuilder.AddChild(backdropRect.Name, true);
         this.WriteRectProperties(backdropRect, true);
@@ -218,6 +250,8 @@ class PLDExporter
     
     WriteFloor(floorRect)
     {
+        if(floorRect == undefined) return;
+        
         this.xmlBuilder.AddChild(PLD_FLOOR_TAG, false);
         this.xmlBuilder.AddChild(floorRect.Name, true);
         this.WriteRectProperties(floorRect, true);
@@ -227,6 +261,8 @@ class PLDExporter
     
     WriteWall(wallRect)
     {
+        if(wallRect == undefined) return;
+        
         this.xmlBuilder.AddChild(PLD_WALL_TAG, false);
         this.xmlBuilder.AddChild(wallRect.Name, true);
         this.WriteRectProperties(wallRect, true);
@@ -236,6 +272,8 @@ class PLDExporter
     
     WriteProps(props)
     {
+        if(props == undefined || props.length == 0) return;
+        
         this.xmlBuilder.AddChild(PLD_PROP_TAG, false);
         for(var i = 0; i < props.length; i++)
         {
@@ -255,6 +293,8 @@ class PLDExporter
     
     WriteEnemies(enemies)
     {
+        if(enemies == undefined || enemies.length == 0) return;
+        
         this.xmlBuilder.AddChild(PLD_ENEMY_TAG, false);
         for(var i = 0; i < enemies.length; i++)
         {
@@ -277,6 +317,8 @@ class PLDExporter
     
     WriteRectProperties(rect, isFirst)
     {
+        if(rect == undefined) return;
+        
         this.WriteRectType(rect, isFirst);
         this.xmlBuilder.AddCompleteChild(PLD_X_TAG, rect.XLocation.toFixed(0), false);
         this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, rect.YLocation.toFixed(0), false);
@@ -287,6 +329,8 @@ class PLDExporter
     
     WriteRectType(rect, isFirst)
     {      
+        if(rect == undefined) return;
+        
         if(rect instanceof ImageRectangle)
         {
             this.xmlBuilder.AddCompleteChild(PLD_TYPE_TAG, PLD_IMAGERECT_CLASS, isFirst);
