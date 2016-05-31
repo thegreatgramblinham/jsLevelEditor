@@ -17,6 +17,7 @@ window.addEventListener("beforeunload", function (event) {
         }
         else if(decision == 2)
         {
+            event.returnValue = false;
             return false;
         }
     }   

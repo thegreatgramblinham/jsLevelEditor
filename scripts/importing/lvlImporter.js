@@ -1,8 +1,6 @@
 var IMAGE_TAG = "Images";
 var PLATFORM_TAG = "Platform";
 var DIMENSIONS_TAG = "Dimensions"
-var BACKGROUND_TAG = "Background";
-var FOREGROUND_TAG = "Foreground";
 var IMAGESOURCE_TAG = "Source";
 
 var X_TAG = "X";
@@ -86,15 +84,7 @@ class LvlImporter
         for(var i=0; i<imagesArray.children.length; i++)
         {
             var child = imagesArray.children[i];
-            if(child.tagName == BACKGROUND_TAG)
-            {
-                this.BuildImageRect(BACKGROUND_TAG,child);
-            }
-            
-            if(child.tagName == FOREGROUND_TAG)
-            {
-                this.BuildImageRect(FOREGROUND_TAG,child);
-            }
+            this.BuildImageRect(child.tagName,child);
         }
     }
     
