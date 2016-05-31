@@ -23,6 +23,19 @@ class XmlStringBuilder extends StringBuilder
         this.AddCompleteNode(childName,childValue);
     }
     
+    AddBlankChild(childName, isFirst)
+    {
+        if(isFirst)
+           this.depth++;
+        
+        this.BeginNode(childName);
+        
+        if(isFirst)
+           this.depth++;
+           
+        this.EndNode(childName);      
+    }
+    
     AddChild(childName,isFirst)
     {
         if(isFirst)

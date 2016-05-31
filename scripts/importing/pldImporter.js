@@ -1,28 +1,34 @@
-//This file is for the importing of pld files.
+//This file is for the importing of .pld files.
 
 //Private Constants
 var PLD_FILE_EXTENSION = "pld";
 
+//Labeling Tags
 var PLD_LEVEL_TAG = "Stage";
 var PLD_GLOBAL_TAG = "Global";
-var PLD_LEVEL_SIZE_TAG = "LevelSize";
+var PLD_TRIGGER_TAG = "Triggers";
 var PLD_OBJECT_TAG = "Objects";
+var PLD_GROUP_TAG = "Group";
+
+//Category Tags
 var PLD_BACKDROP_TAG = "Backdrop";
 var PLD_FLOOR_TAG = "Floor";
 var PLD_WALL_TAG = "Wall";
-var PLD_PROP_TAG = "Props";
-var PLD_ENEMY_TAG = "Enemies";
-var PLD_EXIT_TAG = "Exits";
-var PLD_ENTRY_POINT_TAG = "Entries";
-//todo scripted event triggers.
+var PLD_PROP_TAG = "Prop";
+var PLD_ENEMY_TAG = "Enemy";
+var PLD_EXIT_TAG = "Exit";
+var PLD_ENTRANCE_TAG = "Entrance";
 
+//Value Tags
+var PLD_LEVEL_SIZE_TAG = "LevelSize";
 var PLD_X_TAG = "X";
 var PLD_Y_TAG = "Y";
 var PLD_WIDTH_TAG = "Width";
 var PLD_HEIGHT_TAG = "Height";
 var PLD_RENDER_TAG = "RenderLayer";
-
 var PLD_TYPE_TAG = "Type";
+
+//Const Inner Values
 var PLD_IMAGERECT_CLASS = "ImageRectangle";
 var PLD_BASICRECT_CLASS = "NamedRectangle";
 
@@ -39,6 +45,9 @@ class PLDImporter
         ResetCanvas();
         
         this.SetLevelBounds();
+        
+        this.ReconstituteExits();
+        this.ReconstituteEntrances();
         
         this.ReconstituteBackground();
         this.ReconstituteFloor();
@@ -92,6 +101,38 @@ class PLDImporter
             throw "Level height not found.";
         
         ImportLevelBounds(width, height);
+    }
+    
+    ReconstituteExits()
+    {
+        var exitTags = this.xmlDoc.getElementsByTagName(PLD_EXIT_TAG);
+        var exitContainer = exitTags[0]
+        
+        if(exitContainer == undefined) return;
+        
+        for(var i = 0; i < exitContainer.children.length; i++)
+        {
+            var exit = exitContainer.children[i];
+
+            var propertyArr = this.DeserializeRectProperties(exit);       
+            this.AddToCanvas(propertyArr, exit, PLD_EXIT_TAG);
+        }
+    }
+    
+    ReconstituteEntrances()
+    {
+        var entranceTags = this.xmlDoc.getElementsByTagName(PLD_ENTRANCE_TAG);     
+        var entranceContainer = entranceTags[0]
+        
+        if(entranceContainer == undefined) return;
+        
+        for(var i = 0; i < entranceContainer.children.length; i++)
+        {
+            var entrance = entranceContainer.children[i];
+
+            var propertyArr = this.DeserializeRectProperties(entrance);       
+            this.AddToCanvas(propertyArr, entrance, PLD_ENTRANCE_TAG);
+        }
     }
     
     ReconstituteBackground()
@@ -217,14 +258,13 @@ class PLDImporter
             if(image == undefined)
                 throw "Could not find file "+ tag.tagName +" in open images.";
                
-            AddImage(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], image, tag.tagName, category);
+            AddImageToLayer(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], image, tag.tagName,
+                category, propertyArr[PLD_RENDER_TAG]);
         }
         else if(propertyArr[PLD_TYPE_TAG] == PLD_BASICRECT_CLASS)
         {
-            AddRectangle(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], propertyArr[PLD_WIDTH_TAG],
-                propertyArr[PLD_HEIGHT_TAG], tag.tagName, category);
-                
-            //todo support for render groups
+            AddRectangleToLayer(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], propertyArr[PLD_WIDTH_TAG],
+                propertyArr[PLD_HEIGHT_TAG], tag.tagName, category, propertyArr[PLD_RENDER_TAG]);
         }
         else   
             throw "Rectangle type not intializable."
