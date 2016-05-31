@@ -12,6 +12,7 @@ var PLD_FLOOR_TAG = "Floor";
 var PLD_WALL_TAG = "Wall";
 var PLD_PROP_TAG = "Prop";
 var PLD_ENEMY_TAG = "Enemy";
+var PLD_GROUP_TAG = "Group";
 var PLD_EXIT_TAG = "Exit";
 var PLD_ENTRY_POINT_TAG = "Entrance";
 //todo scripted event triggers.
