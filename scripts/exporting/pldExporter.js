@@ -187,9 +187,11 @@ class PLDExporter
                 this.xmlBuilder.AddChild(enemy.Name, true);
             else
                 this.xmlBuilder.AddChild(enemy.Name, false);
+            
+            //Adding a blank group tag for enemy addition via script
+            this.xmlBuilder.AddBlankChild(PLD_GROUP_TAG, true);   
                 
-            this.WriteRectType(enemy, true);
-            this.AddCompleteChild(PLD_GROUP_TAG, "", false);
+            this.WriteRectType(enemy, false);
             this.WriteRectProperties(enemy);
 
             this.xmlBuilder.EndNode(enemy.Name);
