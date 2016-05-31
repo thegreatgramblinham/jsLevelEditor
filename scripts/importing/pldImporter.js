@@ -265,8 +265,6 @@ class PLDImporter
         {
             AddRectangleToLayer(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], propertyArr[PLD_WIDTH_TAG],
                 propertyArr[PLD_HEIGHT_TAG], tag.tagName, category, propertyArr[PLD_RENDER_TAG]);
-                
-            //todo support for render groups
         }
         else   
             throw "Rectangle type not intializable."
