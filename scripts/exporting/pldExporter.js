@@ -14,7 +14,7 @@ var PLD_PROP_TAG = "Prop";
 var PLD_ENEMY_TAG = "Enemy";
 var PLD_GROUP_TAG = "Group";
 var PLD_EXIT_TAG = "Exit";
-var PLD_ENTRY_POINT_TAG = "Entrance";
+var PLD_ENTRANCE_TAG = "Entrance";
 //todo scripted event triggers.
 
 var PLD_X_TAG = "X";
@@ -54,29 +54,38 @@ class PLDExporter
         var walls = [];
         var props = [];
         var enemies = [];
+        var entrances = [];
+        var exits = [];
         
         for(var i = 0; i < this.layers.length; i++)
         {
             var layer = this.layers[i];
                    
-            var layerBackdrops = layer.GetAllRectsByCategory("Backdrop");
+            var layerBackdrops = layer.GetAllRectsByCategory(PLD_BACKDROP_TAG);
             backdrops = backdrops.concat(layerBackdrops);
             
-            var layerFloors = layer.GetAllRectsByCategory("Floor");
+            var layerFloors = layer.GetAllRectsByCategory(PLD_FLOOR_TAG);
             floors = floors.concat(layerFloors);
             
-            var layerWalls = layer.GetAllRectsByCategory("Wall");
+            var layerWalls = layer.GetAllRectsByCategory(PLD_WALL_TAG);
             walls = walls.concat(layerWalls);  
             
-            var layerProps = layer.GetAllRectsByCategory("Prop");
+            var layerProps = layer.GetAllRectsByCategory(PLD_PROP_TAG);
             props = props.concat(layerProps);
             
-            var layerEnemies = layer.GetAllRectsByCategory("Enemy");
-            enemies = enemies.concat(layerEnemies);    
+            var layerEnemies = layer.GetAllRectsByCategory(PLD_ENEMY_TAG);
+            enemies = enemies.concat(layerEnemies);
+            
+            var layerEntrances = layer.GetAllRectsByCategory(PLD_ENTRANCE_TAG);
+            entrances = entrances.concat(layerEntrances);
+            
+            var layerExits = layer.GetAllRectsByCategory(PLD_EXIT_TAG);
+            exits = exits.concat(layerExits);
+              
         }
         
         //Global property serialization
-        this.WriteGlobalLevelProperties();
+        this.WriteGlobalLevelProperties(entrances, exits);
         
         this.xmlBuilder.AddChild(PLD_OBJECT_TAG, false);
         
@@ -114,24 +123,95 @@ class PLDExporter
     }
     
     //Private Methods
-    WriteGlobalLevelProperties()
+    WriteGlobalLevelProperties(entrances, exits)
     {
         this.xmlBuilder.AddChild(PLD_GLOBAL_TAG, true);
+        
+        this.WriteLevelSize();
+        this.WriteExits(exits);
+        this.WriteEntrance(entrances);
+        
+        //todo Viewport
+        
+        this.xmlBuilder.EndNode(PLD_GLOBAL_TAG); 
+       
+    }
+    
+    WriteLevelSize()
+    {
         this.xmlBuilder.AddChild(PLD_LEVEL_SIZE_TAG, true);
         this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, this.totalWidth.toFixed(0), true);
         this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, this.totalHeight.toFixed(0), false);
         this.xmlBuilder.EndNode(PLD_LEVEL_SIZE_TAG);
-        this.xmlBuilder.EndNode(PLD_GLOBAL_TAG); 
+    }
+    
+    WriteExits(exits)
+    {
+        this.xmlBuilder.AddChild(PLD_EXIT_TAG);
         
-        //todo viewport
+        for(var i = 0; i < exits.length; i++)
+        {
+            var exit = exits[i];
+            var isFirst = (i == 0);
+            
+            var extName = exit.Name;
+                                    
+            switch(extName.toUpperCase())
+            {
+                case "LEFT":
+                case "RIGHT":
+                case "TOP":
+                case "BOTTOM":
+                    extName = extName.toUpperCase(); 
+                    break;        
+                default:
+                    throw "Invalid exit name (type): " +extName;
+            }
+            
+            this.xmlBuilder.AddChild(extName, isFirst);
+            this.WriteRectProperties(exit, true);                            
+            this.xmlBuilder.EndNode(extName);
+        }
+        
+        this.xmlBuilder.EndNode(PLD_EXIT_TAG);
+    }
+    
+    WriteEntrance(entrances)
+    {
+        this.xmlBuilder.AddChild(PLD_ENTRANCE_TAG);
+        
+        for(var i = 0; i < entrances.length; i++)
+        {
+            var entrance = entrances[i];
+            var isFirst = (i == 0);
+            
+            var entName = entrance.Name;
+                                    
+            switch(entName.toUpperCase())
+            {
+                case "LEFT":
+                case "RIGHT":
+                case "TOP":
+                case "BOTTOM":
+                    entName = entName.toUpperCase(); 
+                    break;        
+                default:
+                    throw "Invalid entrance name (type): " +entName;
+            }
+            
+            this.xmlBuilder.AddChild(entName, isFirst);
+            this.WriteRectProperties(entrance, true);                            
+            this.xmlBuilder.EndNode(entName);
+        }
+        
+        this.xmlBuilder.EndNode(PLD_ENTRANCE_TAG);
     }
     
     WriteBackdrop(backdropRect)
     {
         this.xmlBuilder.AddChild(PLD_BACKDROP_TAG, true);
         this.xmlBuilder.AddChild(backdropRect.Name, true);
-        this.WriteRectType(backdropRect, true);
-        this.WriteRectProperties(backdropRect);
+        this.WriteRectProperties(backdropRect, true);
         this.xmlBuilder.EndNode(backdropRect.Name);
         this.xmlBuilder.EndNode(PLD_BACKDROP_TAG);
     }
@@ -140,8 +220,7 @@ class PLDExporter
     {
         this.xmlBuilder.AddChild(PLD_FLOOR_TAG, false);
         this.xmlBuilder.AddChild(floorRect.Name, true);
-        this.WriteRectType(floorRect, true);
-        this.WriteRectProperties(floorRect);
+        this.WriteRectProperties(floorRect, true);
         this.xmlBuilder.EndNode(floorRect.Name);
         this.xmlBuilder.EndNode(PLD_FLOOR_TAG);
     }
@@ -150,8 +229,7 @@ class PLDExporter
     {
         this.xmlBuilder.AddChild(PLD_WALL_TAG, false);
         this.xmlBuilder.AddChild(wallRect.Name, true);
-        this.WriteRectType(wallRect, true);
-        this.WriteRectProperties(wallRect);
+        this.WriteRectProperties(wallRect, true);
         this.xmlBuilder.EndNode(wallRect.Name);
         this.xmlBuilder.EndNode(PLD_WALL_TAG);
     }
@@ -168,8 +246,7 @@ class PLDExporter
             else
                 this.xmlBuilder.AddChild(prop.Name, false);
                   
-            this.WriteRectType(prop, true);
-            this.WriteRectProperties(prop);    
+            this.WriteRectProperties(prop, true);    
                 
             this.xmlBuilder.EndNode(prop.Name);
         } 
@@ -191,16 +268,16 @@ class PLDExporter
             //Adding a blank group tag for enemy addition via script
             this.xmlBuilder.AddBlankChild(PLD_GROUP_TAG, true);   
                 
-            this.WriteRectType(enemy, false);
-            this.WriteRectProperties(enemy);
+            this.WriteRectProperties(enemy, false);
 
             this.xmlBuilder.EndNode(enemy.Name);
         } 
         this.xmlBuilder.EndNode(PLD_ENEMY_TAG);
     }
     
-    WriteRectProperties(rect)
+    WriteRectProperties(rect, isFirst)
     {
+        this.WriteRectType(rect, isFirst);
         this.xmlBuilder.AddCompleteChild(PLD_X_TAG, rect.XLocation.toFixed(0), false);
         this.xmlBuilder.AddCompleteChild(PLD_Y_TAG, rect.YLocation.toFixed(0), false);
         this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, rect.Width.toFixed(0), false);
