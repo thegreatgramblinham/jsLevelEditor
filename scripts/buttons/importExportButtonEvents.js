@@ -85,49 +85,48 @@ function SaveLevel()
 
 function OpenLevel()
 {
-     dialog.showOpenDialog(
-        { filters: [{ name: "Shade Level Files (*."+MAASHES_LEVEL_EXT+")", extensions: [MAASHES_LEVEL_EXT] },
-                    { name: "HERDERR Level Files (*."+SAM_LEVEL_EXT+")", extensions: [SAM_LEVEL_EXT] }
-        ]},
-        function (filePaths) 
-        {
-            if (filePaths === undefined) return;
-            var filePath = filePaths[0];
-            
-            var ext = filePath.split('.').pop();
-            
-            if(ext === MAASHES_LEVEL_EXT)
-            {
-                //Call maashes' level reconst function here.
-                var lvlImporter = new LvlImporter(filePath);
-                try
-                {
-                    LoadingLevel = true;
-                    lvlImporter.ImportLvlFile();
-                }
-                catch(ex)
-                {
-                    dialog.showMessageBox({ message: "IMPORT FAILED: "+ex.toString(), buttons: ["OK"]})
-                }
-                LoadingLevel = false;
-            }
-            else if(ext === SAM_LEVEL_EXT)
-            {
-                //Call sam's level reconst function here.
-                var pldImporter = new PLDImporter(filePath);      
-                try
-                {
-                   LoadingLevel = true;
-                   pldImporter.Import();
+    var filePaths = dialog.showOpenDialog(
+        { filters: [
+            { name: "Shade Level Files (*."+MAASHES_LEVEL_EXT+"), Penguin Level Designs (*."+SAM_LEVEL_EXT+") ",
+              extensions: [MAASHES_LEVEL_EXT, SAM_LEVEL_EXT] }
+        ]});
+        
+    if (filePaths == undefined || filePaths.length == 0) return;
 
-                }
-                catch(ex)
-                {
-                    dialog.showMessageBox({ message: "IMPORT FAILED: "+ex.toString(), buttons: ["OK"]})
-                }
-                LoadingLevel = false;
-            }
+    var filePath = filePaths[0];
+    
+    var ext = filePath.split('.').pop();
+    
+    if(ext === MAASHES_LEVEL_EXT)
+    {
+        //Call maashes' level reconst function here.
+        var lvlImporter = new LvlImporter(filePath);
+        try
+        {
+            LoadingLevel = true;
+            lvlImporter.ImportLvlFile();
         }
-    );
+        catch(ex)
+        {
+            dialog.showMessageBox({ message: "IMPORT FAILED: "+ex.toString(), buttons: ["OK"]})
+        }
+        LoadingLevel = false;
+    }
+    else if(ext === SAM_LEVEL_EXT)
+    {
+        //Call sam's level reconst function here.
+        var pldImporter = new PLDImporter(filePath);      
+        try
+        {
+            LoadingLevel = true;
+            pldImporter.Import();
+
+        }
+        catch(ex)
+        {
+            dialog.showMessageBox({ message: "IMPORT FAILED: "+ex.toString(), buttons: ["OK"]})
+        }
+        LoadingLevel = false;
+    }
 }
 
