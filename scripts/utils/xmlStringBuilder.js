@@ -30,8 +30,7 @@ class XmlStringBuilder extends StringBuilder
         
         this.BeginNode(childName);
         
-        if(isFirst)
-           this.depth++;
+        this.depth++;
            
         this.EndNode(childName);      
     }
