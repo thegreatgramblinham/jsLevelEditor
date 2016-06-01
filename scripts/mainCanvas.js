@@ -201,8 +201,8 @@ _canvas.onmouseup = function(e)
 //Window events
 window.onresize = function(e)
 {
-    _canvas.width = _canvas.offsetWidth;
-    _canvas.height = _canvas.offsetHeight;    
+    _canvas.width = Math.floor((window.innerWidth * .77));
+    _canvas.height = Math.floor((window.innerHeight * .77));   
     RefreshRectangles();
     UpdateScrollThumbs();
 }

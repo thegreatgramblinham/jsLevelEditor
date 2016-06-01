@@ -63,9 +63,19 @@ function SaveLevel()
         if(ext === MAASHES_LEVEL_EXT)
         {
             //Call maashes' xml writing function here.
+           
             var lvlExporter = new LvlExporter(filePath, LayerCollection, LevelHeight, LevelWidth);
             
-            lvlExporter.ExportLevel();
+            try
+            {
+                lvlExporter.ExportLevel();
+                FileChangeMade = false;
+            }
+            catch(ex)
+            {
+                dialog.showMessageBox({ message: "EXPORT FAILED: "+ex.toString(), buttons: ["OK"]})
+            }
+
         }
         else if(ext === SAM_LEVEL_EXT)
         {
@@ -75,6 +85,7 @@ function SaveLevel()
             try
             {
                 pldExporter.Export();  
+                FileChangeMade = false;
             }
             catch(ex)
             {
