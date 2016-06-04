@@ -861,7 +861,7 @@ function RefreshPropertyControls()
 }
 
 //Set level height and width on load
-function ImportLevelBounds(levelHeight,levelWidth)
+function ImportLevelBounds(levelWidth, levelHeight)
 {
     if(levelHeight != undefined)
     {

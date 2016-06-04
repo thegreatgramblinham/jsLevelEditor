@@ -75,7 +75,7 @@ class LvlImporter
             }
         }
         
-        ImportLevelBounds(lvlHeight,lvlWidth);
+        ImportLevelBounds(lvlWidth, lvlHeight);
     }
     
     LoadLevelBackgrounds(imagesArray)
