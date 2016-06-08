@@ -97,7 +97,7 @@ function SaveLevel()
         }
         
         if(exportSuccessful)
-            dialog.showMessageBox({message: ext + " Export Successful!", buttons:["NEAT!"]}); 
+            dialog.showMessageBox({message: ext + " Export Successful!", buttons:["NEET!"]}); 
 }
 
 function OpenLevel()
