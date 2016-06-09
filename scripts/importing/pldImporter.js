@@ -19,6 +19,7 @@ var PLD_PROP_TAG = "Prop";
 var PLD_ENEMY_TAG = "Enemy";
 var PLD_EXIT_TAG = "Exit";
 var PLD_ENTRANCE_TAG = "Entrance";
+var PLD_VIEWPORT_TAG = "ViewPort";
 
 //Value Tags
 var PLD_LEVEL_SIZE_TAG = "LevelSize";
@@ -47,6 +48,7 @@ class PLDImporter
         ResetCanvas();
         
         this.SetLevelBounds();
+        this.ReconstituteViewPort();
         
         this.ReconstituteExits();
         this.ReconstituteEntrances();
@@ -103,6 +105,16 @@ class PLDImporter
             throw "Level height not found.";
         
         ImportLevelBounds(width, height);
+    }
+    
+    ReconstituteViewPort()
+    {
+        var viewPort = this.xmlDoc.getElementsByTagName(PLD_VIEWPORT_TAG);
+        
+        if(viewPort == undefined || viewPort.length == 0) return;
+        
+        var propertyArr = this.DeserializeRectProperties(viewPort[0]);       
+        this.AddToCanvas(propertyArr, viewPort[0], PLD_VIEWPORT_TAG);       
     }
     
     ReconstituteExits()
