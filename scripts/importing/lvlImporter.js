@@ -2,6 +2,7 @@ var IMAGE_TAG = "Images";
 var PLATFORM_TAG = "Platform";
 var DIMENSIONS_TAG = "Dimensions";
 
+var IMAGENAME_TAG = "ImageName";
 var X_TAG = "X";
 var Y_TAG = "Y";
 var WIDTH_TAG = "Width";
@@ -136,6 +137,7 @@ class LvlImporter
     BuildPlatformRect(platformNode, count)
     {
         var platformProperties = [];
+        var isImagePlatform = false;
         for(var i=0;i<platformNode.children.length;i++)
         {
             var platformProperty = platformNode.children[i];
@@ -164,8 +166,23 @@ class LvlImporter
             {
                 platformProperties[RENDERIDX_TAG] = Number(platformProperty.innerHTML);
             }
+
+            else if(platformProperty.tagName == IMAGENAME_TAG)
+            {
+                platformProperties[IMAGENAME_TAG] = platformProperty.innerHTML;
+                isImagePlatform = true;
+            }
         }
-        this.AddPlatformToCanvas(platformProperties,count);
+
+        if(!isImagePlatform)
+        {
+            this.AddPlatformToCanvas(platformProperties,count);
+        }
+        else
+        {
+            this.AddImagePlatformToCanvas(platformProperties);
+        }
+
     }
     
     AddPlatformToCanvas(platformProperties,count)
@@ -173,6 +190,18 @@ class LvlImporter
         AddRectangleToLayer(platformProperties[X_TAG],platformProperties[Y_TAG],
             platformProperties[WIDTH_TAG],platformProperties[HEIGHT_TAG],"Platform" + count,"Platform", 
             platformProperties[RENDERIDX_TAG])
+    }
+
+    AddImagePlatformToCanvas(platformProperties)
+    {
+        var platformImageName = platformProperties[IMAGENAME_TAG];
+        var image = GetImageElementByFileName(platformImageName);
+        if(image == undefined)
+            throw "Could not find file "+ platformImageName +" in open images.";
+        
+        AddImageToLayer(platformProperties[X_TAG],platformProperties[Y_TAG],image,platformImageName,"Platform",
+            platformProperties[RENDERIDX_TAG])
+
     }
     
     AddImageToCanvas(imageTypeName,imageProperties)

@@ -1,6 +1,7 @@
 var IMAGE_TAG = "Images";
 var PLATFORMS_TAG = "Platforms";
 var PLATFORM_TAG = "Platform";
+var IMAGENAME_TAG = "ImageName";
 var DIMENSIONS_TAG = "Dimensions"
 var LEVEL_TAG = "Level";
 var IMAGESOURCE_TAG = "Source";
@@ -88,6 +89,10 @@ class LvlExporter
         this.outputXml.AddCompleteChild(Y_TAG,platformRect.YLocation,false);
         this.outputXml.AddCompleteChild(WIDTH_TAG,platformRect.Width,false);
         this.outputXml.AddCompleteChild(HEIGHT_TAG,platformRect.Height,false);
+        if(platformRect instanceof ImageRectangle)
+        {
+            this.outputXml.AddCompleteChild(IMAGENAME_TAG, platformRect.Name);
+        }
         this.outputXml.AddCompleteChild(RENDERIDX_TAG,platformRect.RenderIdx,false);
         this.outputXml.EndNode(PLATFORM_TAG);
     }
