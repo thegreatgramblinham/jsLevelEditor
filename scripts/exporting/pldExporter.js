@@ -19,6 +19,7 @@ var PLD_PROP_TAG = "Prop";
 var PLD_ENEMY_TAG = "Enemy";
 var PLD_EXIT_TAG = "Exit";
 var PLD_ENTRANCE_TAG = "Entrance";
+var PLD_VIEWPORT_TAG = "ViewPort";
 
 //Value Tags
 var PLD_LEVEL_SIZE_TAG = "LevelSize";
@@ -63,6 +64,7 @@ class PLDExporter
         var enemies = [];
         var entrances = [];
         var exits = [];
+        var viewPorts = [];
         
         for(var i = 0; i < this.layers.length; i++)
         {
@@ -88,11 +90,14 @@ class PLDExporter
             
             var layerExits = layer.GetAllRectsByCategory(PLD_EXIT_TAG);
             exits = exits.concat(layerExits);
+            
+            var layerViewPorts = layer.GetAllRectsByCategory(PLD_VIEWPORT_TAG);
+            viewPorts = viewPorts.concat(layerViewPorts);
               
         }
         
         //Global property serialization
-        this.WriteGlobalLevelProperties();
+        this.WriteGlobalLevelProperties(viewPorts);
         
         //Trigger serialziation
         this.WriteTriggers(entrances, exits);
@@ -106,12 +111,12 @@ class PLDExporter
     }
     
     //Private Methods
-    WriteGlobalLevelProperties()
+    WriteGlobalLevelProperties(viewPorts)
     {
         this.xmlBuilder.AddChild(PLD_GLOBAL_TAG, true);
         
         this.WriteLevelSize();   
-        //todo Viewport
+        this.WriteViewPort(viewPorts);
         
         this.xmlBuilder.EndNode(PLD_GLOBAL_TAG);       
     }
@@ -192,6 +197,18 @@ class PLDExporter
         this.xmlBuilder.AddCompleteChild(PLD_WIDTH_TAG, this.totalWidth.toFixed(0), true);
         this.xmlBuilder.AddCompleteChild(PLD_HEIGHT_TAG, this.totalHeight.toFixed(0), false);
         this.xmlBuilder.EndNode(PLD_LEVEL_SIZE_TAG);
+    }
+    
+    WriteViewPort(viewPorts)
+    {
+        if(viewPorts == undefined || viewPorts.length == 0) return;
+        
+        if(viewPorts.length > 1) 
+            throw "More than one ViewPort defined.";
+            
+        this.xmlBuilder.AddChild(PLD_VIEWPORT_TAG, false);
+        this.WriteRectProperties(viewPorts[0], true);
+        this.xmlBuilder.EndNode(PLD_VIEWPORT_TAG);
     }
     
     WriteExits(exits)
