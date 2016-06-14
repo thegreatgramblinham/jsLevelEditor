@@ -5,7 +5,6 @@ class NamedRectangle extends Rectangle
         super(x,y,width,height);
         this.name = name;
         this.category = "None";
-        this.group = undefined;
     }
     
     get Name()
@@ -17,11 +16,6 @@ class NamedRectangle extends Rectangle
     {
         return this.category;
     }
-
-    get Group()
-    {
-        return this.Group;
-    }
     
     set Name(name)
     {
@@ -31,10 +25,5 @@ class NamedRectangle extends Rectangle
     set Category(category)
     {
         this.category = category;
-    }
-
-    set Group(group)
-    {
-        this.group = group;
     }
 }
