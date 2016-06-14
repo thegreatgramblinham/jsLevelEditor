@@ -10,5 +10,6 @@
     <category>Player</category>
     <category>Prop</category>
     <category>Trigger</category>
+    <category>ViewPort</category>
     <category>Wall</category>	
 </categories>
