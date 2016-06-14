@@ -5,7 +5,7 @@ var IMAGENAME_TAG = "ImageName";
 var DIMENSIONS_TAG = "Dimensions"
 var GROUP_TAG = "Group";
 var GROUPS_TAG = "Groups";
-var NAME_TAG = "NAME";
+var NAME_TAG = "Name";
 var LEVEL_TAG = "Level";
 var IMAGESOURCE_TAG = "Source";
 
