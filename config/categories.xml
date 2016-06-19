@@ -6,6 +6,7 @@
     <category>Entrance</category>
     <category>Exit</category>
     <category>Floor</category>
+    <category>Group</category>
     <category>Platform</category>
     <category>Player</category>
     <category>Prop</category>

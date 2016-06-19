@@ -544,7 +544,7 @@ function AddRectangle(x, y, width, height, name, category)
     _currentRectangle = undefined;
     RefreshPropertyControls();
     RefreshRectangles();
-    
+
     if(!LoadingLevel && !FileChangeMade)
     {
         FileChangeMade = true;

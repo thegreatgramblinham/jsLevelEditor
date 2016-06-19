@@ -1,7 +1,11 @@
 var IMAGE_TAG = "Images";
 var PLATFORMS_TAG = "Platforms";
 var PLATFORM_TAG = "Platform";
+var IMAGENAME_TAG = "ImageName";
 var DIMENSIONS_TAG = "Dimensions"
+var GROUP_TAG = "Group";
+var GROUPS_TAG = "Groups";
+var NAME_TAG = "Name";
 var LEVEL_TAG = "Level";
 var IMAGESOURCE_TAG = "Source";
 
@@ -27,7 +31,8 @@ class LvlExporter
         this.outputXml.BeginNode(LEVEL_TAG);
         var backDrops = [];
         var platforms = [];
-        var enemies = [];
+        var enemies = []; 
+        var groups = [];
         var props = [];
         for(var i = 0; i<this.layerCollection.length; i++)
         {
@@ -37,6 +42,9 @@ class LvlExporter
             
             var layerPlatforms = layer.GetAllRectsByCategory("Platform");
             platforms = platforms.concat(layerPlatforms);
+
+            var platformGroups = layer.GetAllRectsByCategory("Group");
+            groups = groups.concat(platformGroups);
             
             var layerEnemies = layer.GetAllRectsByCategory("Enemy");
             enemies = enemies.concat(layerEnemies);
@@ -50,6 +58,11 @@ class LvlExporter
         if(backDrops.length > 0)
         {
             this.WriteBackdrops(backDrops);
+        }
+
+        if(groups.length > 0)
+        {
+            this.WriteGroups(groups)
         }
         
         if(platforms.length > 0)
@@ -68,6 +81,29 @@ class LvlExporter
         this.outputXml.AddCompleteChild(WIDTH_TAG,this.levelWidth,true);
         this.outputXml.AddCompleteChild(HEIGHT_TAG,this.levelHeight,false);
         this.outputXml.EndNode(DIMENSIONS_TAG);
+    }
+
+    WriteGroups(groups)
+    {
+        this.outputXml.AddChild(GROUPS_TAG,false);
+        for(var i =0; i<groups.length; i++)
+        {
+            var isFirst = (i == 0);
+            this.WriteGroup(groups[i],isFirst);
+        }
+        this.outputXml.EndNode(GROUPS_TAG);
+    }
+
+    WriteGroup(group, isFirst)
+    {
+        this.outputXml.AddChild(GROUP_TAG,isFirst);
+        this.outputXml.AddCompleteChild(NAME_TAG, group.Name,true);
+        this.outputXml.AddCompleteChild(X_TAG,group.XLocation,false);
+        this.outputXml.AddCompleteChild(Y_TAG,group.YLocation,false);
+        this.outputXml.AddCompleteChild(WIDTH_TAG,group.Width,false);
+        this.outputXml.AddCompleteChild(HEIGHT_TAG,group.Height,false);
+        this.outputXml.AddCompleteChild(RENDERIDX_TAG,group.RenderIdx, false);
+        this.outputXml.EndNode(GROUP_TAG);
     }
     
     WritePlatforms(platforms)
@@ -88,6 +124,12 @@ class LvlExporter
         this.outputXml.AddCompleteChild(Y_TAG,platformRect.YLocation,false);
         this.outputXml.AddCompleteChild(WIDTH_TAG,platformRect.Width,false);
         this.outputXml.AddCompleteChild(HEIGHT_TAG,platformRect.Height,false);
+
+        if(platformRect instanceof ImageRectangle)
+        {
+            this.outputXml.AddCompleteChild(IMAGENAME_TAG, platformRect.Name);
+        }
+
         this.outputXml.AddCompleteChild(RENDERIDX_TAG,platformRect.RenderIdx,false);
         this.outputXml.EndNode(PLATFORM_TAG);
     }
