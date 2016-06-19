@@ -59,6 +59,7 @@ function SaveLevel()
         if (filePath === undefined) return false;
         
         var ext = filePath.split('.').pop();
+        var exportSuccessful = false;
         
         if(ext === MAASHES_LEVEL_EXT)
         {
@@ -70,6 +71,7 @@ function SaveLevel()
             {
                 lvlExporter.ExportLevel();
                 FileChangeMade = false;
+                exportSuccessful = true;
             }
             catch(ex)
             {
@@ -86,13 +88,16 @@ function SaveLevel()
             {
                 pldExporter.Export();  
                 FileChangeMade = false;
+                exportSuccessful = true;
             }
             catch(ex)
             {
                 dialog.showMessageBox({ message: "EXPORT FAILED: "+ex.toString(), buttons: ["OK"]})
             }
-            
-        } 
+        }
+        
+        if(exportSuccessful)
+            dialog.showMessageBox({message: ext + " Export Successful!", buttons:["NEET!"]}); 
 }
 
 function OpenLevel()

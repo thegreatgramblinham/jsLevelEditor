@@ -1,7 +1,10 @@
 var IMAGE_TAG = "Images";
 var PLATFORM_TAG = "Platform";
 var DIMENSIONS_TAG = "Dimensions";
-
+var GROUP_TAG = "Group";
+var GROUPS_TAG = "Groups";
+var NAME_TAG = "Name";
+var IMAGENAME_TAG = "ImageName";
 var X_TAG = "X";
 var Y_TAG = "Y";
 var WIDTH_TAG = "Width";
@@ -39,6 +42,7 @@ class LvlImporter
         var images = this.xmlDoc.getElementsByTagName(IMAGE_TAG);
         var imagesCollection = images[0];
         var platforms = this.xmlDoc.getElementsByTagName(PLATFORM_TAG);
+        var groups = this.xmlDoc.getElementsByTagName(GROUP_TAG);
         
         if(dimensionsCollection != undefined && dimensionsCollection.children.length == 2)
         {
@@ -48,6 +52,11 @@ class LvlImporter
         if(imagesCollection != undefined && imagesCollection.children.length > 0)
         {
             this.LoadLevelBackgrounds(imagesCollection);
+        }
+
+        if(groups != undefined)
+        {
+            this.LoadGroups(groups);
         }
         
         if(platforms != undefined)
@@ -75,7 +84,7 @@ class LvlImporter
             }
         }
         
-        ImportLevelBounds(lvlHeight,lvlWidth);
+        ImportLevelBounds(lvlWidth, lvlHeight);
     }
     
     LoadLevelBackgrounds(imagesArray)
@@ -123,6 +132,53 @@ class LvlImporter
         this.AddImageToCanvas(imageName,imageProperties);
     }
     
+    LoadGroups(groupsArray)
+    {
+        for(var i=0; i<groupsArray.length; i++)
+        {
+            this.BuildGroupRect(groupsArray[i]);
+        }
+    }
+
+    BuildGroupRect(group)
+    {
+        var groupProperties = [];
+        for(var i=0; i<group.children.length; i++)
+        {
+            var groupProperty = group.children[i];
+            if(groupProperty.tagName == NAME_TAG)
+            {
+                groupProperties[NAME_TAG] = groupProperty.innerHTML;
+            }
+
+            else if(groupProperty.tagName == X_TAG)
+            {
+                groupProperties[X_TAG] = Number(groupProperty.innerHTML);
+            }
+
+            else if(groupProperty.tagName == Y_TAG)
+            {
+                groupProperties[Y_TAG] = Number(groupProperty.innerHTML);
+            }
+            
+            else if(groupProperty.tagName == WIDTH_TAG)
+            {
+                groupProperties[WIDTH_TAG] = Number(groupProperty.innerHTML);
+            }
+            
+            else if(groupProperty.tagName == HEIGHT_TAG)
+            {
+                groupProperties[HEIGHT_TAG] = Number(groupProperty.innerHTML);
+            }
+            
+            else if(groupProperty.tagName == RENDERIDX_TAG)
+            {
+                groupProperties[RENDERIDX_TAG] = Number(groupProperty.innerHTML);
+            }
+        }
+
+        this.AddGroupToCanvas(groupProperties);
+    }
     
     
     LoadPlatforms(platformsArray)
@@ -136,6 +192,7 @@ class LvlImporter
     BuildPlatformRect(platformNode, count)
     {
         var platformProperties = [];
+        var isImagePlatform = false;
         for(var i=0;i<platformNode.children.length;i++)
         {
             var platformProperty = platformNode.children[i];
@@ -164,8 +221,23 @@ class LvlImporter
             {
                 platformProperties[RENDERIDX_TAG] = Number(platformProperty.innerHTML);
             }
+
+            else if(platformProperty.tagName == IMAGENAME_TAG)
+            {
+                platformProperties[IMAGENAME_TAG] = platformProperty.innerHTML;
+                isImagePlatform = true;
+            }
         }
-        this.AddPlatformToCanvas(platformProperties,count);
+
+        if(!isImagePlatform)
+        {
+            this.AddPlatformToCanvas(platformProperties,count);
+        }
+        else
+        {
+            this.AddImagePlatformToCanvas(platformProperties);
+        }
+
     }
     
     AddPlatformToCanvas(platformProperties,count)
@@ -173,6 +245,25 @@ class LvlImporter
         AddRectangleToLayer(platformProperties[X_TAG],platformProperties[Y_TAG],
             platformProperties[WIDTH_TAG],platformProperties[HEIGHT_TAG],"Platform" + count,"Platform", 
             platformProperties[RENDERIDX_TAG])
+    }
+
+    AddGroupToCanvas(groupProperties)
+    {
+        AddRectangleToLayer(groupProperties[X_TAG],groupProperties[Y_TAG],
+        groupProperties[WIDTH_TAG],groupProperties[HEIGHT_TAG],groupProperties[NAME_TAG],
+        "Group",groupProperties[RENDERIDX_TAG]);
+    }
+
+    AddImagePlatformToCanvas(platformProperties)
+    {
+        var platformImageName = platformProperties[IMAGENAME_TAG];
+        var image = GetImageElementByFileName(platformImageName);
+        if(image == undefined)
+            throw "Could not find file "+ platformImageName +" in open images.";
+        
+        AddImageToLayer(platformProperties[X_TAG],platformProperties[Y_TAG],image,platformImageName,"Platform",
+            platformProperties[RENDERIDX_TAG])
+
     }
     
     AddImageToCanvas(imageTypeName,imageProperties)

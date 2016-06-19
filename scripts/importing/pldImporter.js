@@ -9,6 +9,7 @@ var PLD_GLOBAL_TAG = "Global";
 var PLD_TRIGGER_TAG = "Triggers";
 var PLD_OBJECT_TAG = "Objects";
 var PLD_GROUP_TAG = "Group";
+var PLD_I_TAG = "I";
 
 //Category Tags
 var PLD_BACKDROP_TAG = "Backdrop";
@@ -18,9 +19,11 @@ var PLD_PROP_TAG = "Prop";
 var PLD_ENEMY_TAG = "Enemy";
 var PLD_EXIT_TAG = "Exit";
 var PLD_ENTRANCE_TAG = "Entrance";
+var PLD_VIEWPORT_TAG = "ViewPort";
 
 //Value Tags
 var PLD_LEVEL_SIZE_TAG = "LevelSize";
+var PLD_NAME_TAG = "Name";
 var PLD_X_TAG = "X";
 var PLD_Y_TAG = "Y";
 var PLD_WIDTH_TAG = "Width";
@@ -45,6 +48,7 @@ class PLDImporter
         ResetCanvas();
         
         this.SetLevelBounds();
+        this.ReconstituteViewPort();
         
         this.ReconstituteExits();
         this.ReconstituteEntrances();
@@ -101,6 +105,16 @@ class PLDImporter
             throw "Level height not found.";
         
         ImportLevelBounds(width, height);
+    }
+    
+    ReconstituteViewPort()
+    {
+        var viewPort = this.xmlDoc.getElementsByTagName(PLD_VIEWPORT_TAG);
+        
+        if(viewPort == undefined || viewPort.length == 0) return;
+        
+        var propertyArr = this.DeserializeRectProperties(viewPort[0]);       
+        this.AddToCanvas(propertyArr, viewPort[0], PLD_VIEWPORT_TAG);       
     }
     
     ReconstituteExits()
@@ -215,6 +229,9 @@ class PLDImporter
         {
             var propertyTag = rectTag.children[i];
             
+            if(propertyTag.tagName == PLD_NAME_TAG)
+                propertyArr[PLD_NAME_TAG] = propertyTag.innerHTML;
+            
             if(propertyTag.tagName == PLD_TYPE_TAG)
                 propertyArr[PLD_TYPE_TAG] = propertyTag.innerHTML;
             
@@ -234,6 +251,8 @@ class PLDImporter
                 propertyArr[PLD_RENDER_TAG] = Number(propertyTag.innerHTML);
         }
         
+        if(propertyArr[PLD_NAME_TAG] == undefined || propertyArr[PLD_NAME_TAG] == "")
+            throw rectTag.tagName + " Name not found.";
         if(propertyArr[PLD_TYPE_TAG] == undefined || propertyArr[PLD_TYPE_TAG] == "")
             throw rectTag.tagName + " Type not found.";
         if(propertyArr[PLD_X_TAG] == undefined || isNaN(propertyArr[PLD_X_TAG]))
@@ -254,17 +273,17 @@ class PLDImporter
     {
         if(propertyArr[PLD_TYPE_TAG] == PLD_IMAGERECT_CLASS)
         {
-            var image = GetImageElementByFileName(tag.tagName);    
+            var image = GetImageElementByFileName(propertyArr[PLD_NAME_TAG]);    
             if(image == undefined)
-                throw "Could not find file "+ tag.tagName +" in open images.";
+                throw "Could not find file "+ propertyArr[PLD_NAME_TAG] +" in open images.";
                
-            AddImageToLayer(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], image, tag.tagName,
+            AddImageToLayer(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], image, propertyArr[PLD_NAME_TAG],
                 category, propertyArr[PLD_RENDER_TAG]);
         }
         else if(propertyArr[PLD_TYPE_TAG] == PLD_BASICRECT_CLASS)
         {
             AddRectangleToLayer(propertyArr[PLD_X_TAG], propertyArr[PLD_Y_TAG], propertyArr[PLD_WIDTH_TAG],
-                propertyArr[PLD_HEIGHT_TAG], tag.tagName, category, propertyArr[PLD_RENDER_TAG]);
+                propertyArr[PLD_HEIGHT_TAG], propertyArr[PLD_NAME_TAG], category, propertyArr[PLD_RENDER_TAG]);
         }
         else   
             throw "Rectangle type not intializable."
