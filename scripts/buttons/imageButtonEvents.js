@@ -35,6 +35,12 @@ function SwitchToAdd(e)
     console.log("Switched to image ADD mode.");
     document.getElementById("addModeButton").style.backgroundColor = "darkgoldenrod";
     document.getElementById("modfiyModeButton").style.backgroundColor = "#567179";
+    if(SelectedRectangle != undefined)
+    {
+        SelectedRectangle = undefined;
+        OnSelectedRectangleChanged();
+        RefreshRectangles(); 
+    }
 }
 
 function SwitchToModify(e)
