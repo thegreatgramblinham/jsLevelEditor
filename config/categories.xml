@@ -2,6 +2,7 @@
 <categories>
 	<category>None</category>
     <category>Backdrop</category>
+    <category>BattleUIRoot</category>
     <category>Enemy</category>
     <category>Entrance</category>
     <category>Exit</category>

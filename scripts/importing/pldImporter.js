@@ -20,6 +20,7 @@ var PLD_ENEMY_TAG = "Enemy";
 var PLD_EXIT_TAG = "Exit";
 var PLD_ENTRANCE_TAG = "Entrance";
 var PLD_VIEWPORT_TAG = "ViewPort";
+var PLD_BATTLE_UI_ROOT_TAG = "BattleUIRoot";
 
 //Value Tags
 var PLD_LEVEL_SIZE_TAG = "LevelSize";
@@ -49,6 +50,7 @@ class PLDImporter
         
         this.SetLevelBounds();
         this.ReconstituteViewPort();
+        this.ReconstituteBattleUIRoot();
         
         this.ReconstituteExits();
         this.ReconstituteEntrances();
@@ -115,6 +117,16 @@ class PLDImporter
         
         var propertyArr = this.DeserializeRectProperties(viewPort[0]);       
         this.AddToCanvas(propertyArr, viewPort[0], PLD_VIEWPORT_TAG);       
+    }
+
+    ReconstituteBattleUIRoot()
+    {
+        var battleUIRoot = this.xmlDoc.getElementsByTagName(PLD_BATTLE_UI_ROOT_TAG);
+
+        if(battleUIRoot == undefined || battleUIRoot.length == 0) return;
+
+        var propertyArr = this.DeserializeRectProperties(battleUIRoot[0]);
+        this.AddToCanvas(propertyArr, battleUIRoot[0], PLD_BATTLE_UI_ROOT_TAG);
     }
     
     ReconstituteExits()

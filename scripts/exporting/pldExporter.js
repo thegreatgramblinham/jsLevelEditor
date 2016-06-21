@@ -20,6 +20,7 @@ var PLD_ENEMY_TAG = "Enemy";
 var PLD_EXIT_TAG = "Exit";
 var PLD_ENTRANCE_TAG = "Entrance";
 var PLD_VIEWPORT_TAG = "ViewPort";
+var PLD_BATTLE_UI_ROOT_TAG = "BattleUIRoot";
 
 //Value Tags
 var PLD_LEVEL_SIZE_TAG = "LevelSize";
@@ -65,6 +66,7 @@ class PLDExporter
         var entrances = [];
         var exits = [];
         var viewPorts = [];
+        var battleUIRoots = [];
         
         for(var i = 0; i < this.layers.length; i++)
         {
@@ -93,11 +95,13 @@ class PLDExporter
             
             var layerViewPorts = layer.GetAllRectsByCategory(PLD_VIEWPORT_TAG);
             viewPorts = viewPorts.concat(layerViewPorts);
-              
+
+            var layerBattleUIRoots = layer.GetAllRectsByCategory(PLD_BATTLE_UI_ROOT_TAG);
+            battleUIRoots = battleUIRoots.concat(layerBattleUIRoots);             
         }
         
         //Global property serialization
-        this.WriteGlobalLevelProperties(viewPorts);
+        this.WriteGlobalLevelProperties(viewPorts, battleUIRoots);
         
         //Trigger serialziation
         this.WriteTriggers(entrances, exits);
@@ -111,12 +115,13 @@ class PLDExporter
     }
     
     //Private Methods
-    WriteGlobalLevelProperties(viewPorts)
+    WriteGlobalLevelProperties(viewPorts, battleUIRoots)
     {
         this.xmlBuilder.AddChild(PLD_GLOBAL_TAG, true);
         
         this.WriteLevelSize();   
         this.WriteViewPort(viewPorts);
+        this.WriteBattleUIRoot(battleUIRoots)
         
         this.xmlBuilder.EndNode(PLD_GLOBAL_TAG);       
     }
@@ -209,6 +214,18 @@ class PLDExporter
         this.xmlBuilder.AddChild(PLD_VIEWPORT_TAG, false);
         this.WriteRectProperties(viewPorts[0], true);
         this.xmlBuilder.EndNode(PLD_VIEWPORT_TAG);
+    }
+
+    WriteBattleUIRoot(battleUIRoots)
+    {
+        if(battleUIRoots == undefined || battleUIRoots.length == 0) return;
+
+        if(battleUIRoots.length > 1)
+            throw "More than one BattleUIRoot defined.";
+
+        this.xmlBuilder.AddChild(PLD_BATTLE_UI_ROOT_TAG, false);
+        this.WriteRectProperties(battleUIRoots[0], true);
+        this.xmlBuilder.EndNode(PLD_BATTLE_UI_ROOT_TAG);
     }
     
     WriteExits(exits)
